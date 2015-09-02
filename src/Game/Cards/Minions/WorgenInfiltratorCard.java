@@ -1,49 +1,16 @@
 package Game.Cards.Minions;
 
-import Game.BoardState;
-import Game.Card;
 import Game.Minions.Minion;
-import Search.State;
+import Game.Minions.WorgenInfiltrator;
 
-public class WorgenInfiltrator extends MinionCard {
-	private String name;
-	private int cost;
-	private int hp;
-	private int atk;
-	private boolean charge;
-	private boolean stealth;
+public class WorgenInfiltratorCard extends MinionCard {
 
-	public WorgenInfiltrator() {
-		name = "Worgen Infiltrator";
-		cost = 1;
-		hp = 1;
-		atk = 2;
-		charge = false;
-		stealth = false;
+	public WorgenInfiltratorCard() {
+		super("Worgen Infiltrator",1);
 	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int getCost() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getAtk() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getHp() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public Minion makeNew(int target) {
+		return new WorgenInfiltrator(target);
 	}
 
 }

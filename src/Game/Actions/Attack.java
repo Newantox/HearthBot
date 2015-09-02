@@ -22,10 +22,9 @@ public class Attack implements Action {
 
 	@Override
 	public State result(BoardState oldstate) {
-		System.out.println("resultchecked");
-		BoardState tempstate = defender.damage(oldstate,attacker.getAtk());
+		BoardState tempstate = defender.damage(oldstate,attacker.getAtk()+attacker.getTempAtkChange());
 		attacker.setReady(false);
-		return attacker.damage(tempstate, defender.getAtk());
+		return attacker.damage(tempstate, defender.getAtk()+defender.getTempAtkChange());
 	
 	}
 	

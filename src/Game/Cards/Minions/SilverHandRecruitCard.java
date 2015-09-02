@@ -4,12 +4,9 @@ import Game.Minions.Minion;
 import Game.Minions.SilverHandRecruit;
 
 public class SilverHandRecruitCard extends MinionCard {
-	private String name;
-	private int cost;
 
 	public SilverHandRecruitCard() {
-		name = "Southsea Deckhand";
-		cost = 1;
+		super("Silver Hand Recruit",1);
 	}
 	
 	public Minion makeNew(int target) {

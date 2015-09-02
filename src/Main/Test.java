@@ -1,19 +1,20 @@
 package Main;
 
 import Game.BoardState;
-import Game.Card;
 import Game.GameGoalTest;
 import Game.GamePrinting;
-import Game.Weapon;
+import Game.Hand;
 import Game.Minions.AcidicSwampOoze;
+import Game.Minions.LeperGnome;
 import Game.Minions.Wisp;
-import Game.Cards.Spells.BlessingOfMight;
-import Game.Cards.Spells.Consecration;
-import Game.Cards.Spells.Fireball;
-import Game.Cards.Weapons.FieryWarAxe;
+import Game.Cards.Spells.TargettedSpell.BlessingOfMight;
+import Game.Cards.Spells.TargettedSpell.Fireball;
+import Game.Cards.Spells.Untargetted.AvengingWrath;
+import Game.Cards.Spells.Untargetted.Consecration;
 import Game.Heroes.Hero;
 import Game.Heroes.Uther;
 import Game.Minions.Minion;
+import Game.Weapons.FieryWarAxe;
 import GameSearch.GameHeuristic;
 import Search.AStarFunction;
 import Search.BestFirstFrontier;
@@ -30,34 +31,29 @@ public class Test {
 		
 		Minion[] initOpp = new Minion[7];
 		Minion[] initMy = new Minion[7];
-		Card[] myHand = new Card[10];
+		Hand myHand = new Hand();
 		
 		initOpp[0] = new Wisp(7);
-		//initOpp[1] = new Wisp(8);
-	//	initOpp[2] = new Minion("Magma Rager",9,3,5,1,1, false, false, false, false);
-		//initOpp[3] = new Minion("Argent Squire",10,1,1,1,1,false,true,false,false);
-	//	initOpp[3] = new Minion("Token1",10,3,3,3,3, false, false, false, false);
-		//initOpp[4] = new Minion("Token2",11,3,3,3,3, false, false, false, false);
-		//initOpp[5] = new Minion("Token3",3,3,3,3);
+		initOpp[1] = new Wisp(8);
+		initOpp[2] = new Minion("Magma Rager",9,3,5,1,1);
+		initOpp[3] = new Minion("Argent Squire",10,1,1,1,1);
+		//initOpp[3] = new Minion("Token1",10,3,3,3,3);
+		initOpp[4] = new Minion("Token2",11,3,3,3,3);
+		initOpp[5] = new Minion("Token3",12,3,3,3, 0);
 
-		initMy[0] = new Wisp(0);
-		//initMy[1] = new Minion("Silverback Patriach",1,3,1,4,4, true, false, false, false);
-	//	initMy[2] = new Minion("Wisp",2,0,1,1,1, true, false, false, false);
+		//initMy[0] = new Wisp(0);
+		initMy[0] = new LeperGnome(0);
+	//	initMy[2] = new Minion("Wisp",2,0,1,1,1, true, false, false, false, false);
 	//	initMy[1] = new Minion("Argent Squire",1,1,1,1,1,true,true,false,false);
-	//	initMy[3] = new Minion("Argent Squire",3,1,1,1,1,true,true,false,false);
+		//initMy[3] = new Minion("Argent Squire",3,1,1,1,1,true,true,false,false, false);
 		//initMy[3] = new Minion("Abomination",3,5,4,4,4, true, false, false, false);
-	//	initMy[4] = new Minion("Deathwing",1,10,10,10);
+		//initMy[4] = new Minion("Deathwing",4,10,10,10, 0, true, false, false, false, false);
 		
-		//myHand[0] = new Wisp();
-		//myHand[2] = new AcidicSwampOoze();
-	//	myHand[0] = new Fireball();
-		//myHand[1] = new BlessingOfMight();
-	//	myHand[3] = new Consecration();
-		//myHand[3] = new FieryWarAxe();
+		myHand.add(new Fireball());
 		
 	
 		
-		BoardState config = new BoardState(new Uther("Garrosh",20,0,null),new Hero("Anduin",30,0,new Weapon("Fiery War Axe",3,2)),10,10,initOpp,initMy,null,myHand);
+		BoardState config = new BoardState(new Uther("Uther",14,20,30,0,10,10,0,null),new Hero("Anduin",15,2,30,0,10,10,0, new FieryWarAxe()),initOpp,initMy,null,myHand);
 		Frontier frontier = new BestFirstFrontier(new AStarFunction(new GameHeuristic()));
 		
 		Search search = new GraphSearch(frontier);

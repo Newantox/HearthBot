@@ -1,9 +1,9 @@
 package Game.Actions;
 
 import Game.BoardState;
-import Game.Weapon;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
+import Game.Weapons.Weapon;
 import Search.Action;
 import Search.State;
 
@@ -14,9 +14,9 @@ public class HeroAttack implements Action {
 	private Weapon weapon;
 
 	public HeroAttack(Hero hero, Minion defender) {
-		this.hero = hero.fresh();
-		this.defender = new Minion(defender);
-		this.weapon = new Weapon(hero.getWeapon());
+		this.hero = hero;
+		this.defender = defender;
+		this.weapon = hero.getWeapon();
 	}
 
 	@Override
@@ -25,21 +25,7 @@ public class HeroAttack implements Action {
 	}
 	
 	public State result(BoardState oldstate) {
-		BoardState tempstate = defender.damage(oldstate,weapon.getAtk());
-		if(defender.getAtk() >= hero.getHP()) {
-			return null;
-		}
-		else {
-			hero.setReady(false);
-			hero.setHP(hero.getHP() - defender.getAtk());
-			weapon.setDurability(weapon.getDurability()-1);
-			if (weapon.getDurability()<=0) hero.destroyWeapon();
-			else hero.setWeapon(weapon);
-			}
-		
-		State newState = new BoardState(hero,tempstate.getEnemy(),tempstate.getCurrentMana(),tempstate.getTotalMana(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
-		
-		return newState;
+		return (hero.getWeapon()).attackWith(oldstate,defender);
 	}
 	
 	public void print() {

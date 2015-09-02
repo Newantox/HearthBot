@@ -22,7 +22,7 @@ public class BestFirstFrontier implements Frontier  {
 		if (current>max) max = current;
 		frontier.add(n);
 		State state = n.state;
-		BoardState board = (BoardState)state;
+		//BoardState board = (BoardState)state;
 		System.out.println(current);
 
 	}

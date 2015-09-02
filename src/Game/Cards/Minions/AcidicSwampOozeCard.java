@@ -4,12 +4,9 @@ import Game.Minions.AcidicSwampOoze;
 import Game.Minions.Minion;
 
 public class AcidicSwampOozeCard extends MinionCard {
-	private String name;
-	private int cost;
 
 	public AcidicSwampOozeCard() {
-		name = "Acidic Swamp Ooze";
-		cost = 2;
+		super("Acidic Swamp Ooze",2);
 	}
 	
 	public Minion makeNew(int target) {

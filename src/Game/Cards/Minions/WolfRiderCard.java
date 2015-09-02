@@ -1,18 +1,16 @@
 package Game.Cards.Minions;
 
-public class WolfRider extends MinionCard {
-	private String name;
-	private int cost;
-	private int hp;
-	private int atk;
-	private boolean charge;
+import Game.Minions.Minion;
+import Game.Minions.WolfRider;
 
-	public WolfRider() {
-		name = "Wolf Rider";
-		cost = 3;
-		hp = 1;
-		atk = 3;
-		charge = true;
+public class WolfRiderCard extends MinionCard {
+
+	public WolfRiderCard() {
+		super("Wolf Rider",3);
+	}
+	
+	public Minion makeNew(int target) {
+		return new WolfRider(target);
 	}
 
 }

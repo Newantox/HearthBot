@@ -2,6 +2,7 @@ package Game.Actions;
 
 import Game.BoardState;
 import Game.Card;
+import Game.Hand;
 import Search.Action;
 import Search.State;
 
@@ -19,12 +20,15 @@ public class PlayCard implements Action {
 
 	@Override
 	public double cost() {
-		return 4;
+		return card.getCost();
 	}
 
 	@Override
 	public State result(BoardState oldstate) {
-		return card.playCard(oldstate,target,pos);
+		Hand newMyHand = (oldstate.getMyHand()).remove(pos);
+		BoardState tempstate = (oldstate.getHero()).useMana(oldstate,card.getCost());
+		tempstate = new BoardState(tempstate.getHero(),tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),newMyHand);
+		return card.playCard(tempstate,target);
 	}
 
 	@Override

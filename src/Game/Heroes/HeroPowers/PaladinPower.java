@@ -21,7 +21,7 @@ public class PaladinPower implements HeroPower {
 	
 	@Override
 	public boolean useable(BoardState oldstate) {
-		return (oldstate.getMySide()[6] == null) && (oldstate.getCurrentMana() >= manacost);
+		return (oldstate.getMySide()[6] == null) && ((oldstate.getHero()).getCurrentMana() >= manacost);
 	}
 
 	@Override
@@ -33,8 +33,9 @@ public class PaladinPower implements HeroPower {
 		newMySide[i] = new SilverHandRecruit(i);
 		Hero hero = (oldstate.getHero()).fresh();
 		hero.setPowerUsed(true);
+		hero.setCurrentMana(hero.getCurrentMana()-manacost);
 		
-		return new BoardState(hero, oldstate.getEnemy(), oldstate.getCurrentMana()-manacost, oldstate.getTotalMana(), oldstate.getOppSide(), newMySide, oldstate.getMyDeck(), oldstate.getMyHand());
+		return new BoardState(hero, oldstate.getEnemy(),oldstate.getOppSide(), newMySide, oldstate.getMyDeck(), oldstate.getMyHand());
 	}
 
 	@Override

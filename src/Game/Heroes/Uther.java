@@ -1,13 +1,13 @@
 package Game.Heroes;
 
-import Game.Weapon;
 import Game.Heroes.HeroPowers.HeroPower;
 import Game.Heroes.HeroPowers.PaladinPower;
+import Game.Weapons.Weapon;
 
 public class Uther extends Hero {
 
-	public Uther(String name, int HP, int Armour, Weapon weapon) {
-		super(name, HP, Armour, weapon);
+	public Uther(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, int overload, Weapon weapon) {
+		super(name, mypos, HP, maxHP, Armour, currentMana, totalMana, overload, weapon);
 	}
 	
 	public Uther(Hero hero) {

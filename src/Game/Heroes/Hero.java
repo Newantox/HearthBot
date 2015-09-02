@@ -1,39 +1,110 @@
 package Game.Heroes;
 
-import Game.Weapon;
+import Game.BoardState;
 import Game.Heroes.HeroPowers.HeroPower;
+import Game.Weapons.Weapon;
 
 public class Hero {
 	private String name;
+	private int myPos;
 	private int HP;
-	private int Armour;
+	private int maxHP;
+	private int armour;
+	private int currentMana;
+	private int totalMana;
+	private int overload;
 	private Weapon weapon;
 	private boolean ready;
 	private boolean powerUsed;
 	
-	public Hero(String name, int HP, int Armour, Weapon weapon) {
+	public Hero(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, int overload, Weapon weapon) {
 		this.setName(name);
+		this.myPos = mypos;
 		this.HP = HP;
-		this.Armour = Armour;
+		this.maxHP = maxHP;
+		this.armour = Armour;
+		this.currentMana = currentMana;
+		this.totalMana = totalMana;
+		this.overload = overload;
 		this.weapon = weapon;
 		this.ready = true;
 		this.powerUsed = false;
 	}
-	
+
 	public Hero(Hero h) {
-		this.setName(h.getName());
-		this.Armour = h.Armour;
-		this.setHP(h.getHP());
-		this.setReady(h.isReady());
-		this.powerUsed = h.powerUsed;
+		this.name = h.getName();
+		this.myPos = h.getMyPos();
+		this.HP = h.getHP();
+		this.armour = h.getArmour();
+		this.currentMana = h.getCurrentMana();
+		this.totalMana = h.getTotalMana();
+		this.overload = h.getOverload();
+		this.weapon = h.getWeapon();
+		this.ready = h.isReady();
+		this.powerUsed = h.getPowerUsed();
 	}
 	
+	public int getCurrentMana() {
+		return currentMana;
+	}
+
+	public void setCurrentMana(int currentMana) {
+		this.currentMana = currentMana;
+	}
+
+	public int getTotalMana() {
+		return totalMana;
+	}
+
+	public void setTotalMana(int totalMana) {
+		this.totalMana = totalMana;
+	}
+
+	public int getOverload() {
+		return overload;
+	}
+
+	public void setOverload(int overload) {
+		this.overload = overload;
+	}
+
 	public Hero fresh() {
 		return new Hero(this);
+	}
+	
+	public BoardState damage(BoardState oldstate, int amount) {
+		Hero hero = this.fresh();
+		if (hero.getArmour()>=amount) hero.setArmour(hero.getArmour()-2);
+		else {int additional = amount - hero.getArmour(); hero.setArmour(0); hero.setHP(hero.getHP()-additional);}
+		System.out.println(name+" HP: "+hero.getHP());
+		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+	}
+	
+	public BoardState heal(BoardState oldstate, int amount) {
+		Hero hero = this.fresh();
+		hero.setHP(Math.min(hero.getHP()+amount,hero.getMaxHP()));
+		
+		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+	}
+	
+	public BoardState useMana(BoardState oldstate, int amount) {
+		Hero hero = this.fresh();
+		hero.setCurrentMana(hero.getCurrentMana()-amount);
+		return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
 	}
 
 	public boolean canAttack() {
 		return (weapon!=null && ready && this.getWeapon().getDurability()>0);
+	}
+	
+	public int getMyPos() {
+		return myPos;
+	}
+
+	public void setMyPos(int myPos) {
+		this.myPos = myPos;
 	}
 
 	public int getHP() {
@@ -44,12 +115,20 @@ public class Hero {
 		this.HP = HP;
 	}
 	
-	public int getArmour() {
-		return Armour;
+	public int getMaxHP() {
+		return maxHP;
 	}
 
-	public void setArmour(int Armour) {
-		this.Armour = Armour;
+	public void setMaxHP(int maxHP) {
+		this.maxHP = maxHP;
+	}
+	
+	public int getArmour() {
+		return armour;
+	}
+
+	public void setArmour(int armour) {
+		this.armour = armour;
 	}
 
 	public Weapon getWeapon() {
@@ -86,12 +165,24 @@ public class Hero {
 	}
 
 	public boolean isAttackable() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	
-	public void destroyWeapon() {
-		weapon = null;
+	public BoardState equipWeapon(BoardState oldstate, Weapon weapon) {
+		Hero hero = this.fresh();
+		BoardState tempstate = weapon.battleCry(oldstate);
+		hero.setWeapon(weapon);
+		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+	}
+	
+	public BoardState destroyWeapon(BoardState oldstate) {
+		Hero hero = this.fresh();
+		Weapon weapon = hero.getWeapon();
+		BoardState tempstate = weapon.deathRattle(oldstate);
+		hero.setWeapon(null);
+		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
 	}
 	
 	public HeroPower getHeroPower() {
@@ -103,7 +194,10 @@ public class Hero {
 		Hero other = (Hero)that;
 		if (name != other.getName()) return false;
 		if (HP != other.getHP()) return false;
-		if (Armour != other.getArmour()) return false;
+		if (armour != other.getArmour()) return false;
+		if (currentMana != other.getCurrentMana()) return false;
+		if (totalMana != other.getTotalMana()) return false;
+		if (overload != other.getOverload()) return false;
 		if (weapon==null && other.getWeapon() != null) return false;
 		if (weapon!= null && other.getWeapon() == null) return false;
 		if (weapon==null && other.getWeapon() == null);

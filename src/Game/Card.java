@@ -8,6 +8,8 @@ public interface Card {
 	
 	public int getCost();
 	
-	public State playCard(BoardState oldstate, int target, int pos);
+	public State playCard(BoardState oldstate, int target);
+	
+	public CardType getType();
 	
 }

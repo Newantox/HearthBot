@@ -1,5 +1,8 @@
 package Game;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.LinkedHashSet;
 
@@ -8,38 +11,45 @@ import Game.Actions.FaceAttack;
 import Game.Actions.HeroAttack;
 import Game.Actions.HeroFaceAttack;
 import Game.Actions.PlayCard;
+import Game.Cards.Spells.TargettedSpell.TargettedSpell;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
+import Game.SummonEffects.SummonEffect;
 import Search.Action;
 import Search.State;
 
 public class BoardState implements State {
-	// IMPLEMENT: flattenBoard to remove gaps in board, to make it easier to deal with AoE clearing minions etc.
+	
+	public StateType getStatetype() {
+		return StateType.BOARD;
+	}
+	
 	private Hero hero;
 	private Hero enemy;
-		
-	private int currentMana;
-	private int totalMana;
 		
 	private Minion[] oppSide = new Minion[7];
 	private Minion[] mySide = new Minion[7];
 		
-	private Set<Card> myDeck = new LinkedHashSet<Card>();
-	private Card[] myHand = new Card[10];
+	private Deck myDeck;
+	private Hand myHand;
 	
-	public BoardState(Hero hero, Hero enemy, int currentMana, int totalMana, Minion[] oppSide, Minion[] mySide, Set<Card> myDeck, Card[] myHand) {
-		this.setHero(hero);
-		this.setEnemy(enemy);
-		this.setCurrentMana(currentMana);
-		this.setTotalMana(totalMana);
+	private ArrayList<SummonEffect> summonEffects;
+	
+	public ArrayList<SummonEffect> getSummonEffects() {
+		return summonEffects;
+	}
+
+	public BoardState(Hero hero, Hero enemy, Minion[] oppSide, Minion[] mySide, Deck myDeck, Hand myHand) {
+		this.hero = hero;
+		this.enemy = enemy;
 		this.oppSide = oppSide;
 		this.mySide = mySide;
-		this.setMyDeck(myDeck);
-		this.setMyHand(myHand);
+		this.myDeck = myDeck;
+		this.myHand = myHand;
 	}
 
 	@Override
-	public Set<? extends Action> getApplicableActions() {
+	public Set<Action> getApplicableActions() {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		
 		//Add possible attacks by minions to the set of actions.
@@ -49,7 +59,7 @@ public class BoardState implements State {
 				if (enemy.isAttackable()) actions.add(new FaceAttack(myMinion,enemy));
 				for (int j = 0; j<7; j++) {
 					Minion oppMinion = getOppSide()[j];
-					if (oppMinion != null && oppMinion.isAttackable()) actions.add(new Attack(myMinion,oppMinion));
+					if (oppMinion != null && oppMinion.isAttackable()) {System.out.println(myMinion.getName()+" "+oppMinion.getName()); actions.add(new Attack(myMinion,oppMinion));}
 				}
 			}
 		}
@@ -70,12 +80,37 @@ public class BoardState implements State {
 		
 		//Add playing cards in hand to set of actions.
 		// Case matching on class types IMPLEMENT
-		for (int i = 0; i<10; i++) {
-			if (myHand[i] != null) {
-				if (myHand[i].getCost()<= currentMana) { 
-					for (int j = 0; j<7 ; j++) {
-						if (oppSide[j]!=null) actions.add(new PlayCard(myHand[i],j+7,i));
-						if (mySide[j]!=null) actions.add(new PlayCard(myHand[i],j,i));
+		for (int i = 0; i < myHand.getSize(); i++) {
+			if ((myHand.raw()).get(i) != null) {
+				Card card = (myHand.raw()).get(i);
+				if (card.getCost()<= hero.getCurrentMana()) { 
+					if (card.getType().equals(CardType.MINION)){
+						if (mySide[6]==null) {
+							actions.add(new PlayCard(card,6,i));
+						}
+					}
+					else if (card.getType().equals(CardType.UNTARGETTEDSPELL)) {
+						actions.add(new PlayCard(card,0,i));
+					}
+					else if (card.getType().equals(CardType.TARGETTEDSPELL)) {
+						TargettedSpell tcard = (TargettedSpell) card;
+						if (tcard.getTargets().equals(TargetsType.ALL)) {
+							for (int j = 0; j<7 ; j++) {
+								if (oppSide[j]!=null) actions.add(new PlayCard(card,j+7,i));
+								if (mySide[j]!=null) actions.add(new PlayCard(card,j,i));
+							}
+							actions.add(new PlayCard(card,14,i));
+							actions.add(new PlayCard(card,15,i));
+						}
+						else if (tcard.getTargets().equals(TargetsType.ALLMINIONS)) {
+							for (int j = 0; j<7 ; j++) {
+								if (oppSide[j]!=null) actions.add(new PlayCard(card,j+7,i));
+								if (mySide[j]!=null) actions.add(new PlayCard(card,j,i));
+							}
+						}
+					}
+					else if (card.getType().equals(CardType.WEAPON)){
+						actions.add(new PlayCard(card,0,i));
 					}
 				}
 			}
@@ -98,8 +133,6 @@ public class BoardState implements State {
 			final BoardState other = (BoardState) that;
 			if (!hero.equals(other.getHero())) return false;
 			if (!enemy.equals(other.getEnemy())) return false;
-			if (getCurrentMana() != other.getCurrentMana()) return false;
-			else if (getTotalMana() != other.getTotalMana())  return false;
             else {
             	for (int i = 0; i<7; i++) {
             		if (oppSide[i] == null && other.oppSide[i] != null) return false;
@@ -115,13 +148,8 @@ public class BoardState implements State {
             		if (mySide[i] == null && other.mySide[i] == null);
             		else if (!mySide[i].equals(other.mySide[i])) return false;
             	}
-            	for (int i = 0; i<10; i++) {
-            		if (myHand[i] == null && other.myHand[i] != null) return false;
-            		else if (myHand[i] != null && other.myHand[i] == null) return false;
-            		
-            		if (myHand[i] == null && other.myHand[i] == null);
-            		else if (myHand[i] != other.myHand[i]) return false;
-            	}
+            	if (!myHand.equals(other.myHand)) return false;
+        
             	 return true;
             }
 		}
@@ -161,36 +189,20 @@ public class BoardState implements State {
 		this.hero = hero;
 	}
 
-	public Card[] getMyHand() {
+	public Hand getMyHand() {
 		return myHand;
 	}
 
-	public void setMyHand(Card[] myHand) {
+	public void setMyHand(Hand myHand) {
 		this.myHand = myHand;
 	}
 
-	public int getTotalMana() {
-		return totalMana;
-	}
-
-	public void setTotalMana(int totalMana) {
-		this.totalMana = totalMana;
-	}
-
-	public Set<Card> getMyDeck() {
+	public Deck getMyDeck() {
 		return myDeck;
 	}
 
-	public void setMyDeck(Set<Card> myDeck) {
+	public void setMyDeck(Deck myDeck) {
 		this.myDeck = myDeck;
-	}
-
-	public int getCurrentMana() {
-		return currentMana;
-	}
-
-	public void setCurrentMana(int currentMana) {
-		this.currentMana = currentMana;
 	}
 
 	public Hero getEnemy() {
@@ -200,4 +212,48 @@ public class BoardState implements State {
 	public void setEnemy(Hero enemy) {
 		this.enemy = enemy;
 	}
+	
+	public List<Integer> getHittableEnemies() {
+		List<Integer> list = new LinkedList<Integer>();
+		for (int i = 7; i<14; i++) {
+			if (oppSide[i-7]!=null) list.add(i);
+		}
+		return list;
+	}
+	
+	public RandomState damageRandomHittableEnemy(int amount, double probmodifier) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		int possibilities = getHittableEnemies().size();
+		for (int j : getHittableEnemies()) {
+			list.add(new StateProbabilityPair(oppSide[j-7].damage(this,amount) , probmodifier / (possibilities+1)));
+		}
+		list.add(new StateProbabilityPair(enemy.damage(this,amount), probmodifier /(possibilities+1)));
+		System.out.println("Enemy"+enemy.getHP());
+		return new RandomState(list);
+	}
+	
+	public BoardState damageTarget(int target, int amount) {
+		if (target <14) {
+			Minion defender;
+			if (target<7) defender = mySide[target];
+			else defender = oppSide[target-7];
+			return defender.damage(this,amount);
+		}
+		
+		else {
+			Hero defender;
+			if (target==14) defender = enemy;
+			else defender = hero;
+			return defender.damage(this,amount);
+		}
+	}
+	
+	public RandomState drawCard() {
+		return myDeck.drawCard(this);
+	}
+	
+	public BoardState enemyDrawCard() {
+		return this;
+	}
+	
 }

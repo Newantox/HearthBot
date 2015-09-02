@@ -29,11 +29,11 @@ public class FaceAttack implements Action {
 			if (oldstate.getMySide()[i] != null) newMySide[i] = oldstate.getMySide()[i];
 		}
 		
-		defender.setHP(defender.getHP() - attacker.getAtk());
+		defender.setHP(defender.getHP() - attacker.getAtk() - attacker.getTempAtkChange());
 		attacker.setReady(false);
 		newMySide[attacker.getMyPos()] = attacker;
 		
-		return new BoardState(oldstate.getHero(),defender,oldstate.getCurrentMana(),oldstate.getTotalMana(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+		return new BoardState(oldstate.getHero(),defender,oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
 	}
 
 	@Override
