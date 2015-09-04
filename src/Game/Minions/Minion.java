@@ -30,6 +30,8 @@ public class Minion {
 	protected ArrayList<Deathrattle> deathrattles;
 	protected ArrayList<Inspire> inspires;
 	
+	protected ArrayList<SummonEffect> summonEffects;
+	
 	public Minion (String name, int mypos, int cost, int atk, int hp, int maxHP) {
 		this.name = name;
 		this.mypos = mypos;
@@ -49,6 +51,8 @@ public class Minion {
 		this.battlecrys = new ArrayList<Battlecry>();
 		this.deathrattles = new ArrayList<Deathrattle>();
 		this.inspires = new ArrayList<Inspire>();
+		
+		this.summonEffects = new ArrayList<SummonEffect>();
 	}
 	
 	public Minion(Minion m) {
@@ -70,10 +74,8 @@ public class Minion {
 		this.battlecrys = m.getBattlecrys();
 		this.deathrattles = m.getDeathrattles();
 		this.inspires = m.getInspires();
-	}
-
-	public Minion(int target) {
-		this.setMyPos(target);
+		
+		this.summonEffects = m.getSummonEffects();
 	}
 	
 	public int getTempHPChange() {
@@ -225,16 +227,48 @@ public class Minion {
 		deathrattles.add(DR);
 	}
 	
+	public void addSummonEffect(SummonEffect SE) {
+		summonEffects.add(SE);
+	}
+	
+	public ArrayList<SummonEffect> getSummonEffects() {
+		return summonEffects;
+	}
+	
 	public State play(BoardState oldstate) {
 		Minion[] newMySide = new Minion[7];
 		for (int i = 0; i<mypos; i++) newMySide[i] = oldstate.getMySide()[i];
 		newMySide[mypos] = this;
 		for (int i = mypos+1; i<7; i++) newMySide[i] = oldstate.getMySide()[i-1];
-		State tempstate =  new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+		
+		ArrayList<SummonEffect> newSummonEffects = oldstate.getSummonEffects();
+		if (summonEffects!=null) newSummonEffects.addAll(summonEffects);
+		
+		State tempstate =  new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),newSummonEffects,oldstate.getEnemyHandSize());
 		tempstate = battleCry((BoardState) tempstate);
+		
 		for (SummonEffect effect : oldstate.getSummonEffects()) {
 			tempstate = effect.perform(tempstate, this);
 		}
+		
+		return tempstate;
+	}
+	
+	public State place(BoardState oldstate) {
+		Minion[] newMySide = new Minion[7];
+		for (int i = 0; i<mypos; i++) newMySide[i] = oldstate.getMySide()[i];
+		newMySide[mypos] = this;
+		for (int i = mypos+1; i<7; i++) newMySide[i] = oldstate.getMySide()[i-1];
+		
+		ArrayList<SummonEffect> newSummonEffects = oldstate.getSummonEffects();
+		newSummonEffects.addAll(summonEffects);
+		
+		State tempstate =  new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),newSummonEffects,oldstate.getEnemyHandSize());
+		
+		for (SummonEffect effect : oldstate.getSummonEffects()) {
+			tempstate = effect.perform(tempstate, this);
+		}
+		
 		return tempstate;
 	}
 	
@@ -249,7 +283,7 @@ public class Minion {
 			if (divineshield) newMinion.setDivineShield(false);
 			else if (amount >= hp) newMinion.destroy(oldstate);
 			else newMinion.setHP(newMinion.getHP()-amount);
-			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
 		else {
 			Minion[] newOppSide = new Minion[7];
@@ -260,7 +294,7 @@ public class Minion {
 			else if (amount >= hp) return newMinion.destroy(oldstate);
 			else newMinion.setHP(newMinion.getHP()-amount);
 			newOppSide[mypos-7] = newMinion;
-			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
 		
 	}
@@ -275,7 +309,7 @@ public class Minion {
 				if(i>=6) newMySide[i] = null;
 				else newMySide[i] = newMySide[i+1];
 			}
-			BoardState tempstate =  new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+			BoardState tempstate =  new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 			return deathRattle(tempstate);
 		}
 		else {
@@ -287,7 +321,7 @@ public class Minion {
 				if(i>=6) newOppSide[i] = null;
 				else newOppSide[i] = newOppSide[i+1];
 			}
-			BoardState tempstate = new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+			BoardState tempstate = new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 			return deathRattle(tempstate);
 		}
 		
@@ -304,7 +338,7 @@ public class Minion {
 			
 			defender.setAtk(defender.getAtk() + amount);
 		
-			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
 		
 		else {
@@ -317,7 +351,7 @@ public class Minion {
 		    
 		    defender.setAtk(defender.getAtk() + amount);
 			
-		    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
 	}
 	
@@ -332,7 +366,7 @@ public class Minion {
 			
 			defender.setHP(defender.getHP() + amount);
 		
-			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
 		
 		else {
@@ -345,7 +379,7 @@ public class Minion {
 		    
 		    defender.setHP(defender.getHP() + amount);
 			
-		    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
 	}
 	
@@ -356,7 +390,6 @@ public class Minion {
 	public BoardState deathRattle(BoardState oldstate) {
 		BoardState tempstate = oldstate;
 		for (Deathrattle deathrattle : deathrattles) {
-			System.out.println(getName());
 			tempstate = (BoardState) deathrattle.perform(this,tempstate);
 		}
 		return tempstate;

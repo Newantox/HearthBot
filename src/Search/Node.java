@@ -1,5 +1,7 @@
 package Search;
 
+import Game.BoardState;
+import Game.ChoiceState;
 import Game.IndexAction;
 import Game.RandomState;
 import Game.StateProbabilityPair;
@@ -26,25 +28,44 @@ public class Node {
 		double best;
 		switch (state.getStatetype()) {
 			case BOARD:
+				BoardState boardstate = (BoardState) state;
+				best = fn;
+				for (Action action : boardstate.getApplicableActions()) {
+					Node newnode = new Node(this,action,boardstate.getActionResult(action));
+					if (newnode.getBestValue() < best) {best = newnode.getBestValue(); bestNode = newnode;}
+				}
+				
+			case RANDOM:
+				RandomState randomstate = (RandomState) state;
+				best = 0;
+				for (int i = 0; i < ((RandomState) randomstate).getSize(); i++) {
+					StateProbabilityPair pair = ((RandomState) randomstate).getPair(i);
+					Node pairnode = new Node(this,new IndexAction(i),pair.getState());
+					best += pair.getProbability() * pairnode.getBestValue();
+				}
+				bestNode = this;
+				
+			case CHOICE:
+				ChoiceState choicestate = (ChoiceState) state;
 				best = 1000;
 				for (Action action : state.getApplicableActions()) {
 					Node newnode = new Node(this,action,state.getActionResult(action));
 					if (newnode.getBestValue() < best) {best = newnode.getBestValue(); bestNode = newnode;}
 				}
-				
-			case RANDOM:
-				RandomState state2 = (RandomState)state;
-				best = 0;
-				for (int i = 0; i < state2.getSize(); i++) {
-					StateProbabilityPair pair = state2.getPair(i);
-					Node pairnode = new Node(this,new IndexAction(i),pair.getState());
-					best += pair.getProbability() * pairnode.getBestValue();
-				}
-				bestNode = this;
 		
 			default:
 				best = 0;
 		}
 		return best;
 	}
+
+	public Node getBestNode() {
+		return bestNode;
+	}
+
+	public void setBestNode(Node bestNode) {
+		this.bestNode = bestNode;
+	}
 }
+
+

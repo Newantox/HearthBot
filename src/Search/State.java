@@ -3,10 +3,9 @@ package Search;
 import java.util.Set;
 
 import Game.StateType;
+import Game.TargetsType;
 
 public interface State {
-	
-	Game.StateType statetype = StateType.PLAIN;
 	
 	StateType getStatetype();
 	
@@ -16,6 +15,8 @@ public interface State {
 	abstract boolean equals(Object that);
 	abstract int hashCode();
 
-	State damageRandomHittableEnemy(int i, double j);
+	State damageRandomHittable(TargetsType targets, int i, double j);
+
+	State drawCard();
 	
 }

@@ -27,7 +27,7 @@ public class TruesilverChampion extends Weapon {
 		weapon.setDurability(weapon.getDurability()-1);
 		if (weapon.getDurability()<=0) return hero.destroyWeapon(tempstate);
 		else hero.setWeapon(weapon);
-		return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+		return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
 	}
 
 }

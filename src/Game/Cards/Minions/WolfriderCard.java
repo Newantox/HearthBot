@@ -1,16 +1,16 @@
 package Game.Cards.Minions;
 
 import Game.Minions.Minion;
-import Game.Minions.WolfRider;
+import Game.Minions.Wolfrider;
 
-public class WolfRiderCard extends MinionCard {
+public class WolfriderCard extends MinionCard {
 
-	public WolfRiderCard() {
-		super("Wolf Rider",3);
+	public WolfriderCard() {
+		super("Wolfrider",3);
 	}
 	
 	public Minion makeNew(int target) {
-		return new WolfRider(target);
+		return new Wolfrider(target);
 	}
 
 }

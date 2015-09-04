@@ -6,7 +6,7 @@ import Game.Minions.LeperGnome;
 public class LeperGnomeCard extends MinionCard {
 
 	public LeperGnomeCard() {
-		super("Leper Gnome",2);
+		super("Leper Gnome",1);
 	}
 	
 	public Minion makeNew(int target) {

@@ -34,8 +34,13 @@ public class ChoiceState implements State {
 	}
 
 	@Override
-	public State damageRandomHittableEnemy(int i, double j) {
-		return state.damageRandomHittableEnemy(i,j);
+	public State damageRandomHittable(TargetsType targets, int i, double j) {
+		return state.damageRandomHittable(targets, i,j);
+	}
+	
+	@Override
+	public State drawCard() {
+		return state.drawCard();
 	}
 	
 }

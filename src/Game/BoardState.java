@@ -38,14 +38,18 @@ public class BoardState implements State {
 	public ArrayList<SummonEffect> getSummonEffects() {
 		return summonEffects;
 	}
+	
+	private int enemyHandSize;
 
-	public BoardState(Hero hero, Hero enemy, Minion[] oppSide, Minion[] mySide, Deck myDeck, Hand myHand) {
+	public BoardState(Hero hero, Hero enemy, Minion[] oppSide, Minion[] mySide, Deck myDeck, Hand myHand,ArrayList<SummonEffect> summonEffects, int enemyHandSize) {
 		this.hero = hero;
 		this.enemy = enemy;
 		this.oppSide = oppSide;
 		this.mySide = mySide;
 		this.myDeck = myDeck;
 		this.myHand = myHand;
+		this.summonEffects = summonEffects;
+		this.enemyHandSize = enemyHandSize;
 	}
 
 	@Override
@@ -59,7 +63,7 @@ public class BoardState implements State {
 				if (enemy.isAttackable()) actions.add(new FaceAttack(myMinion,enemy));
 				for (int j = 0; j<7; j++) {
 					Minion oppMinion = getOppSide()[j];
-					if (oppMinion != null && oppMinion.isAttackable()) {System.out.println(myMinion.getName()+" "+oppMinion.getName()); actions.add(new Attack(myMinion,oppMinion));}
+					if (oppMinion != null && oppMinion.isAttackable()) actions.add(new Attack(myMinion,oppMinion));
 				}
 			}
 		}
@@ -85,8 +89,8 @@ public class BoardState implements State {
 				Card card = (myHand.raw()).get(i);
 				if (card.getCost()<= hero.getCurrentMana()) { 
 					if (card.getType().equals(CardType.MINION)){
-						if (mySide[6]==null) {
-							actions.add(new PlayCard(card,6,i));
+						if (numberOfMinions()<7) {
+							actions.add(new PlayCard(card,numberOfMinions(),i));
 						}
 					}
 					else if (card.getType().equals(CardType.UNTARGETTEDSPELL)) {
@@ -213,22 +217,56 @@ public class BoardState implements State {
 		this.enemy = enemy;
 	}
 	
-	public List<Integer> getHittableEnemies() {
+	public int getEnemyHandSize() {
+		return enemyHandSize;
+	}
+
+	public void setEnemyHandSize(int enemyHandSize) {
+		this.enemyHandSize = enemyHandSize;
+	}
+
+	public List<Integer> getHittable(TargetsType targets) {
 		List<Integer> list = new LinkedList<Integer>();
-		for (int i = 7; i<14; i++) {
-			if (oppSide[i-7]!=null) list.add(i);
+		
+		switch (targets) {
+			case ALLYCHAR:
+				for (int i = 0; i<7; i++) {
+					if (mySide[i]!=null) list.add(i);
+				}
+				list.add(14);
+			
+			case ENEMYCHAR:
+				for (int i = 7; i<14; i++) {
+					if (oppSide[i-7]!=null) list.add(i);
+				}
+				list.add(15);
+		default:
+			break;
 		}
+		
 		return list;
 	}
 	
-	public RandomState damageRandomHittableEnemy(int amount, double probmodifier) {
+	public RandomState damageRandomHittable(TargetsType targets, int amount, double probmodifier) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-		int possibilities = getHittableEnemies().size();
-		for (int j : getHittableEnemies()) {
-			list.add(new StateProbabilityPair(oppSide[j-7].damage(this,amount) , probmodifier / (possibilities+1)));
+		int possibilities = getHittable(targets).size();
+		
+		switch (targets) {
+			case  ALLYCHAR:
+				for (int j : getHittable(TargetsType.ALLYMINIONS)) {
+					list.add(new StateProbabilityPair(mySide[j].damage(this,amount) , probmodifier / (possibilities+1)));
+				}
+				list.add(new StateProbabilityPair(hero.damage(this,amount), probmodifier /(possibilities+1)));
+			
+			case  ENEMYCHAR:
+				for (int j : getHittable(TargetsType.ENEMYMINIONS)) {
+					list.add(new StateProbabilityPair(oppSide[j-7].damage(this,amount) , probmodifier / (possibilities+1)));
+				}
+				list.add(new StateProbabilityPair(enemy.damage(this,amount), probmodifier /(possibilities+1)));
+		default:
+			break;
 		}
-		list.add(new StateProbabilityPair(enemy.damage(this,amount), probmodifier /(possibilities+1)));
-		System.out.println("Enemy"+enemy.getHP());
+		
 		return new RandomState(list);
 	}
 	
@@ -248,12 +286,19 @@ public class BoardState implements State {
 		}
 	}
 	
-	public RandomState drawCard() {
+	@Override
+	public State drawCard() {
 		return myDeck.drawCard(this);
 	}
 	
 	public BoardState enemyDrawCard() {
 		return this;
+	}
+	
+	public int numberOfMinions() {
+		int i = 0;
+		while (mySide[i]!=null) i++;
+		return i;
 	}
 	
 }

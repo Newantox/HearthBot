@@ -32,7 +32,7 @@ public class Equality extends UntargettedSpell {
 				newMySide[i].setHP(1);
 			}
 		}
-		return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+		return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 	}
 	
 }

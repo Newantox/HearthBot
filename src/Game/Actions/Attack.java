@@ -17,7 +17,8 @@ public class Attack implements Action {
 
 	@Override
 	public double cost() {
-		return Math.min(attacker.getHP() , defender.getAtk());
+		//return Math.min(attacker.getHP() , defender.getAtk());
+		return 0;
 	}
 
 	@Override

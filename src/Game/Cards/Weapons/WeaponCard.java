@@ -28,7 +28,7 @@ public abstract class WeaponCard implements Card {
 		Hero newhero = new Hero(oldstate.getHero());
 		newhero.setWeapon(this.makeNew());
 		
-		return new BoardState(newhero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		return new BoardState(newhero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 	}
 	
 	public Weapon makeNew() {

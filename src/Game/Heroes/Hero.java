@@ -17,6 +17,8 @@ public class Hero {
 	private boolean ready;
 	private boolean powerUsed;
 	
+	private HeroPower power;
+	
 	public Hero(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, int overload, Weapon weapon) {
 		this.setName(name);
 		this.myPos = mypos;
@@ -42,6 +44,7 @@ public class Hero {
 		this.weapon = h.getWeapon();
 		this.ready = h.isReady();
 		this.powerUsed = h.getPowerUsed();
+		this.power = h.getHeroPower();
 	}
 	
 	public int getCurrentMana() {
@@ -76,23 +79,22 @@ public class Hero {
 		Hero hero = this.fresh();
 		if (hero.getArmour()>=amount) hero.setArmour(hero.getArmour()-2);
 		else {int additional = amount - hero.getArmour(); hero.setArmour(0); hero.setHP(hero.getHP()-additional);}
-		System.out.println(name+" HP: "+hero.getHP());
-		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
-		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 	}
 	
 	public BoardState heal(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setHP(Math.min(hero.getHP()+amount,hero.getMaxHP()));
 		
-		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
-		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 	}
 	
 	public BoardState useMana(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setCurrentMana(hero.getCurrentMana()-amount);
-		return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+		return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 	}
 
 	public boolean canAttack() {
@@ -168,12 +170,20 @@ public class Hero {
 		return true;
 	}
 	
+	public HeroPower getHeroPower() {
+		return power;
+	}
+	
+	public void setHeroPower(HeroPower power) {
+		this.power = power;
+	} 
+	
 	public BoardState equipWeapon(BoardState oldstate, Weapon weapon) {
 		Hero hero = this.fresh();
 		BoardState tempstate = weapon.battleCry(oldstate);
 		hero.setWeapon(weapon);
-		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
-		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
+		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
 	}
 	
 	public BoardState destroyWeapon(BoardState oldstate) {
@@ -181,12 +191,8 @@ public class Hero {
 		Weapon weapon = hero.getWeapon();
 		BoardState tempstate = weapon.deathRattle(oldstate);
 		hero.setWeapon(null);
-		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
-		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
-	}
-	
-	public HeroPower getHeroPower() {
-		return null;
+		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
+		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
 	}
 	
 	@Override
@@ -204,5 +210,5 @@ public class Hero {
 		else if (!weapon.equals(other.getWeapon())) return false;
 		if (ready != other.isReady()) return false;
 		return true;
-	} 
+	}
 }

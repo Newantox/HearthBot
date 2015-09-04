@@ -6,7 +6,7 @@ import Game.CardType;
 import Game.Minions.Minion;
 import Search.State;
 
-public class MinionCard implements Card {
+public abstract class MinionCard implements Card {
 	private String name;
 	private int cost;
 
@@ -25,13 +25,11 @@ public class MinionCard implements Card {
 	
 	public State playCard(BoardState oldstate, int target) {
 		Minion newMinion = this.makeNew(target);
-		
+
 		return newMinion.play(oldstate);
 	}
 
-	private Minion makeNew(int target) {
-		return new Minion(target);
-	}
+	protected abstract Minion makeNew(int target);
 	
 	@Override
 	public boolean equals(Object that) {

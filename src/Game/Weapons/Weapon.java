@@ -65,7 +65,7 @@ public class Weapon {
 		BoardState tempstate = defender.damage(oldstate,atk);
 		tempstate = hero.damage(tempstate,defender.getAtk());
 		hero.setReady(false);
-		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
 		return changeDurability(tempstate,14,-1);
 	}
 	
@@ -73,7 +73,7 @@ public class Weapon {
 		Hero hero = (oldstate.getHero()).fresh();
 		BoardState tempstate = defender.damage(oldstate,atk);
 		hero.setReady(false);
-		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand());
+		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
 		return changeDurability(tempstate,14,-1);
 	}
 	
@@ -85,7 +85,7 @@ public class Weapon {
 			if (weapon.getDurability()<=0) return hero.destroyWeapon(oldstate);
 			else {
 				hero.setWeapon(weapon);
-				return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+				return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 			}
 		}
 		else {
@@ -95,7 +95,7 @@ public class Weapon {
 			if (weapon.getDurability()<=0) return hero.destroyWeapon(oldstate);
 			else {
 				hero.setWeapon(weapon);
-				return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+				return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 			}
 		}
 	}

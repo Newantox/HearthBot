@@ -50,7 +50,7 @@ public class AbusiveSergeantBC extends Battlecry {
 				
 				defender.setTempAtkChange(defender.getTempAtkChange() + 2);
 			
-				return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+				return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 			}
 			
 			else {
@@ -63,7 +63,7 @@ public class AbusiveSergeantBC extends Battlecry {
 			    
 			    defender.setTempAtkChange(defender.getTempAtkChange() + 2);
 				
-			    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand());
+			    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 			}
 		}
 

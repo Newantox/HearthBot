@@ -21,7 +21,7 @@ public class HeroAttack implements Action {
 
 	@Override
 	public double cost() {
-		return (0.5*weapon.getAtk()) + ((3*defender.getAtk())/hero.getHP());
+		return (0.3*weapon.getAtk()); // + ((3*defender.getAtk())/hero.getHP());
 	}
 	
 	public State result(BoardState oldstate) {

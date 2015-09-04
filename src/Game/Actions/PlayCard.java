@@ -20,14 +20,14 @@ public class PlayCard implements Action {
 
 	@Override
 	public double cost() {
-		return card.getCost();
+		return card.getCost()*0.4;
 	}
 
 	@Override
 	public State result(BoardState oldstate) {
 		Hand newMyHand = (oldstate.getMyHand()).remove(pos);
 		BoardState tempstate = (oldstate.getHero()).useMana(oldstate,card.getCost());
-		tempstate = new BoardState(tempstate.getHero(),tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),newMyHand);
+		tempstate = new BoardState(tempstate.getHero(),tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),newMyHand,tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
 		return card.playCard(tempstate,target);
 	}
 

@@ -1,13 +1,13 @@
 package Game.Minions;
 
-public class WolfRider extends Minion {
+public class Wolfrider extends Minion {
 	
-	public WolfRider(int target) {
-		super("Wolf Rider",target,3,3,1,1);
+	public Wolfrider(int target) {
+		super("Wolfrider",target,3,3,1,1);
 		this.setCharge(true);;
 	}
 	
-	public WolfRider(Minion m) {
+	public Wolfrider(Minion m) {
 		super(m);
 	}
 

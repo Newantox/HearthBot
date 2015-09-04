@@ -8,6 +8,7 @@ public class Uther extends Hero {
 
 	public Uther(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, int overload, Weapon weapon) {
 		super(name, mypos, HP, maxHP, Armour, currentMana, totalMana, overload, weapon);
+		setHeroPower(new PaladinPower());
 	}
 	
 	public Uther(Hero hero) {

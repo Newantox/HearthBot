@@ -12,7 +12,7 @@ public class PaladinPower implements HeroPower {
 
 	@Override
 	public double cost() {
-		return 0;
+		return 0.4;
 	}
 	
 	public int getCost() {
@@ -26,16 +26,14 @@ public class PaladinPower implements HeroPower {
 
 	@Override
 	public State result(BoardState oldstate) {
-		int i = 0;
-		while (oldstate.getMySide()[i]!=null) i++;
-		Minion[] newMySide = new Minion[7];
-		for (int j = 0; j<i; j++) newMySide[j] = oldstate.getMySide()[j];
-		newMySide[i] = new SilverHandRecruit(i);
 		Hero hero = (oldstate.getHero()).fresh();
 		hero.setPowerUsed(true);
 		hero.setCurrentMana(hero.getCurrentMana()-manacost);
 		
-		return new BoardState(hero, oldstate.getEnemy(),oldstate.getOppSide(), newMySide, oldstate.getMyDeck(), oldstate.getMyHand());
+		BoardState tempstate = new BoardState(hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getMyDeck(), oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+	
+		Minion minion = new SilverHandRecruit(oldstate.numberOfMinions());
+		return  minion.place(tempstate);
 	}
 
 	@Override

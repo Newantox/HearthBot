@@ -6,7 +6,7 @@ import Game.Minions.ShieldedMinibot;
 public class ShieldedMinibotCard extends MinionCard {
 
 	public ShieldedMinibotCard() {
-		super("Shielded Minibot",1);
+		super("Shielded Minibot",2);
 	}
 	
 	public Minion makeNew(int target) {

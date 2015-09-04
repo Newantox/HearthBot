@@ -44,10 +44,19 @@ public class RandomState implements State {
 	}
 
 	@Override
-	public State damageRandomHittableEnemy(int amount, double probmodifier) {
+	public State damageRandomHittable(TargetsType targets, int amount, double probmodifier) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(thing.getState().damageRandomHittableEnemy(amount,probmodifier * thing.getProbability()),thing.getProbability()));
+			list.add(new StateProbabilityPair(thing.getState().damageRandomHittable(targets,amount,probmodifier * thing.getProbability()),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public State drawCard() {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().drawCard(),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}

@@ -33,7 +33,7 @@ public class FaceAttack implements Action {
 		attacker.setReady(false);
 		newMySide[attacker.getMyPos()] = attacker;
 		
-		return new BoardState(oldstate.getHero(),defender,oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand());
+		return new BoardState(oldstate.getHero(),defender,oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 	}
 
 	@Override

@@ -14,10 +14,10 @@ public class Deck {
 		this.deck = deck;
 	}
 	
-	public Deck add(Card card) {
+	public Deck add(Card card, int amount) {
 		Map<Card, Integer> temp = deck;
-		if (temp.containsKey(card)) temp.put(card, temp.get(card) + 1);
-		else temp.put(card,1);
+		if (temp.containsKey(card)) temp.put(card, temp.get(card) + amount);
+		else temp.put(card,amount);
 		return new Deck(temp);
 	}
 	
@@ -56,7 +56,7 @@ public class Deck {
 			temphand = state.getMyHand();
 			tempdeck.remove(card);
 			temphand.add(card);
-			list.add(new StateProbabilityPair(new BoardState(state.getHero(),state.getEnemy(),state.getOppSide(),state.getMySide(),tempdeck,temphand),deck.get(card)/tempdeck.size()));
+			list.add(new StateProbabilityPair(new BoardState(state.getHero(),state.getEnemy(),state.getOppSide(),state.getMySide(),tempdeck,temphand,state.getSummonEffects(),state.getEnemyHandSize()),deck.get(card)/tempdeck.size()));
 		}
 		return new RandomState(list);
 	}

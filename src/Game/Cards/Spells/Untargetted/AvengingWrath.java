@@ -1,6 +1,7 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
+import Game.TargetsType;
 import Search.State;
 
 public class AvengingWrath extends UntargettedSpell {
@@ -23,7 +24,7 @@ public class AvengingWrath extends UntargettedSpell {
 	
 		State tempstate = oldstate;
 		for (int i = 0; i<damage; i++) {
-			tempstate = tempstate.damageRandomHittableEnemy(1,1);
+			tempstate = tempstate.damageRandomHittable(TargetsType.ENEMYCHAR,1,1);
 			
 		}
 		return tempstate;
