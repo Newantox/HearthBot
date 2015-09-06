@@ -15,7 +15,9 @@ import Game.Minions.AcidicSwampOoze;
 import Game.Minions.ArgentSquire;
 import Game.Minions.KnifeJuggler;
 import Game.Minions.LeperGnome;
+import Game.Minions.LootHoarder;
 import Game.Minions.Wisp;
+import Game.Minions.Wolfrider;
 import Game.Cards.Minions.AbusiveSergeantCard;
 import Game.Cards.Minions.ArgentSquireCard;
 import Game.Cards.Minions.KnifeJugglerCard;
@@ -62,7 +64,7 @@ public class Test {
 		Deck myDeck = new Deck(new HashMap<Card,Integer>());
 		ArrayList<SummonEffect> summonEffects = new ArrayList<SummonEffect>();
 		
-		initOpp[0] = new LeperGnome(7);
+		initOpp[0] = new LootHoarder(7);
 		initOpp[1] = null;
 		initOpp[2] = null;
 		initOpp[3] = null;
@@ -70,16 +72,16 @@ public class Test {
 		initOpp[5] = null;
 		initOpp[6] = null;
 
-		initMy[0] = null;
-		initMy[1] = null;
+		initMy[0] = new ArgentSquire(0);
+		initMy[1] = new ArgentSquire(1);
 		initMy[2] = null;
 		initMy[3] = null;
 		initMy[4] = null;
 		initMy[5] = null;
 		initMy[6] = null;
 		
-	//	initMy[0].setReady(true);
-	//	initMy[1].setReady(true);
+		initMy[0].setReady(true);
+		initMy[1].setReady(true);
 	//	initMy[2].setReady(true);
 	//	initMy[3].setReady(true);
 	//	initMy[4].setReady(true);
@@ -89,11 +91,10 @@ public class Test {
 		myHand.add(new ArgentSquireCard());
 		myHand.add(new Equality());
 		myHand.add(new AbusiveSergeantCard());
-		myHand.add(new KnifeJugglerCard());
 		//myHand.add(new DivineFavour());
 		myHand.add(new TheCoin());
 		
-		int startmana = 1;
+		int startmana = 10;
 		
 	//	summonEffects.add(new KnifeJugglerSE(14));
 	//	summonEffects.add(new SwordOfJusticeSE(14));

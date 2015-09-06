@@ -1,8 +1,14 @@
 package Game.Weapons;
 
+import java.util.ArrayList;
+
 import Game.BoardState;
+import Game.Battlecrys.WeaponBattlecry;
+import Game.Deathrattles.WeaponDeathrattle;
 import Game.Heroes.Hero;
+import Game.Inspires.Inspire;
 import Game.Minions.Minion;
+import Search.State;
 
 public class Weapon {
 	private String name;
@@ -10,11 +16,19 @@ public class Weapon {
 	private int atk;
 	private int durability;
 	
+	protected ArrayList<WeaponBattlecry> battlecrys;
+	protected ArrayList<WeaponDeathrattle> deathrattles;
+	protected ArrayList<Inspire> inspires;
+	
 	public Weapon(String name, int cost, int atk, int durability) {
 		this.name = name;
 		this.cost = cost;
 		this.atk = atk;
 		this.setDurability(durability);
+		
+		this.battlecrys = new ArrayList<WeaponBattlecry>();
+		this.deathrattles = new ArrayList<WeaponDeathrattle>();
+		this.inspires = new ArrayList<Inspire>();
 	}
 	
 	public Weapon(Weapon w) {
@@ -22,8 +36,36 @@ public class Weapon {
 			this.cost = w.getCost();
 			this.atk = w.getAtk();
 			this.durability = w.getDurability();
+			
+			this.battlecrys = w.getBattlecrys();
+			this.deathrattles = w.getDeathrattles();
+			this.inspires = w.getInspires();
 	}
 	
+	public ArrayList<WeaponBattlecry> getBattlecrys() {
+		return battlecrys;
+	}
+
+	public void setBattlecrys(ArrayList<WeaponBattlecry> battlecrys) {
+		this.battlecrys = battlecrys;
+	}
+
+	public ArrayList<WeaponDeathrattle> getDeathrattles() {
+		return deathrattles;
+	}
+
+	public void setDeathrattles(ArrayList<WeaponDeathrattle> deathrattles) {
+		this.deathrattles = deathrattles;
+	}
+
+	public ArrayList<Inspire> getInspires() {
+		return inspires;
+	}
+
+	public void setInspires(ArrayList<Inspire> inspires) {
+		this.inspires = inspires;
+	}
+
 	public int getCost() {
 		return cost;
 	}
@@ -60,52 +102,48 @@ public class Weapon {
 		return new Weapon(this);
 	}
 	
-	public BoardState attackWith(BoardState oldstate, Minion defender) {
+	public State attackWith(BoardState oldstate, Minion defender) {
+		Hero hero = (oldstate.getHero()).fresh();
+		hero.setReady(false);
+		BoardState tempstate1 = hero.damage(oldstate,defender.getAtk());
+		State tempstate2 = defender.damage(tempstate1,atk);
+		return changeDurability(tempstate2,hero,-1);
+	}
+	
+	public State attackWith(BoardState oldstate, Hero defender) {
 		Hero hero = (oldstate.getHero()).fresh();
 		BoardState tempstate = defender.damage(oldstate,atk);
-		tempstate = hero.damage(tempstate,defender.getAtk());
 		hero.setReady(false);
 		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
-		return changeDurability(tempstate,14,-1);
+		return changeDurability(tempstate,hero,-1);
 	}
 	
-	public BoardState attackWith(BoardState oldstate, Hero defender) {
-		Hero hero = (oldstate.getHero()).fresh();
-		BoardState tempstate = defender.damage(oldstate,atk);
-		hero.setReady(false);
-		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
-		return changeDurability(tempstate,14,-1);
+	public State changeDurability(State oldstate, Hero target, int amount) {
+		return oldstate.changeWeaponDurability(target,amount);
 	}
 	
-	public BoardState changeDurability(BoardState oldstate, int side, int amount) {
-		if (side==14) {
-			Hero hero = (oldstate.getHero()).fresh();
-			Weapon weapon = this.fresh();
-			weapon.setDurability(weapon.getDurability() + amount);
-			if (weapon.getDurability()<=0) return hero.destroyWeapon(oldstate);
-			else {
-				hero.setWeapon(weapon);
-				return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
-			}
+	public State battleCry(BoardState oldstate) {
+		BoardState tempstate = oldstate;
+		for (WeaponBattlecry battlecry : battlecrys) {
+			tempstate = (BoardState) battlecry.perform(this,tempstate);
 		}
-		else {
-			Hero hero = (oldstate.getEnemy()).fresh();
-			Weapon weapon = this.fresh();
-			weapon.setDurability(weapon.getDurability() + amount);
-			if (weapon.getDurability()<=0) return hero.destroyWeapon(oldstate);
-			else {
-				hero.setWeapon(weapon);
-				return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
-			}
+		return tempstate;
+	}
+	
+	public State deathRattle(BoardState oldstate) {
+		BoardState tempstate = oldstate;
+		for (WeaponDeathrattle deathrattle : deathrattles) {
+			tempstate = (BoardState) deathrattle.perform(this,tempstate);
 		}
+		return tempstate;
 	}
 	
-	public BoardState battleCry(BoardState oldstate) {
-		return oldstate;
-	}
-	
-	public BoardState deathRattle(BoardState oldstate) {
-		return oldstate;
+	public State inspire(BoardState oldstate) {
+		BoardState tempstate = oldstate;
+		for (Inspire inspire : inspires) {
+			tempstate = (BoardState) inspire.perform(this,tempstate);
+		}
+		return tempstate;
 	}
 	
 	@Override

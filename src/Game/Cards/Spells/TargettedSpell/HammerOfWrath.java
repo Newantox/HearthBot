@@ -20,7 +20,7 @@ public class HammerOfWrath extends TargettedSpell {
 
 	@Override
 	public State playCard(BoardState oldstate, int target) {
-		BoardState tempstate = oldstate.damageTarget(target, damage);
+		State tempstate = oldstate.damageTarget(target, damage);
 		
 		return tempstate.drawCard();
 	}

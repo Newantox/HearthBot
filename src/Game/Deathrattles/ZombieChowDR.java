@@ -4,7 +4,7 @@ import Game.BoardState;
 import Game.Minions.Minion;
 import Search.State;
 
-public class ZombieChowDR extends Deathrattle {
+public class ZombieChowDR extends MinionDeathrattle {
 
 	@Override
 	public State perform(Minion minion, BoardState oldstate) {

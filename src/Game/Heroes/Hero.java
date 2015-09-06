@@ -3,6 +3,7 @@ package Game.Heroes;
 import Game.BoardState;
 import Game.Heroes.HeroPowers.HeroPower;
 import Game.Weapons.Weapon;
+import Search.State;
 
 public class Hero {
 	private String name;
@@ -178,21 +179,26 @@ public class Hero {
 		this.power = power;
 	} 
 	
-	public BoardState equipWeapon(BoardState oldstate, Weapon weapon) {
+	public State equipWeapon(BoardState oldstate, Weapon weapon) {
 		Hero hero = this.fresh();
-		BoardState tempstate = weapon.battleCry(oldstate);
 		hero.setWeapon(weapon);
-		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
-		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
+		BoardState tempstate;
+		if (myPos==14) tempstate = new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		else tempstate =  new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		
+		return weapon.battleCry(tempstate);
 	}
 	
-	public BoardState destroyWeapon(BoardState oldstate) {
+	public State destroyWeapon(BoardState oldstate) {
 		Hero hero = this.fresh();
 		Weapon weapon = hero.getWeapon();
-		BoardState tempstate = weapon.deathRattle(oldstate);
 		hero.setWeapon(null);
-		if (myPos==14) return new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
-		else return new BoardState(tempstate.getHero(),hero,tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
+		BoardState tempstate;
+		if (myPos==14) tempstate = new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		else tempstate =  new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		
+		return weapon.deathRattle(tempstate);
+		
 	}
 	
 	@Override

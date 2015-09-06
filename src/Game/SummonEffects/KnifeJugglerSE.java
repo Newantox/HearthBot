@@ -15,10 +15,10 @@ public class KnifeJugglerSE extends SummonEffect {
 	@Override
 	public State perform(State oldstate, Minion minion) {
 		if (side==14 && minion.getMyPos()<7) {
-			return oldstate.damageRandomHittable(TargetsType.ENEMYCHAR, 1, 1);
+			return oldstate.damageRandomHittable(TargetsType.ENEMYCHAR, 1);
 		}
 		else if (side==15 && minion.getMyPos()>=7) {
-			return oldstate.damageRandomHittable(TargetsType.ALLYCHAR, 1, 1);
+			return oldstate.damageRandomHittable(TargetsType.ALLYCHAR, 1);
 		}
 		else return oldstate;
 	}

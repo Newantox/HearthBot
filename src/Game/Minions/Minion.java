@@ -3,8 +3,8 @@ package Game.Minions;
 import java.util.ArrayList;
 
 import Game.BoardState;
-import Game.Battlecrys.Battlecry;
-import Game.Deathrattles.Deathrattle;
+import Game.Battlecrys.MinionBattlecry;
+import Game.Deathrattles.MinionDeathrattle;
 import Game.Inspires.Inspire;
 import Game.SummonEffects.SummonEffect;
 import Search.State;
@@ -26,8 +26,8 @@ public class Minion {
 	private int tempHPChange;
 	private int tempAtkChange;
 	
-	protected ArrayList<Battlecry> battlecrys;
-	protected ArrayList<Deathrattle> deathrattles;
+	protected ArrayList<MinionBattlecry> battlecrys;
+	protected ArrayList<MinionDeathrattle> deathrattles;
 	protected ArrayList<Inspire> inspires;
 	
 	protected ArrayList<SummonEffect> summonEffects;
@@ -48,8 +48,8 @@ public class Minion {
 		this.tempHPChange = 0;
 		this.tempAtkChange = 0;
 		
-		this.battlecrys = new ArrayList<Battlecry>();
-		this.deathrattles = new ArrayList<Deathrattle>();
+		this.battlecrys = new ArrayList<MinionBattlecry>();
+		this.deathrattles = new ArrayList<MinionDeathrattle>();
 		this.inspires = new ArrayList<Inspire>();
 		
 		this.summonEffects = new ArrayList<SummonEffect>();
@@ -94,19 +94,19 @@ public class Minion {
 		this.tempAtkChange = tempAtkChange;
 	}
 	
-	public ArrayList<Battlecry> getBattlecrys() {
+	public ArrayList<MinionBattlecry> getBattlecrys() {
 		return battlecrys;
 	}
 
-	public void setBattlecrys(ArrayList<Battlecry> battlecrys) {
+	public void setBattlecrys(ArrayList<MinionBattlecry> battlecrys) {
 		this.battlecrys = battlecrys;
 	}
 
-	public ArrayList<Deathrattle> getDeathrattles() {
+	public ArrayList<MinionDeathrattle> getDeathrattles() {
 		return deathrattles;
 	}
 
-	public void setDeathrattles(ArrayList<Deathrattle> deathrattles) {
+	public void setDeathrattles(ArrayList<MinionDeathrattle> deathrattles) {
 		this.deathrattles = deathrattles;
 	}
 
@@ -223,7 +223,7 @@ public class Minion {
 		this.frozen = frozen;
 	}
 	
-	public void addDeathrattle(Deathrattle DR) {
+	public void addDeathrattle(MinionDeathrattle DR) {
 		deathrattles.add(DR);
 	}
 	
@@ -272,7 +272,31 @@ public class Minion {
 		return tempstate;
 	}
 	
-	public BoardState damage(BoardState oldstate, int amount) {
+	public State attackWith(BoardState oldstate, Minion target) {
+		Minion[] newMySide = new Minion[7];
+		for (int i = 0; i<7; i++) {
+			newMySide[i] = oldstate.getMySide()[i];
+		}
+		
+		Minion newAttacker = new Minion(this);
+		newAttacker.setReady(false);
+		newMySide[mypos] = newAttacker;
+		
+		BoardState tempstate = new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		
+		ArrayList<Minion> minions = new ArrayList<Minion>();
+		ArrayList<Integer> amounts = new ArrayList<Integer>();
+		
+		minions.add(newAttacker);
+		minions.add(target);
+		
+		amounts.add(target.getAtk());
+		amounts.add(newAttacker.getAtk());
+		
+		return tempstate.simultaneousDamage(minions,amounts);
+	}
+	
+	public State damage(BoardState oldstate, int amount) {
 		Minion newMinion = new Minion(this);
 		if (mypos < 7) {
 			Minion[] newMySide = new Minion[7];
@@ -281,7 +305,7 @@ public class Minion {
 			}
 			newMySide[mypos] = newMinion;
 			if (divineshield) newMinion.setDivineShield(false);
-			else if (amount >= hp) newMinion.destroy(oldstate);
+			else if (amount >= hp) return newMinion.destroy(oldstate);
 			else newMinion.setHP(newMinion.getHP()-amount);
 			return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		}
@@ -299,7 +323,7 @@ public class Minion {
 		
 	}
 	
-	public BoardState destroy(BoardState oldstate) {
+	public State destroy(BoardState oldstate) {
 		if (mypos < 7) {
 			Minion[] newMySide = new Minion[7];
 			for (int i = 0; i<7; i++) {
@@ -383,14 +407,26 @@ public class Minion {
 		}
 	}
 	
-	public BoardState battleCry(BoardState oldstate) {
-		return oldstate;
+	public State battleCry(BoardState oldstate) {
+		State tempstate = oldstate;
+		for (MinionBattlecry battlecry : battlecrys) {
+			tempstate =  battlecry.trigger(this,tempstate);
+		}
+		return tempstate;
 	}
 	
-	public BoardState deathRattle(BoardState oldstate) {
+	public State deathRattle(BoardState oldstate) {
+		State tempstate = oldstate;
+		for (MinionDeathrattle deathrattle : deathrattles) {
+			tempstate =  deathrattle.trigger(this,tempstate);
+		}
+		return tempstate;
+	}
+	
+	public State inspire(BoardState oldstate) {
 		BoardState tempstate = oldstate;
-		for (Deathrattle deathrattle : deathrattles) {
-			tempstate = (BoardState) deathrattle.perform(this,tempstate);
+		for (Inspire inspire : inspires) {
+			tempstate = (BoardState) inspire.perform(this,tempstate);
 		}
 		return tempstate;
 	}

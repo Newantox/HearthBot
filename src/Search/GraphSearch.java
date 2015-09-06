@@ -6,7 +6,6 @@ import Game.BoardState;
 import Game.ChoiceState;
 import Game.GameGoalTest2;
 import Game.RandomState;
-import Game.StateType;
 import Game.StopWatch;
 // Change to record best solution then return best solution available, so not always trying to clear board.
 public class GraphSearch implements Search {
@@ -30,19 +29,28 @@ public class GraphSearch implements Search {
 		int k = 1;
 		frontier.add(new Node(null,null,initialConfig));
 		exploredSet = new LinkedHashSet<State>();
-		while(!frontier.empty() && timer.elapsedTime() < 55) {
-			Node n = frontier.remove();
+		Node n = frontier.remove();
+		if (goalTest.isGoal(n.state)) {System.out.println("Game won"); lastSearch = k; return n;}
+		double nbest = n.getBestValue();
+		System.out.println(nbest);
+		if (nbest < bestscore) {best = n.getBestNode(); bestscore = nbest;}
+		while ((n.bestNode) != null && !(n.bestNode).equals(n)) {System.out.println(n.best); n = n.bestNode;}
+		return n;
+		/*while(!frontier.empty() && timer.elapsedTime() < 55) {
+			n = frontier.remove();
 			if (goalTest.isGoal(n.state)) {System.out.println("Game won"); lastSearch = k; return n;}
-			if (n.getBestValue() < bestscore) {best = n.getBestNode(); bestscore = n.getBestValue();}
-			switch (n.state.getStatetype()) {
-				case BOARD:
-					BoardState boardstate = (BoardState)n.state;
-					for (Action action : boardstate.getApplicableActions()) {
-						State newState = boardstate.getActionResult(action);
+			nbest = n.getBestValue();
+			System.out.println(nbest);
+			if (nbest < bestscore) {best = n.getBestNode(); bestscore = nbest;}
+			//switch (n.state.getStatetype()) {
+			//	case BOARD:
+				//	BoardState boardstate = (BoardState)n.state;
+					for (Action action : n.state.getApplicableActions()) {
+						State newState = n.state.getActionResult(action);
 						if (!exploredSet.contains(newState)) {k+=1; frontier.add(new Node(n, action, newState)); exploredSet.add(newState);}
 					}
 				
-				case RANDOM:
+				/*case RANDOM:
 					RandomState randomstate = (RandomState)n.state;
 					for (Action action : randomstate.getApplicableActions()) {
 							State newState = randomstate.getActionResult(action);
@@ -64,7 +72,7 @@ public class GraphSearch implements Search {
 		}
 		lastSearch = k;
 		//if (step<2) {frontier.clear(); Search g = new GraphSearch(frontier); return g.solution(init, new GameGoalTest2(), step+1);}
-		return best;
+		return best; */
 	}
 
 	@Override

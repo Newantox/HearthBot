@@ -5,26 +5,27 @@ import Search.State;
 
 public class GameGoalTest implements GoalTest {
 
-	@Override
+    @Override
 	public boolean isGoal(State state) {
-		switch (state.getStatetype()) {
-			case BOARD:
-				BoardState board = (BoardState)state;
-				return (board.getEnemy().getHP() <= 0);
-		
-			case RANDOM:
-				RandomState boardrand = (RandomState)state;
-				for (int i = 0; i<boardrand.getSize(); i++) {
-					if (!isGoal(boardrand.getPair(i).getState())) return false;
-				}
-				return true;
-				
-			case CHOICE:
-				return isGoal(((ChoiceState) state).getState());
-		
-			default:
-				return false;
-		}
+		return isGoalCheck(state);
 	}
-
+	
+	private boolean isGoalCheck(BoardState boardState) {
+		return (boardState.getEnemy().getHP() <= 0);
+	}
+	
+	private boolean isGoalCheck(RandomState randomState) {
+		for (int i = 0; i<randomState.getSize(); i++) {
+			if (!isGoal(randomState.getPair(i).getState())) return false;
+		}
+		return true;
+	}
+	
+	private boolean isGoalCheck(ChoiceState state) {
+		return false;
+	}
+	
+	private boolean isGoalCheck(State state) {
+		return false;
+	}
 }

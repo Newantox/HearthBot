@@ -6,7 +6,7 @@ import Game.Weapons.Ashbringer;
 import Game.Weapons.Weapon;
 import Search.State;
 
-public class TirionFordringDR extends Deathrattle {
+public class TirionFordringDR extends MinionDeathrattle {
 
 	@Override
 	public State perform(Minion minion, BoardState oldstate) {

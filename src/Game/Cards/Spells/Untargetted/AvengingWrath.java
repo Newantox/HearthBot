@@ -24,7 +24,7 @@ public class AvengingWrath extends UntargettedSpell {
 	
 		State tempstate = oldstate;
 		for (int i = 0; i<damage; i++) {
-			tempstate = tempstate.damageRandomHittable(TargetsType.ENEMYCHAR,1,1);
+			tempstate = tempstate.damageRandomHittable(TargetsType.ENEMYCHAR,1);
 			
 		}
 		return tempstate;

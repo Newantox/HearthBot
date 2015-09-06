@@ -9,7 +9,7 @@ import Game.Minions.Minion;
 import Search.Action;
 import Search.State;
 
-public class AbusiveSergeantBC extends Battlecry {
+public class AbusiveSergeantBC extends MinionBattlecry {
 
 	@Override
 	public State perform(Minion minion, BoardState oldstate) {
@@ -18,8 +18,9 @@ public class AbusiveSergeantBC extends Battlecry {
 			if (oldstate.getMySide()[i] != null) actions.add(new AbusiveSergeantChoice(i));
 		}
 		for (int i = 7; i<14; i++) {
-			if (oldstate.getOppSide()[i] != null) actions.add(new AbusiveSergeantChoice(i));
+			if (oldstate.getOppSide()[i-7] != null) actions.add(new AbusiveSergeantChoice(i));
 		}
+		System.out.println("NewBoardBest");
 		return new ChoiceState(oldstate,actions);
 	}
 	

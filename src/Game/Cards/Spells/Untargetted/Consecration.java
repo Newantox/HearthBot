@@ -1,6 +1,9 @@
 package Game.Cards.Spells.Untargetted;
 
+import java.util.ArrayList;
+
 import Game.BoardState;
+import Game.Minions.Minion;
 import Search.State;
 
 public class Consecration extends UntargettedSpell {
@@ -20,15 +23,16 @@ public class Consecration extends UntargettedSpell {
 	@Override
 	public State playCard(BoardState oldstate, int target) {
 		
-		BoardState tempstate = oldstate.getEnemy().damage(oldstate, damage);
+		ArrayList<Minion> minions = new ArrayList<Minion>();
+		ArrayList<Integer> amounts = new ArrayList<Integer>();
 		
-		for (int i = 0; i<7; i++) {
-			if (tempstate.getOppSide()[i] != null) {
-				tempstate = ((tempstate.getOppSide())[i]).damage(tempstate,damage);
-			}
+		int i = 0;
+		while (oldstate.getOppSide()[i]!=null) {
+			minions.add(oldstate.getOppSide()[i]);
+			amounts.add(damage);
+			i++;
 		}
-		
-		return tempstate;
+		return oldstate.simultaneousDamage(minions, amounts);
 	}
 
 }

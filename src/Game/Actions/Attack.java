@@ -11,8 +11,8 @@ public class Attack implements Action {
 	Minion defender;
 	
 	public Attack(Minion attacker , Minion defender) {
-		this.attacker = new Minion(attacker);
-		this.defender = new Minion(defender);
+		this.attacker = attacker;
+		this.defender = defender;
 	}
 
 	@Override
@@ -23,9 +23,7 @@ public class Attack implements Action {
 
 	@Override
 	public State result(BoardState oldstate) {
-		BoardState tempstate = defender.damage(oldstate,attacker.getAtk()+attacker.getTempAtkChange());
-		attacker.setReady(false);
-		return attacker.damage(tempstate, defender.getAtk()+defender.getTempAtkChange());
+		return attacker.attackWith(oldstate, defender);
 	
 	}
 	
