@@ -1,13 +1,13 @@
-package Game.Battlecrys;
+package Game.Inspires;
 
 import Game.BoardState;
 import Game.Minions.Minion;
 import Search.State;
 
-public abstract class MinionBattlecry extends Battlecry {
-	
+public abstract class MinionInspire extends Inspire {
+
 	public State trigger(Minion minion, State oldstate) {
-		return oldstate.performBC(this,minion);
+		return oldstate.performInspire(this,minion);
 	}
 	
 	public abstract State perform(Minion minion, BoardState oldstate);

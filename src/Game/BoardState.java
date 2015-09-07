@@ -11,10 +11,11 @@ import Game.Actions.FaceAttack;
 import Game.Actions.HeroAttack;
 import Game.Actions.HeroFaceAttack;
 import Game.Actions.PlayCard;
-import Game.Battlecrys.Battlecry;
+import Game.Battlecrys.MinionBattlecry;
+import Game.Battlecrys.WeaponBattlecry;
 import Game.Cards.Spells.TargettedSpell.TargettedSpell;
-import Game.Deathrattles.Deathrattle;
 import Game.Deathrattles.MinionDeathrattle;
+import Game.Deathrattles.WeaponDeathrattle;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
 import Game.SummonEffects.SummonEffect;
@@ -353,13 +354,18 @@ public class BoardState implements State {
 	}
 	
 	public BoardState enemyDrawCard() {
-		return this;
+		return new BoardState(hero,enemy,oppSide,mySide,myDeck,myHand,summonEffects,enemyHandSize+1);
 	}
 	
 	public int numberOfMinions() {
 		int i = 0;
 		while (mySide[i]!=null) i++;
 		return i;
+	}
+	
+	@Override
+	public State placeMinion(Minion minion) {
+		return minion.place(this);
 	}
 	
 	public double getValue(Node n) {
@@ -399,13 +405,33 @@ public class BoardState implements State {
 	}
 	
 	@Override
-	public State performBC(Battlecry battlecry, Minion minion) {
+	public State performBC(MinionBattlecry battlecry, Minion minion) {
 		return battlecry.perform(minion,this);
 	}
 
 	@Override
-	public State performDR(Deathrattle deathrattle, Minion minion) {
+	public State performDR(MinionDeathrattle deathrattle, Minion minion) {
 		return deathrattle.perform(minion,this);
+	}
+
+	@Override
+	public State performBC(WeaponBattlecry battlecry) {
+		return battlecry.perform(this);
+	}
+	
+	@Override
+	public State performDR(WeaponDeathrattle deathrattle) {
+		return deathrattle.perform(this);
+	}
+	
+	@Override
+	public State equipHeroWeapon(Weapon weapon) {
+		return hero.equipWeapon(this, weapon);
+	}
+	
+	@Override
+	public State equipEnemyWeapon(Weapon weapon) {
+		return enemy.equipWeapon(this, weapon);
 	}
 	
 	//Helper function to keep minions properly arranged on their sides (removes gaps)

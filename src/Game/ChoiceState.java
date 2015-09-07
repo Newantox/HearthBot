@@ -2,10 +2,13 @@ package Game;
 
 import java.util.Set;
 
-import Game.Battlecrys.Battlecry;
-import Game.Deathrattles.Deathrattle;
+import Game.Battlecrys.MinionBattlecry;
+import Game.Battlecrys.WeaponBattlecry;
+import Game.Deathrattles.MinionDeathrattle;
+import Game.Deathrattles.WeaponDeathrattle;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
+import Game.Weapons.Weapon;
 import Search.Action;
 import Search.Node;
 import Search.State;
@@ -50,13 +53,38 @@ public class ChoiceState implements State {
 	}
 	
 	@Override
-	public State performBC(Battlecry battlecry, Minion minion) {
+	public State placeMinion(Minion minion) {
+		return state.placeMinion(minion);
+	}
+	
+	@Override
+	public State performBC(MinionBattlecry battlecry, Minion minion) {
 		return state.performBC(battlecry, minion);
 	}
 
 	@Override
-	public State performDR(Deathrattle deathrattle, Minion minion) {
+	public State performDR(MinionDeathrattle deathrattle, Minion minion) {
 		return state.performDR(deathrattle, minion);
+	}
+	
+	@Override
+	public State performBC(WeaponBattlecry battlecry) {
+		return state.performBC(battlecry);
+	}
+	
+	@Override
+	public State performDR(WeaponDeathrattle deathrattle) {
+		return state.performDR(deathrattle);
+	}
+	
+	@Override
+	public State equipHeroWeapon(Weapon weapon) {
+		return state.equipHeroWeapon(weapon);
+	}
+	
+	@Override
+	public State equipEnemyWeapon(Weapon weapon) {
+		return state.equipEnemyWeapon(weapon);
 	}
 	
 	public double getValue(Node n) {

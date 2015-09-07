@@ -122,18 +122,18 @@ public class Weapon {
 		return oldstate.changeWeaponDurability(target,amount);
 	}
 	
-	public State battleCry(BoardState oldstate) {
-		BoardState tempstate = oldstate;
+	public State battleCry(State oldstate) {
+		State tempstate = oldstate;
 		for (WeaponBattlecry battlecry : battlecrys) {
-			tempstate = (BoardState) battlecry.perform(this,tempstate);
+			tempstate = battlecry.trigger(tempstate);
 		}
 		return tempstate;
 	}
 	
-	public State deathRattle(BoardState oldstate) {
-		BoardState tempstate = oldstate;
+	public State deathRattle(State oldstate) {
+		State tempstate = oldstate;
 		for (WeaponDeathrattle deathrattle : deathrattles) {
-			tempstate = (BoardState) deathrattle.perform(this,tempstate);
+			tempstate = deathrattle.trigger(tempstate);
 		}
 		return tempstate;
 	}

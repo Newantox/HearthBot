@@ -88,11 +88,11 @@ public class Test {
 	//	initMy[5].setReady(true);
 	//  initMy[6].setReady(true);
 		
-		myHand.add(new ArgentSquireCard());
+	//	myHand.add(new ArgentSquireCard());
 		myHand.add(new Equality());
-		myHand.add(new AbusiveSergeantCard());
-		//myHand.add(new DivineFavour());
-		myHand.add(new TheCoin());
+	//	myHand.add(new AbusiveSergeantCard());
+		myHand.add(new DivineFavour());
+	//	myHand.add(new TheCoin());
 		
 		int startmana = 10;
 		

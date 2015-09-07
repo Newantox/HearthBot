@@ -4,6 +4,7 @@ public class SouthseaDeckhand extends Minion {
 
 	public SouthseaDeckhand(int target) {
 		super("Southsea Deckhand",target,1,2,1,1);
+		setRace(Race.PIRATE);
 	}
 	
 	public SouthseaDeckhand(Minion m) {

@@ -16,6 +16,7 @@ public class Minion {
 	private int atk;
 	private int hp;
 	private int maxHP;
+	private Race race;
 	private boolean ready;
 	private boolean charge;
 	private boolean divineshield;
@@ -39,12 +40,13 @@ public class Minion {
 		this.atk = atk;
 		this.hp = hp;
 		this.maxHP = maxHP;
+		this.setRace(Race.NORMAL);
 		this.ready = false;
 		this.charge = false;
 		this.divineshield = false;
 		this.taunt = false;
 		this.stealth = false;
-		this.setFrozen(false);
+		this.frozen = false;
 		this.tempHPChange = 0;
 		this.tempAtkChange = 0;
 		
@@ -61,6 +63,8 @@ public class Minion {
 		this.setCost(m.getCost());
 		this.setAtk(m.getAtk());
 		this.setHP(m.getHP());
+		this.setMaxHP(m.getMaxHP());
+		this.setRace(m.getRace());
 		this.setReady(m.isReady());
 		this.setCharge(m.isCharge());
 		this.setDivineShield(m.isDivineShield());
@@ -235,6 +239,7 @@ public class Minion {
 		return summonEffects;
 	}
 	
+	//NEEDS CHANGED
 	public State play(BoardState oldstate) {
 		Minion[] newMySide = new Minion[7];
 		for (int i = 0; i<mypos; i++) newMySide[i] = oldstate.getMySide()[i];
@@ -254,6 +259,7 @@ public class Minion {
 		return tempstate;
 	}
 	
+	//NEEDS CHANGED
 	public State place(BoardState oldstate) {
 		Minion[] newMySide = new Minion[7];
 		for (int i = 0; i<mypos; i++) newMySide[i] = oldstate.getMySide()[i];
@@ -449,6 +455,14 @@ public class Minion {
 		if (tempHPChange != other.getTempHPChange()) return false;
 		if (tempAtkChange != other.getTempAtkChange()) return false;
 		return true;
+	}
+
+	public Race getRace() {
+		return race;
+	}
+
+	public void setRace(Race race) {
+		this.race = race;
 	}
 
 }

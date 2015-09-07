@@ -5,10 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import Game.Battlecrys.Battlecry;
-import Game.Deathrattles.Deathrattle;
+import Game.Battlecrys.MinionBattlecry;
+import Game.Battlecrys.WeaponBattlecry;
+import Game.Deathrattles.MinionDeathrattle;
+import Game.Deathrattles.WeaponDeathrattle;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
+import Game.Weapons.Weapon;
 import Search.Action;
 import Search.Node;
 import Search.State;
@@ -43,6 +46,15 @@ public class RandomState implements State {
 	public StateProbabilityPair getPair(int i) {
 		return states.get(i);
 	}
+	
+	@Override
+	public State placeMinion(Minion minion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().placeMinion(minion),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
 
 	@Override
 	public State damageRandomHittable(TargetsType targets, int amount) {
@@ -63,7 +75,7 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State performBC(Battlecry battlecry, Minion minion) {
+	public State performBC(MinionBattlecry battlecry, Minion minion) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(battlecry.trigger(minion,thing.getState()),thing.getProbability()));
@@ -72,10 +84,46 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State performDR(Deathrattle deathrattle, Minion minion) {
+	public State performDR(MinionDeathrattle deathrattle, Minion minion) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(deathrattle.trigger(minion,thing.getState()),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public State performBC(WeaponBattlecry battlecry) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(battlecry.trigger(thing.getState()),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public State performDR(WeaponDeathrattle deathrattle) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(deathrattle.trigger(thing.getState()),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public State equipHeroWeapon(Weapon weapon) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().equipHeroWeapon(weapon),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public State equipEnemyWeapon(Weapon weapon) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().equipEnemyWeapon(weapon),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}

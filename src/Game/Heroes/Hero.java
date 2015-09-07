@@ -179,16 +179,18 @@ public class Hero {
 		this.power = power;
 	} 
 	
+	//NEEDS CHANGED
 	public State equipWeapon(BoardState oldstate, Weapon weapon) {
+		State tempstate = destroyWeapon(oldstate);
 		Hero hero = this.fresh();
 		hero.setWeapon(weapon);
-		BoardState tempstate;
 		if (myPos==14) tempstate = new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		else tempstate =  new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
 		
 		return weapon.battleCry(tempstate);
 	}
 	
+	//NEEDS CHANGED
 	public State destroyWeapon(BoardState oldstate) {
 		Hero hero = this.fresh();
 		Weapon weapon = hero.getWeapon();
