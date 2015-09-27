@@ -1,14 +1,14 @@
 package Game.Battlecrys;
 
 import Game.BoardState;
-import Search.State;
+import Game.MyTurnState;
 
 public abstract class WeaponBattlecry extends Battlecry {
 	
-	public State trigger(State oldstate) {
+	public MyTurnState trigger(MyTurnState oldstate) {
 		return oldstate.performBC(this);
 }
 	
-	public abstract State perform(BoardState tempstate);
+	public abstract MyTurnState perform(BoardState oldstate);
 	
 }

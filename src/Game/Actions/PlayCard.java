@@ -3,8 +3,9 @@ package Game.Actions;
 import Game.BoardState;
 import Game.Card;
 import Game.Hand;
+import Game.MyTurnState;
+import Game.Heroes.Hero;
 import Search.Action;
-import Search.State;
 
 public class PlayCard implements Action {
 	
@@ -24,10 +25,15 @@ public class PlayCard implements Action {
 	}
 
 	@Override
-	public State result(BoardState oldstate) {
-		Hand newMyHand = (oldstate.getMyHand()).remove(pos);
-		BoardState tempstate = (oldstate.getHero()).useMana(oldstate,card.getCost());
-		tempstate = new BoardState(tempstate.getHero(),tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),newMyHand,tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
+	public MyTurnState result(BoardState oldstate) {
+		
+		Hero newHero = (oldstate.getHero()).fresh();
+		Hand newMyHand = newHero.getMyHand();
+		
+		newMyHand = newMyHand.remove(pos);
+		
+		BoardState tempstate = newHero.useMana(oldstate,card.getCost());
+		
 		return card.playCard(tempstate,target);
 	}
 

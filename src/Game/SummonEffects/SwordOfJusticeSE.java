@@ -1,8 +1,7 @@
 package Game.SummonEffects;
 
-import Game.BoardState;
+import Game.MyTurnState;
 import Game.Minions.Minion;
-import Search.State;
 
 public class SwordOfJusticeSE extends SummonEffect {
 	
@@ -13,20 +12,15 @@ public class SwordOfJusticeSE extends SummonEffect {
 	}
 
 	@Override
-	public State perform(State oldstate, Minion minion) {
-		BoardState state = (BoardState) oldstate;
+	public MyTurnState perform(MyTurnState oldstate, Minion dummy, Minion minion) {
 		if (minion.getMyPos() < 7 && side==14) {
-			BoardState tempstate = minion.changeAtk(state, 1);
-			tempstate = (tempstate.getMySide()[minion.getMyPos()]).changeHP(tempstate, 1);
-
-			return tempstate.changeWeaponDurability(tempstate.getHero(),-1);
+			MyTurnState tempstate = oldstate.changeAtkHP(minion, 1, 1);
+			return tempstate.changeHeroWeaponAtkDurability(0,-1);
 		}
 			
 		else if (minion.getMyPos() >= 7 && side==15) {
-			BoardState tempstate = minion.changeAtk(state, 1);
-			tempstate = (tempstate.getOppSide()[minion.getMyPos()-7]).changeHP(tempstate, 1);
-
-			return tempstate.changeWeaponDurability(tempstate.getEnemy(),-1);
+			MyTurnState tempstate = oldstate.changeAtkHP(minion, 1, 1);
+			return tempstate.changeEnemyWeaponAtkDurability(0,-1);
 		}
 		
 		else return oldstate;

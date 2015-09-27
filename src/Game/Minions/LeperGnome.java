@@ -5,7 +5,7 @@ import Game.Deathrattles.LeperGnomeDR;
 public class LeperGnome extends Minion {
 
 	public LeperGnome(int target) {
-		super("Leper Gnome",target,1,2,1,1);
+		super("Leper Gnome",target,1,2,1);
 		addDeathrattle(new LeperGnomeDR());
 	}
 	

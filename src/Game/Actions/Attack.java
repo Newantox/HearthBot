@@ -1,9 +1,9 @@
 package Game.Actions;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Minions.Minion;
 import Search.Action;
-import Search.State;
 
 public class Attack implements Action {
 	
@@ -22,7 +22,7 @@ public class Attack implements Action {
 	}
 
 	@Override
-	public State result(BoardState oldstate) {
+	public MyTurnState result(BoardState oldstate) {
 		return attacker.attackWith(oldstate, defender);
 	
 	}

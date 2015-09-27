@@ -1,30 +1,22 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Minions.Minion;
 import Game.Minions.SilverHandRecruit;
 import Game.Weapons.LightsJustice;
-import Search.State;
 
 public class MusterForBattle extends UntargettedSpell {
 
-	int cost = 3;
-	
-	@Override
-	public String getName() {
-		return "Muster for Battle";
+	public MusterForBattle() {
+		super("Muster for Battle", 3);
 	}
 
 	@Override
-	public int getCost() {
-		return cost;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		int i = oldstate.numberOfMinions();
-		State tempstate = oldstate;
-		while (i<7 && i<oldstate.numberOfMinions()+3) {
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		int i = oldstate.numberOfAlliedMinions();
+		MyTurnState tempstate = oldstate;
+		while (i<7 && i<oldstate.numberOfAlliedMinions()+3) {
 			Minion minion = new SilverHandRecruit(i);
 			tempstate = tempstate.placeMinion(minion);
 		}

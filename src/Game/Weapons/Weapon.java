@@ -3,12 +3,12 @@ package Game.Weapons;
 import java.util.ArrayList;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Battlecrys.WeaponBattlecry;
 import Game.Deathrattles.WeaponDeathrattle;
 import Game.Heroes.Hero;
-import Game.Inspires.Inspire;
+import Game.Inspires.WeaponInspire;
 import Game.Minions.Minion;
-import Search.State;
 
 public class Weapon {
 	private String name;
@@ -18,7 +18,7 @@ public class Weapon {
 	
 	protected ArrayList<WeaponBattlecry> battlecrys;
 	protected ArrayList<WeaponDeathrattle> deathrattles;
-	protected ArrayList<Inspire> inspires;
+	protected ArrayList<WeaponInspire> inspires;
 	
 	public Weapon(String name, int cost, int atk, int durability) {
 		this.name = name;
@@ -28,7 +28,7 @@ public class Weapon {
 		
 		this.battlecrys = new ArrayList<WeaponBattlecry>();
 		this.deathrattles = new ArrayList<WeaponDeathrattle>();
-		this.inspires = new ArrayList<Inspire>();
+		this.inspires = new ArrayList<WeaponInspire>();
 	}
 	
 	public Weapon(Weapon w) {
@@ -58,11 +58,11 @@ public class Weapon {
 		this.deathrattles = deathrattles;
 	}
 
-	public ArrayList<Inspire> getInspires() {
+	public ArrayList<WeaponInspire> getInspires() {
 		return inspires;
 	}
 
-	public void setInspires(ArrayList<Inspire> inspires) {
+	public void setInspires(ArrayList<WeaponInspire> inspires) {
 		this.inspires = inspires;
 	}
 
@@ -102,46 +102,44 @@ public class Weapon {
 		return new Weapon(this);
 	}
 	
-	public State attackWith(BoardState oldstate, Minion defender) {
+	public MyTurnState attackWith(BoardState oldstate, Minion defender) {
 		Hero hero = (oldstate.getHero()).fresh();
 		hero.setReady(false);
 		BoardState tempstate1 = hero.damage(oldstate,defender.getAtk());
-		State tempstate2 = defender.damage(tempstate1,atk);
-		return changeDurability(tempstate2,hero,-1);
+		MyTurnState tempstate2 = defender.damage(tempstate1,atk);
+		if (hero.getMyPos()==14) return tempstate2.changeHeroWeaponAtkDurability(0,-1);
+		else return tempstate2.changeEnemyWeaponAtkDurability(0,-1);
 	}
 	
-	public State attackWith(BoardState oldstate, Hero defender) {
+	public MyTurnState attackWith(BoardState oldstate, Hero defender) {
 		Hero hero = (oldstate.getHero()).fresh();
 		BoardState tempstate = defender.damage(oldstate,atk);
 		hero.setReady(false);
-		tempstate =  new BoardState(hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getMyDeck(),tempstate.getMyHand(),tempstate.getSummonEffects(),tempstate.getEnemyHandSize());
-		return changeDurability(tempstate,hero,-1);
+		tempstate =  new BoardState(tempstate.getViewType(),hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getPositionsInPlayOrder(),tempstate.getEnemyHandSize());
+		if (hero.getMyPos()==14) return tempstate.changeHeroWeaponAtkDurability(0,-1);
+		else return tempstate.changeEnemyWeaponAtkDurability(0,-1);
 	}
 	
-	public State changeDurability(State oldstate, Hero target, int amount) {
-		return oldstate.changeWeaponDurability(target,amount);
-	}
-	
-	public State battleCry(State oldstate) {
-		State tempstate = oldstate;
+	public MyTurnState battleCry(MyTurnState oldstate) {
+		MyTurnState tempstate = oldstate;
 		for (WeaponBattlecry battlecry : battlecrys) {
 			tempstate = battlecry.trigger(tempstate);
 		}
 		return tempstate;
 	}
 	
-	public State deathRattle(State oldstate) {
-		State tempstate = oldstate;
+	public MyTurnState deathRattle(MyTurnState oldstate) {
+		MyTurnState tempstate = oldstate;
 		for (WeaponDeathrattle deathrattle : deathrattles) {
 			tempstate = deathrattle.trigger(tempstate);
 		}
 		return tempstate;
 	}
 	
-	public State inspire(BoardState oldstate) {
-		BoardState tempstate = oldstate;
-		for (Inspire inspire : inspires) {
-			tempstate = (BoardState) inspire.perform(this,tempstate);
+	public MyTurnState inspire(BoardState oldstate) {
+		MyTurnState tempstate = oldstate;
+		for (WeaponInspire inspire : inspires) {
+			tempstate = inspire.trigger(tempstate);
 		}
 		return tempstate;
 	}

@@ -1,29 +1,22 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.TargetsType;
-import Search.State;
 
 public class AvengingWrath extends UntargettedSpell {
 	
+	public AvengingWrath() {
+		super("Avenging Wrath", 6);
+	}
+
 	private int damage = 8;
-	private int cost = 6;
 
 	@Override
-	public String getName() {
-		return "Avenging Wrath";
-	}
-
-	@Override
-	public int getCost() {
-		return cost;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
+	public MyTurnState playCard(BoardState oldstate, int target) {
 	
-		State tempstate = oldstate;
-		for (int i = 0; i<damage; i++) {
+		MyTurnState tempstate = oldstate;
+		for (int i = 0; i<damage+oldstate.getTotalAlliedSpellDamage(); i++) {
 			tempstate = tempstate.damageRandomHittable(TargetsType.ENEMYCHAR,1);
 			
 		}

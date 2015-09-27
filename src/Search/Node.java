@@ -20,6 +20,10 @@ public class Node {
 		else { this.depth = parent.depth + 1; this.gn = action.cost() + parent.gn;}
 	}
 	
+	public double getValue() {
+		return state.getValue(this);
+	}
+	
 	public double getBestValue() {
 		if (!done) {
 			done = true;

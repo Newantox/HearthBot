@@ -5,7 +5,7 @@ import Game.Minions.Minion;
 
 public class BluegillWarriorCard extends MinionCard {
 
-	public BluegillWarriorCard(String name, int cost) {
+	public BluegillWarriorCard() {
 		super("Bluegill Warrior", 2);
 	}
 

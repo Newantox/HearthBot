@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import Game.Heroes.Hero;
+
 public class Deck {
 	
 	private Map<Card, Integer> deck;
@@ -16,11 +18,16 @@ public class Deck {
 		(this.deck).putAll(deck);
 	}
 	
+	public Deck() {
+		this.deck = new HashMap<Card, Integer>();
+	}
+
 	public Deck add(Card card, int amount) {
 		Map<Card, Integer> temp = new HashMap<Card, Integer>();
 		temp.putAll(deck);
 		if (temp.containsKey(card)) temp.put(card, temp.get(card) + amount);
 		else temp.put(card,amount);
+		System.out.println("Card added, unique cards: "+temp.size());
 		return new Deck(temp);
 	}
 	
@@ -32,18 +39,7 @@ public class Deck {
 		return new Deck(temp);
 	}
 	
-	public ArrayList<Card> generate() {
-		ArrayList<Card> temp = new ArrayList<Card>();
-		for (Card card : deck.keySet()) {
-			for (int j = 0; j < deck.get(card); j++) {
-				temp.add(card);
-			}
-		}
-		Collections.shuffle(temp);
-		return temp;
-	}
-	
-	public int size() {
+	public int getSize() {
 		int k = 0;
 		for (Card card : deck.keySet()) {
 			k += deck.get(card);
@@ -51,17 +47,28 @@ public class Deck {
 		return k;
 	}
 	
-	public RandomState drawCard(BoardState state) {
-		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-		Deck tempdeck;
-		Hand temphand;
-		for (Card card : deck.keySet()) {
-			tempdeck = new Deck(deck);
-			temphand = new Hand(state.getMyHand().raw());
-			tempdeck.remove(card);
-			temphand.add(card);
-			list.add(new StateProbabilityPair(new BoardState(state.getHero(),state.getEnemy(),state.getOppSide(),state.getMySide(),tempdeck,temphand,state.getSummonEffects(),state.getEnemyHandSize()),deck.get(card)/deck.size()));
+	public MyTurnState drawCard(BoardState state, Hero hero, int pos) {
+		if (deck.size()<=0) return hero.fatigue(state);
+		else {
+			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+			for (Card card : deck.keySet()) {
+				Hero newHero = hero.fresh();
+				
+				Hand newHand = (hero.getMyHand()).add(pos,card);
+				Deck newDeck = remove(card);
+				
+				newHero.setMyHand(newHand);
+				newHero.setMyDeck(newDeck);
+				
+				double probability = ((double) deck.get(card))/getSize();
+				if (newHero.getMyPos()==14) list.add(new StateProbabilityPair(new BoardState(state.getViewType(),newHero,state.getEnemy(),state.getOppSide(),state.getMySide(),state.getPositionsInPlayOrder(),state.getEnemyHandSize()), probability));
+				else list.add(new StateProbabilityPair(new BoardState(state.getViewType(),state.getHero(),newHero,state.getOppSide(),state.getMySide(),state.getPositionsInPlayOrder(),state.getEnemyHandSize()+1), probability));
+			}
+			return new RandomState(list);
 		}
-		return new RandomState(list);
+	}
+	
+	public MyTurnState drawCard(BoardState state, Hero hero) {
+		return drawCard(state,hero,hero.getMyHandSize());
 	}
 }

@@ -1,10 +1,10 @@
 package Game.Actions;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Heroes.Hero;
 import Game.Weapons.Weapon;
 import Search.Action;
-import Search.State;
 
 public class HeroFaceAttack implements Action {
 	
@@ -25,7 +25,7 @@ public class HeroFaceAttack implements Action {
 	}
 
 	@Override
-	public State result(BoardState oldstate) {
+	public MyTurnState result(BoardState oldstate) {
 		return (attacker.getWeapon()).attackWith(oldstate,defender);
 	}
 

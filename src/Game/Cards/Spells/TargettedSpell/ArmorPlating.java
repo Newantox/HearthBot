@@ -1,24 +1,22 @@
 package Game.Cards.Spells.TargettedSpell;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.TargetsType;
-import Search.State;
+import Game.Minions.Minion;
 
 public class ArmorPlating extends TargettedSpell {
 
-	public String getName() {
-		return "Armor Plating";
+	public ArmorPlating() {
+		super("Armor Plating", 1);
 	}
 
 	@Override
-	public int getCost() {
-		return 1;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		// TODO Auto-generated method stub
-		return null;
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		Minion defender;
+		if (target<7) defender = (oldstate.getMySide()).get(target);
+		else defender = (oldstate.getOppSide()).get(target);
+		return defender.changeAtkHP(oldstate,0,1);
 	}
 
 	@Override

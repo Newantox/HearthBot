@@ -1,8 +1,8 @@
 package Game.Weapons;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Minions.Minion;
-import Search.State;
 
 public class TruesilverChampion extends Weapon {
 	
@@ -15,7 +15,7 @@ public class TruesilverChampion extends Weapon {
 	}
 	
 	@Override
-	public State attackWith(BoardState oldstate, Minion defender) {
+	public MyTurnState attackWith(BoardState oldstate, Minion defender) {
 		BoardState tempstate = (oldstate.getHero()).heal(oldstate,2);
 		return super.attackWith(tempstate,defender);
 		

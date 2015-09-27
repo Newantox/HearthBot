@@ -1,13 +1,14 @@
 package Game.Deathrattles;
 
 import Game.BoardState;
+import Game.MyTurnState;
+
 import Game.Minions.Minion;
-import Search.State;
 
 public class LootHoarderDR extends MinionDeathrattle {
 
 	@Override
-	public State perform(Minion minion, BoardState oldstate) {
+	public MyTurnState perform(Minion minion, BoardState oldstate) {
 		if (minion.getMyPos() < 7) return oldstate.drawCard();
 		else return oldstate.enemyDrawCard();
 	}

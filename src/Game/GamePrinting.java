@@ -14,7 +14,7 @@ public class GamePrinting extends Printing {
 
 	@Override
 	public void print(State state) {
-		// TODO Auto-generated method stub
+		state.print();
 		
 	}
 

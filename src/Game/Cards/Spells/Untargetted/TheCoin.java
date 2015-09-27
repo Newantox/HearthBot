@@ -1,26 +1,17 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
-import Game.Heroes.Hero;
-import Search.State;
+import Game.MyTurnState;
 
 public class TheCoin extends UntargettedSpell {
 
-	@Override
-	public String getName() {
-		return "The Coin";
+	public TheCoin() {
+		super("The Coin", 0);
 	}
 
 	@Override
-	public int getCost() {
-		return 0;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		Hero hero = (oldstate.getHero()).fresh();
-		hero.setCurrentMana(hero.getCurrentMana()+1);
-		return new BoardState(hero, oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		return (oldstate.getHero()).useMana(oldstate, -1);
 	}
 
 }

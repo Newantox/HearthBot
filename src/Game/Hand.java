@@ -12,20 +12,20 @@ public class Hand {
 		this.hand = hand;
 	}
 	
-	public Hand add(Card card) {
+	public Hand add(int pos, Card card) {
 		if (hand.size() < 10) {
-			ArrayList<Card> temp = hand;
-			temp.add(card);
+			ArrayList<Card> temp = new ArrayList<Card>();
+			temp.addAll(hand);
+			temp.add(pos,card);
 			return new Hand(temp);
 		}
 		else return this;
 	}
 	
 	public Hand remove(int i) {
-		ArrayList<Card> temp = hand;
-		if (i<temp.size()) {
-		temp.remove(i);
-		}
+		ArrayList<Card> temp = new ArrayList<Card>();
+		temp.addAll(hand);
+		if (i<temp.size()) temp.remove(i);
 		return new Hand(temp);
 	}
 	
@@ -36,4 +36,11 @@ public class Hand {
 	public int getSize() {
 		return hand.size();
 	}
+	
+	public void print() {
+		String s = "         | ";
+		for (Card card : hand) s = s+card.getName()+" | ";
+		System.out.println(s);
+	}
+	
 }

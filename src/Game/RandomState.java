@@ -10,13 +10,14 @@ import Game.Battlecrys.WeaponBattlecry;
 import Game.Deathrattles.MinionDeathrattle;
 import Game.Deathrattles.WeaponDeathrattle;
 import Game.Heroes.Hero;
+import Game.Inspires.MinionInspire;
+import Game.Inspires.WeaponInspire;
 import Game.Minions.Minion;
 import Game.Weapons.Weapon;
 import Search.Action;
 import Search.Node;
-import Search.State;
 
-public class RandomState implements State {
+public class RandomState implements MyTurnState {
 	
 	private List<StateProbabilityPair> states;
 	
@@ -34,7 +35,7 @@ public class RandomState implements State {
 	}
 
 	@Override
-	public State getActionResult(Action action) {
+	public MyTurnState getActionResult(Action action) {
 		IndexAction index = (IndexAction)action;
 		return (states.get(index.getIndex())).getState();
 	}
@@ -48,7 +49,7 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State placeMinion(Minion minion) {
+	public MyTurnState placeMinion(Minion minion) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(thing.getState().placeMinion(minion),thing.getProbability()));
@@ -57,7 +58,7 @@ public class RandomState implements State {
 	}
 
 	@Override
-	public State damageRandomHittable(TargetsType targets, int amount) {
+	public MyTurnState damageRandomHittable(TargetsType targets, int amount) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(thing.getState().damageRandomHittable(targets,amount),thing.getProbability()));
@@ -66,7 +67,16 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State drawCard() {
+	public MyTurnState drawCard(int pos) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).drawCard(pos),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState drawCard() {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).drawCard(),thing.getProbability()));
@@ -75,7 +85,52 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State performBC(MinionBattlecry battlecry, Minion minion) {
+	public MyTurnState enemyDrawCard() {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			if (list.add(new StateProbabilityPair((thing.getState()).enemyDrawCard(),thing.getProbability())));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState changeHeroWeaponAtkDurability(int amountAtk, int amountDurability) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).changeHeroWeaponAtkDurability(amountAtk,amountDurability),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+
+	@Override
+	public MyTurnState changeEnemyWeaponAtkDurability(int amountAtk, int amountDurability) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).changeEnemyWeaponAtkDurability(amountAtk,amountDurability),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState changeAttributes(Minion minion, boolean charge, boolean divineshield, boolean taunt, boolean stealth, boolean windfury, int spelldamage, boolean frozen) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).changeAttributes(minion,charge,divineshield,taunt,stealth,windfury,spelldamage,frozen),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState changeAtkHP(Minion minion, int amountAtk, int amountHP) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).changeAtkHP(minion,amountAtk,amountHP),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState performBC(MinionBattlecry battlecry, Minion minion) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(battlecry.trigger(minion,thing.getState()),thing.getProbability()));
@@ -84,7 +139,7 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State performDR(MinionDeathrattle deathrattle, Minion minion) {
+	public MyTurnState performDR(MinionDeathrattle deathrattle, Minion minion) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(deathrattle.trigger(minion,thing.getState()),thing.getProbability()));
@@ -93,7 +148,7 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State performBC(WeaponBattlecry battlecry) {
+	public MyTurnState performBC(WeaponBattlecry battlecry) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(battlecry.trigger(thing.getState()),thing.getProbability()));
@@ -102,7 +157,7 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State performDR(WeaponDeathrattle deathrattle) {
+	public MyTurnState performDR(WeaponDeathrattle deathrattle) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(deathrattle.trigger(thing.getState()),thing.getProbability()));
@@ -111,7 +166,88 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State equipHeroWeapon(Weapon weapon) {
+	public MyTurnState performInspire(MinionInspire inspire, Minion minion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(inspire.trigger(minion,thing.getState()),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState performInspire(WeaponInspire inspire) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(inspire.trigger(thing.getState()),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState applyAuras(Minion minion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).applyAuras(minion),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState removeAuras(Minion minion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).removeAuras(minion),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState doSummonEffects(Minion minion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).doSummonEffects(minion),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState doDeathEffects(Minion minion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).doDeathEffects(minion),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState doStartTurnEffects(Hero hero) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).doStartTurnEffects(hero),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+
+	@Override
+	public MyTurnState doEndTurnEffects(Hero hero) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).doEndTurnEffects(hero),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState giveWeapon(Hero hero, Weapon weapon) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().giveWeapon(hero,weapon),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState equipHeroWeapon(Weapon weapon) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(thing.getState().equipHeroWeapon(weapon),thing.getProbability()));
@@ -120,7 +256,7 @@ public class RandomState implements State {
 	}
 	
 	@Override
-	public State equipEnemyWeapon(Weapon weapon) {
+	public MyTurnState equipEnemyWeapon(Weapon weapon) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(thing.getState().equipEnemyWeapon(weapon),thing.getProbability()));
@@ -128,11 +264,24 @@ public class RandomState implements State {
 		return new RandomState(list);
 	}
 	
+	public MyTurnState resolveRNG() {
+		
+		if (states.size()==1) return ((states.get(0)).getState()).resolveRNG();
+		
+		double random = Math.random();
+		
+		for (StateProbabilityPair pair : states) {
+			if (random<=pair.getProbability()) return (pair.getState()).resolveRNG();
+			else random -= pair.getProbability();
+		}
+		return ((states.get(0)).getState()).resolveRNG();
+	}
+	
 	public double getValue(Node n) {
 		int j = 0;
 		for (int i = 0; i < getSize(); i++) {
-			StateProbabilityPair pair = states.get(i);
-			Node node = new Node(n.parent,n.action,pair.getState());
+			StateProbabilityPair pair = getPair(i);
+			Node node = new Node(n,new IndexAction(i),pair.getState());
 			j += pair.getProbability()*getValue(node);
 		}
 		return (double) j / getSize();		
@@ -149,11 +298,45 @@ public class RandomState implements State {
 		 n.best = best;
 		 return best;
 	}
+	
+	public boolean isGameWon() {
+		 for (int i = 0; i < getSize(); i++) {
+			 StateProbabilityPair pair = getPair(i);
+			 if (!(pair.getState()).isGameWon()) return false;
+		 } 
+		 return true;
+	}
 
 	@Override
-	public State changeWeaponDurability(Hero target, int amount) {
-		// TODO Auto-generated method stub
-		return null;
+	public void print() {
+		System.out.println("Possible states:");
+		for (StateProbabilityPair pair : states) {
+			pair.getState().print();
+			System.out.println("^ With probability "+pair.getProbability());
+		}
+		System.out.println("----------------");
+	}
+
+	@Override
+	public boolean isTurnEnded() {
+		for (int i = 0; i < getSize(); i++) {
+			 StateProbabilityPair pair = getPair(i);
+			 if (!(pair.getState()).isTurnEnded()) return false;
+		 } 
+		 return true;
+	}
+
+	@Override
+	public void setTurnEnded(boolean b) {	
+	}
+
+	@Override
+	public MyTurnState viewBiased() {
+		List<StateProbabilityPair> newStates = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair pair : states) {
+			newStates.add(new StateProbabilityPair((pair.getState()).viewBiased(), pair.getProbability()));
+		}
+		return new RandomState(newStates);
 	}
 
 }

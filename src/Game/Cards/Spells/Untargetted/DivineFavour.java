@@ -1,26 +1,18 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
-import Search.State;
+import Game.MyTurnState;
 
 public class DivineFavour extends UntargettedSpell {
 
-	int cost = 3;
-	
-	@Override
-	public String getName() {
-		return "Divine Favour";
+	public DivineFavour() {
+		super("Divine Favour", 3);
 	}
 
 	@Override
-	public int getCost() {
-		return cost;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		int amount = Math.max(0,oldstate.getEnemyHandSize() - (oldstate.getMyHand()).getSize());
-		State tempstate = (State) oldstate;
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		int amount = Math.max(0,oldstate.getEnemyHandSize() - (oldstate.getHero()).getMyHandSize());
+		MyTurnState tempstate = oldstate;
 		for (int i = 0; i<amount; i++) {
 			tempstate = tempstate.drawCard();
 		}

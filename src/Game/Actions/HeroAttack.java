@@ -1,11 +1,11 @@
 package Game.Actions;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
 import Game.Weapons.Weapon;
 import Search.Action;
-import Search.State;
 
 public class HeroAttack implements Action {
 	
@@ -24,7 +24,7 @@ public class HeroAttack implements Action {
 		return (0.3*weapon.getAtk()); // + ((3*defender.getAtk())/hero.getHP());
 	}
 	
-	public State result(BoardState oldstate) {
+	public MyTurnState result(BoardState oldstate) {
 		return (hero.getWeapon()).attackWith(oldstate,defender);
 	}
 	

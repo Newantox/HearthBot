@@ -1,15 +1,15 @@
 package Game.Battlecrys;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Minions.Minion;
-import Search.State;
 
 public abstract class MinionBattlecry extends Battlecry {
 	
-	public State trigger(Minion minion, State oldstate) {
+	public MyTurnState trigger(Minion minion, MyTurnState oldstate) {
 		return oldstate.performBC(this,minion);
 	}
 	
-	public abstract State perform(Minion minion, BoardState oldstate);
+	public abstract MyTurnState perform(Minion minion, BoardState oldstate);
 	
 }

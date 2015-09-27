@@ -1,27 +1,20 @@
 package Game.Cards.Spells.TargettedSpell;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.TargetsType;
-import Search.State;
 
 public class Fireball extends TargettedSpell {
 	
+	public Fireball() {
+		super("Fireball", 4);
+	}
+
 	private int damage = 6;
-	private int cost = 4;
 
 	@Override
-	public String getName() {
-		return "Fireball";
-	}
-
-	@Override
-	public int getCost() {
-		return cost;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		return oldstate.damageTarget(target, damage);
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		return oldstate.spellDamageTarget(target, damage);
 	}
 
 	@Override

@@ -1,18 +1,16 @@
 package Game;
 
-import Search.State;
-
 public class StateProbabilityPair {
 
-  private final State state;
+  private final MyTurnState state;
   private final double probability;
 
-  public StateProbabilityPair(State state, double probability) {
+  public StateProbabilityPair(MyTurnState state, double probability) {
     this.state = state;
     this.probability = probability;
   }
 
-  public State getState() { 
+  public MyTurnState getState() { 
 	  return state; 
   }
   

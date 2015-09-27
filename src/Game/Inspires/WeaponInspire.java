@@ -1,14 +1,15 @@
 package Game.Inspires;
 
 import Game.BoardState;
-import Search.State;
+import Game.MyTurnState;
+import Game.ViewType;
 
 public abstract class WeaponInspire extends Inspire {
 
-public State trigger(State oldstate) {
+public MyTurnState trigger(MyTurnState oldstate) {
 	return oldstate.performInspire(this);
 }
 
-public abstract State perform(BoardState oldstate);
+public abstract MyTurnState perform(BoardState oldstate);
 
 }

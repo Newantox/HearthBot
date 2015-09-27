@@ -1,38 +1,35 @@
 package Game.Cards.Spells.Untargetted;
 
+import java.util.ArrayList;
+
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Minions.Minion;
-import Search.State;
 
 public class Equality extends UntargettedSpell {
 	
-	private int cost = 2;
-
-	@Override
-	public String getName() {
-		return "Equality";
+	public Equality() {
+		super("Equality", 2);
 	}
 
 	@Override
-	public int getCost() {
-		return cost;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		Minion[] newOppSide = new Minion[7];
-		Minion[] newMySide = new Minion[7];
-		for(int i = 0; i<7; i++) {
-			if (oldstate.getOppSide()[i] != null) {
-				newOppSide[i] = new Minion(oldstate.getOppSide()[i]);
-				newOppSide[i].setHP(1);
-			}
-			if (oldstate.getMySide()[i] != null) {
-				newMySide[i] = new Minion(oldstate.getMySide()[i]);
-				newMySide[i].setHP(1);
-			}
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		ArrayList<Minion> newOppSide = new ArrayList<Minion>();
+		ArrayList<Minion> newMySide = new ArrayList<Minion>();
+		
+		for(int position : oldstate.getPositionsInPlayOrder()) {
+			Minion minion;
+			if (position<7) minion = (oldstate.getMySide()).get(position);
+			else minion = (oldstate.getOppSide()).get(position-7);
+			
+			Minion newMinion = new Minion(minion);
+			newMinion.setHP(1);
+	
+			if (position<7) newMySide.set(position,newMinion);
+			else newOppSide.set(position-7, newMinion);
 		}
-		return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		
+		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 	}
 	
 }

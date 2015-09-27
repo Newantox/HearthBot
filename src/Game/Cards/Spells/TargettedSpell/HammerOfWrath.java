@@ -1,26 +1,20 @@
 package Game.Cards.Spells.TargettedSpell;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.TargetsType;
-import Search.State;
 
 public class HammerOfWrath extends TargettedSpell {
+	
+	public HammerOfWrath() {
+		super("Hammer of Wrath", 4);
+	}
+
 	private int damage = 3;
-	private int cost = 4;
 
 	@Override
-	public String getName() {
-		return "Hammer of Wrath";
-	}
-
-	@Override
-	public int getCost() {
-		return cost;
-	}
-
-	@Override
-	public State playCard(BoardState oldstate, int target) {
-		State tempstate = oldstate.damageTarget(target, damage);
+	public MyTurnState playCard(BoardState oldstate, int target) {
+		MyTurnState tempstate = oldstate.spellDamageTarget(target, damage);
 		
 		return tempstate.drawCard();
 	}

@@ -1,31 +1,34 @@
 package Game.Battlecrys;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import Game.BoardState;
 import Game.ChoiceState;
+import Game.MyTurnState;
+import Game.Actions.ChoiceAction;
 import Game.Minions.Minion;
 import Search.Action;
-import Search.State;
 
 public class AbusiveSergeantBC extends MinionBattlecry {
 
 	@Override
-	public State perform(Minion minion, BoardState oldstate) {
+	public MyTurnState perform(Minion minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
-		for (int i = 0; i<7; i++) {
-			if (oldstate.getMySide()[i] != null) actions.add(new AbusiveSergeantChoice(i));
+		for (int position : oldstate.getPositionsInPlayOrder()) {
+			if (position<7) {
+				if (((oldstate.getMySide()).get(position)).isTargettable()) actions.add(new AbusiveSergeantChoice(position));
+			}
+			
+			else if (((oldstate.getOppSide()).get(position-7)).isTargettable()) actions.add(new AbusiveSergeantChoice(position));
 		}
-		for (int i = 7; i<14; i++) {
-			if (oldstate.getOppSide()[i-7] != null) actions.add(new AbusiveSergeantChoice(i));
-		}
-		System.out.println("NewBoardBest");
+		if (actions.size()==0) return oldstate;
 		return new ChoiceState(oldstate,actions);
 	}
 	
 	
-	public class AbusiveSergeantChoice implements Action {
+	public class AbusiveSergeantChoice extends ChoiceAction {
 		
 		private int target;
 		
@@ -33,38 +36,30 @@ public class AbusiveSergeantBC extends MinionBattlecry {
 			this.target = target;
 		}
 
-		@Override
-		public double cost() {
-			return 0;
-		}
-
-		@Override
-		public State result(BoardState oldstate) {
+		@SuppressWarnings("unchecked")
+		public MyTurnState result(BoardState oldstate) {
 			Minion defender;
+			
 			if (target<7) {
-				defender = new Minion(oldstate.getMySide()[target]);
-				Minion[] newMySide = new Minion[7];
-				for (int i = 0; i<7; i++) {
-					if (oldstate.getMySide()[i] != null && i!=target) newMySide[i] = oldstate.getMySide()[i];
-				}
-				newMySide[target] = defender;
+				ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
+				
+				defender = new Minion((oldstate.getMySide()).get(target));
 				
 				defender.setTempAtkChange(defender.getTempAtkChange() + 2);
-			
-				return new BoardState(oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+				newMySide.set(target, defender);
+				
+				return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 			}
 			
 			else {
-				defender = oldstate.getOppSide()[target-7];
-			    Minion[] newOppSide = new Minion[7];
-			    for (int i = 0; i<7; i++) {
-			    	if (oldstate.getOppSide()[i] != null && i!=target-7) newOppSide[i] = oldstate.getOppSide()[i];
-			    }
-			    newOppSide[target-7] = defender;
-			    
-			    defender.setTempAtkChange(defender.getTempAtkChange() + 2);
+				ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
 				
-			    return new BoardState(oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+				defender = new Minion((oldstate.getOppSide()).get(target-7));
+				
+				defender.setTempAtkChange(defender.getTempAtkChange() + 2);
+				newOppSide.set(target, defender);
+				
+			    return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 			}
 		}
 
@@ -73,6 +68,7 @@ public class AbusiveSergeantBC extends MinionBattlecry {
 			System.out.println("Abusive Sergeant buffs minion at "+target);
 			
 		}
+
 	}
 
 }

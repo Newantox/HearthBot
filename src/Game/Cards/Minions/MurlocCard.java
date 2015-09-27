@@ -5,7 +5,7 @@ import Game.Minions.Murloc;
 
 public class MurlocCard extends MinionCard {
 	
-	public MurlocCard(String name, int cost) {
+	public MurlocCard() {
 		super("Murloc", 1);
 	}
 

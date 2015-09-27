@@ -1,9 +1,11 @@
 package Game.Heroes;
 
 import Game.BoardState;
+import Game.Deck;
+import Game.Hand;
+import Game.MyTurnState;
 import Game.Heroes.HeroPowers.HeroPower;
 import Game.Weapons.Weapon;
-import Search.State;
 
 public class Hero {
 	private String name;
@@ -13,22 +15,28 @@ public class Hero {
 	private int armour;
 	private int currentMana;
 	private int totalMana;
+	private Hand myHand;
+	private Deck myDeck;
 	private int overload;
+	private int fatigue;
 	private Weapon weapon;
 	private boolean ready;
 	private boolean powerUsed;
 	
 	private HeroPower power;
 	
-	public Hero(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, int overload, Weapon weapon) {
-		this.setName(name);
+	public Hero(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, Hand myHand, Deck myDeck, int overload, int fatigue, Weapon weapon) {
+		this.name = name;
 		this.myPos = mypos;
 		this.HP = HP;
 		this.maxHP = maxHP;
 		this.armour = Armour;
 		this.currentMana = currentMana;
 		this.totalMana = totalMana;
+		this.myHand = myHand;
+		this.myDeck = myDeck;
 		this.overload = overload;
+		this.fatigue = fatigue;
 		this.weapon = weapon;
 		this.ready = true;
 		this.powerUsed = false;
@@ -41,13 +49,24 @@ public class Hero {
 		this.armour = h.getArmour();
 		this.currentMana = h.getCurrentMana();
 		this.totalMana = h.getTotalMana();
+		this.myHand = h.getMyHand();
+		this.myDeck = h.getMyDeck();
 		this.overload = h.getOverload();
+		this.fatigue = h.getFatigue();
 		this.weapon = h.getWeapon();
 		this.ready = h.isReady();
 		this.powerUsed = h.getPowerUsed();
 		this.power = h.getHeroPower();
 	}
 	
+	public int getFatigue() {
+		return fatigue;
+	}
+
+	public void setFatigue(int fatigue) {
+		this.fatigue = fatigue;
+	}
+
 	public int getCurrentMana() {
 		return currentMana;
 	}
@@ -62,6 +81,34 @@ public class Hero {
 
 	public void setTotalMana(int totalMana) {
 		this.totalMana = totalMana;
+	}
+
+	public Hand getMyHand() {
+		return myHand;
+	}
+	
+	public int getMyHandSize() {
+		return myHand.getSize();
+	}
+	
+	public MyTurnState drawCard(BoardState boardState, int pos) {
+		return myDeck.drawCard(boardState, this, pos);
+	}
+	
+	public MyTurnState drawCard(BoardState boardState) {
+		return myDeck.drawCard(boardState, this);
+	}
+
+	public void setMyHand(Hand myHand) {
+		this.myHand = myHand;
+	}
+
+	public Deck getMyDeck() {
+		return myDeck;
+	}
+
+	public void setMyDeck(Deck myDeck) {
+		this.myDeck = myDeck;
 	}
 
 	public int getOverload() {
@@ -80,22 +127,22 @@ public class Hero {
 		Hero hero = this.fresh();
 		if (hero.getArmour()>=amount) hero.setArmour(hero.getArmour()-2);
 		else {int additional = amount - hero.getArmour(); hero.setArmour(0); hero.setHP(hero.getHP()-additional);}
-		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
-		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		if (hero.getMyPos() == 14) return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 	}
 	
 	public BoardState heal(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setHP(Math.min(hero.getHP()+amount,hero.getMaxHP()));
 		
-		if (hero.getMyPos() == 14) return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
-		else return new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		if (hero.getMyPos() == 14) return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 	}
 	
 	public BoardState useMana(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setCurrentMana(hero.getCurrentMana()-amount);
-		return new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 	}
 
 	public boolean canAttack() {
@@ -179,28 +226,40 @@ public class Hero {
 		this.power = power;
 	} 
 	
-	//NEEDS CHANGED
-	public State equipWeapon(BoardState oldstate, Weapon weapon) {
-		State tempstate = destroyWeapon(oldstate);
+	public MyTurnState giveWeapon(BoardState oldstate, Weapon weapon) {
 		Hero hero = this.fresh();
 		hero.setWeapon(weapon);
-		if (myPos==14) tempstate = new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
-		else tempstate =  new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		
+		if (myPos==14) return  new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+	}
+	
+	//NEEDS CHANGED
+	public MyTurnState equipWeapon(BoardState oldstate, Weapon weapon) {
+		MyTurnState tempstate = destroyWeapon(oldstate);
+		tempstate = tempstate.giveWeapon(this,weapon);
 		
 		return weapon.battleCry(tempstate);
 	}
 	
-	//NEEDS CHANGED
-	public State destroyWeapon(BoardState oldstate) {
+	public MyTurnState destroyWeapon(BoardState oldstate) {
+		if (weapon==null) return oldstate;
 		Hero hero = this.fresh();
 		Weapon weapon = hero.getWeapon();
 		hero.setWeapon(null);
 		BoardState tempstate;
-		if (myPos==14) tempstate = new BoardState(hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
-		else tempstate =  new BoardState(oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getMyDeck(),oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		if (myPos==14) tempstate = new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		else tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 		
 		return weapon.deathRattle(tempstate);
 		
+	}
+	
+	public MyTurnState fatigue(BoardState oldstate) {
+		System.out.println("Take fat");
+		Hero newHero = this.fresh();
+		newHero.setFatigue(fatigue+1);
+		return newHero.damage(oldstate, fatigue);
 	}
 	
 	@Override

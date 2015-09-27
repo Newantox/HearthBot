@@ -1,22 +1,13 @@
 package Game.SummonEffects;
 
-import Game.TargetsType;
+import Game.MyTurnState;
 import Game.Minions.Minion;
 import Game.Minions.Race;
-import Search.State;
 
 public class MurlocTidecallerSE extends SummonEffect {
 	
-private Minion source;
-	
-	public MurlocTidecallerSE(Minion source) {
-		this.source = source;
-	}
-	
-	@Override
-	public State perform(State oldstate, Minion minion) {
-		if (minion.getRace().equals(Race.MURLOC)) return source.changeAtk(oldstate,1);
+	public MyTurnState perform(MyTurnState oldstate, Minion source, Minion minion) {
+		if (minion.getRace().equals(Race.MURLOC)) return oldstate.changeAtkHP(source,1,0);
 		else return oldstate;
 	}
-
 }

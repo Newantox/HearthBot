@@ -5,7 +5,7 @@ import Game.Minions.MurlocTidecaller;
 
 public class MurlocTidecallerCard extends MinionCard {
 	
-	public MurlocTidecallerCard(String name, int cost) {
+	public MurlocTidecallerCard() {
 		super("Murloc Tidecaller", 1);
 	}
 

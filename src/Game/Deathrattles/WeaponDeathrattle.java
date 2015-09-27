@@ -1,14 +1,14 @@
 package Game.Deathrattles;
 
 import Game.BoardState;
-import Search.State;
+import Game.MyTurnState;
 
 public abstract class WeaponDeathrattle extends Deathrattle {
 	
-	public State trigger(State oldstate) {
+	public MyTurnState trigger(MyTurnState oldstate) {
 		return oldstate.performDR(this);
 	}
 
-	public abstract State perform(BoardState oldstate);
+	public abstract MyTurnState perform(BoardState oldstate);
 	
 }

@@ -1,7 +1,6 @@
 package Game;
 
 import Search.Action;
-import Search.State;
 
 public class IndexAction implements Action {
 	
@@ -21,7 +20,7 @@ public class IndexAction implements Action {
 	}
 
 	@Override
-	public State result(BoardState oldstate) {
+	public MyTurnState result(BoardState oldstate) {
 		return null;
 	}
 

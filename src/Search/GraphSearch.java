@@ -2,12 +2,9 @@ package Search;
 
 import java.util.LinkedHashSet;
 
-import Game.BoardState;
-import Game.ChoiceState;
 import Game.GameGoalTest2;
-import Game.RandomState;
 import Game.StopWatch;
-// Change to record best solution then return best solution available, so not always trying to clear board.
+
 public class GraphSearch implements Search {
 
 	private Frontier frontier;
@@ -29,19 +26,20 @@ public class GraphSearch implements Search {
 		int k = 1;
 		frontier.add(new Node(null,null,initialConfig));
 		exploredSet = new LinkedHashSet<State>();
-		Node n = frontier.remove();
+		/*Node n = frontier.remove();
 		if (goalTest.isGoal(n.state)) {System.out.println("Game won"); lastSearch = k; return n;}
 		double nbest = n.getBestValue();
 		System.out.println(nbest);
 		if (nbest < bestscore) {best = n.getBestNode(); bestscore = nbest;}
-		while ((n.bestNode) != null && !(n.bestNode).equals(n)) {System.out.println(n.best); n = n.bestNode;}
-		return n;
-		/*while(!frontier.empty() && timer.elapsedTime() < 55) {
-			n = frontier.remove();
+		while ((n.bestNode) != null && !(n.bestNode).equals(n)) n = n.bestNode;
+		if (goalTest.isGoal(n.state)) System.out.println("Game Won");
+		return n;*/
+		while(!frontier.empty() && timer.elapsedTime() < 55) {
+			Node n = frontier.remove();
 			if (goalTest.isGoal(n.state)) {System.out.println("Game won"); lastSearch = k; return n;}
-			nbest = n.getBestValue();
+			double nbest = n.getValue();
 			System.out.println(nbest);
-			if (nbest < bestscore) {best = n.getBestNode(); bestscore = nbest;}
+			if (nbest < bestscore) {best = n; bestscore = nbest;}
 			//switch (n.state.getStatetype()) {
 			//	case BOARD:
 				//	BoardState boardstate = (BoardState)n.state;
@@ -66,13 +64,12 @@ public class GraphSearch implements Search {
 					}
 					
 				default:
-					return null;
+					return null;*/
 			}
 
-		}
 		lastSearch = k;
 		//if (step<2) {frontier.clear(); Search g = new GraphSearch(frontier); return g.solution(init, new GameGoalTest2(), step+1);}
-		return best; */
+		return best; 
 	}
 
 	@Override

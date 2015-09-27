@@ -1,19 +1,14 @@
-package Game.Heroes.HeroPowers;
+ package Game.Heroes.HeroPowers;
 
 import Game.BoardState;
+import Game.MyTurnState;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
 import Game.Minions.SilverHandRecruit;
-import Search.State;
 
-public class PaladinPower implements HeroPower {
+public class PaladinPower extends HeroPower {
 	
 	private int manacost = 2;
-
-	@Override
-	public double cost() {
-		return 0.4;
-	}
 	
 	public int getCost() {
 		return manacost;
@@ -21,18 +16,18 @@ public class PaladinPower implements HeroPower {
 	
 	@Override
 	public boolean useable(BoardState oldstate) {
-		return (oldstate.getMySide()[6] == null) && ((oldstate.getHero()).getCurrentMana() >= manacost);
+		return (oldstate.numberOfAlliedMinions()<7) && ((oldstate.getHero()).getCurrentMana() >= manacost);
 	}
 
 	@Override
-	public State result(BoardState oldstate) {
+	public MyTurnState result(BoardState oldstate) {
 		Hero hero = (oldstate.getHero()).fresh();
 		hero.setPowerUsed(true);
 		hero.setCurrentMana(hero.getCurrentMana()-manacost);
 		
-		BoardState tempstate = new BoardState(hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getMyDeck(), oldstate.getMyHand(),oldstate.getSummonEffects(),oldstate.getEnemyHandSize());
+		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getPositionsInPlayOrder(), oldstate.getEnemyHandSize());
 	
-		Minion minion = new SilverHandRecruit(oldstate.numberOfMinions());
+		Minion minion = new SilverHandRecruit(tempstate.numberOfAlliedMinions());
 		return  minion.place(tempstate);
 	}
 

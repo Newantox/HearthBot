@@ -5,7 +5,7 @@ import Game.Minions.Minion;
 
 public class ColdlightSeerCard extends MinionCard {
 
-	public ColdlightSeerCard(String name, int cost) {
+	public ColdlightSeerCard() {
 		super("Coldlight Seer", 3);
 	}
 
