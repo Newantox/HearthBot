@@ -32,8 +32,10 @@ import Search.Node;
 
 public class BoardState implements MyTurnState {
 	
+	//Tracker to remove action choices when EndTurn action is performed.
 	private boolean  turnEnded = false;
 	
+	//ViewType tracker to determine whether enemy hand and secrets are "visible".
 	private ViewType viewType;
 	
 	private Hero hero;
@@ -42,31 +44,20 @@ public class BoardState implements MyTurnState {
 	private ArrayList<Minion> oppSide = new ArrayList<Minion>();
 	private ArrayList<Minion> mySide = new ArrayList<Minion>();
 	
+	//Stores positions of minions, in order of the time they were played.
 	private ArrayList<Integer> positionsInPlayOrder;
 	
-	public ArrayList<Integer> getPositionsInPlayOrder() {
-		return positionsInPlayOrder;
-	}
-	
+	//Biased ViewType tracker, as substitute for updating enemy hand.
 	private int enemyHandSize;
 
 	public BoardState(ViewType viewType, Hero hero, Hero enemy, ArrayList<Minion> oppSide, ArrayList<Minion> mySide, ArrayList<Integer> positionsInPlayOrder, int enemyHandSize) {
 		this.viewType = viewType;
-		
 		this.hero = hero;
 		this.enemy = enemy;
 		this.oppSide = oppSide;
 		this.mySide = mySide;
 		this.positionsInPlayOrder = positionsInPlayOrder;
 		this.enemyHandSize = enemyHandSize;
-	}
-
-	public ViewType getViewType() {
-		return viewType;
-	}
-
-	public void setViewType(ViewType viewType) {
-		this.viewType = viewType;
 	}
 
 	@Override
@@ -185,18 +176,15 @@ public class BoardState implements MyTurnState {
 		}
 		return k;
 	}
-
-	public ArrayList<Minion> getOppSide() {
-		return oppSide;
+	
+	public ViewType getViewType() {
+		return viewType;
 	}
 
-	public void setOppSide(ArrayList<Minion> oppSide) {
-		this.oppSide = oppSide;
+	public void setViewType(ViewType viewType) {
+		this.viewType = viewType;
 	}
 
-	public ArrayList<Minion> getMySide() {
-		return mySide;
-	}
 
 	public Hero getHero() {
 		return hero;
@@ -212,6 +200,18 @@ public class BoardState implements MyTurnState {
 
 	public void setEnemy(Hero enemy) {
 		this.enemy = enemy;
+	}
+	
+	public ArrayList<Minion> getOppSide() {
+		return oppSide;
+	}
+
+	public ArrayList<Minion> getMySide() {
+		return mySide;
+	}
+	
+	public ArrayList<Integer> getPositionsInPlayOrder() {
+		return positionsInPlayOrder;
 	}
 	
 	public int getEnemyHandSize() {
