@@ -1,13 +1,13 @@
 package Game.Minions;
 
-import Game.Battlecrys.MurlocTidehunterBC;
+import Game.Battlecrys.MinionCompanionBC;
 
 public class MurlocTidehunter extends Minion {
 
-	public MurlocTidehunter(int target) {
-		super("Murloc Tidehunter",target,2,2,1);
+	public MurlocTidehunter() {
+		super("Murloc Tidehunter",-1,2,2,1);
 		setRace(Race.MURLOC);
-		battlecrys.add(new MurlocTidehunterBC());
+		battlecrys.add(new MinionCompanionBC(new MurlocScout()));
 		
 	}
 	

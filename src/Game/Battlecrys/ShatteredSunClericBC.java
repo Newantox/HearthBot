@@ -6,18 +6,20 @@ import java.util.Set;
 import Game.BoardState;
 import Game.ChoiceState;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.Actions.ChoiceAction;
+import Game.Buffs.AdditiveBuff;
 import Game.Minions.Minion;
 import Search.Action;
 
-public class ShatteredSunClericBC extends MinionBattlecry {
+public class ShatteredSunClericBC extends Battlecry {
 	
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int position : oldstate.getPositionsInPlayOrder()) {
 			if (position<7) {
-				if (((oldstate.getMySide()).get(position)).isTargettable()) actions.add(new ShatteredSunClericChoice(minion,position));
+				if (((oldstate.getMySide()).get(position)).isTargettable()) actions.add(new ShatteredSunClericChoice((Minion) minion,position));
 			}	
 		}
 		if (actions.size()==0) return oldstate;
@@ -38,7 +40,7 @@ public class ShatteredSunClericBC extends MinionBattlecry {
 			
 			Minion minion = (oldstate.getMySide()).get(target);
 
-			return oldstate.changeAtkHP(minion, 1, 1);
+			return oldstate.applyBuff(minion.getId(),new AdditiveBuff(-1,1,1,0));
 			    
 		}
 

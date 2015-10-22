@@ -4,8 +4,8 @@ import Game.Battlecrys.GnomishInventorBC;
 
 public class GnomishInventor extends Minion {
 
-	public GnomishInventor(int target) {
-		super("Gnomish Inventor",target,4,2,4);
+	public GnomishInventor() {
+		super("Gnomish Inventor",-1,4,2,4);
 		battlecrys.add(new GnomishInventorBC());
 	}
 	

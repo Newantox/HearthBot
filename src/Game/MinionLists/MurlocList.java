@@ -21,20 +21,20 @@ import Game.Minions.SiltfinSpiritwalker;
 public class MurlocList {
 	
 		public MurlocList(int target) {
-			list.add(new BluegillWarrior(target));
-			list.add(new ColdlightOracle(target));
-			list.add(new ColdlightSeer(target));
-			list.add(new GrimscaleOracle(target));
-			list.add(new Murloc(target));
-			list.add(new MurlocKnight(target));
-			list.add(new MurlocRaider(target));
-			list.add(new MurlocScout(target));
-			list.add(new MurlocTidecaller(target));
-			list.add(new MurlocTidehunter(target));
-			list.add(new MurlocWarleader(target));
-			list.add(new OldMurkEye(target));
-			list.add(new Puddlestomper(target));
-			list.add(new SiltfinSpiritwalker(target));
+			list.add(new BluegillWarrior());
+			list.add(new ColdlightOracle());
+			list.add(new ColdlightSeer());
+			list.add(new GrimscaleOracle());
+			list.add(new Murloc());
+			list.add(new MurlocKnight());
+			list.add(new MurlocRaider());
+			list.add(new MurlocScout());
+			list.add(new MurlocTidecaller());
+			list.add(new MurlocTidehunter());
+			list.add(new MurlocWarleader());
+			list.add(new OldMurkEye());
+			list.add(new Puddlestomper());
+			list.add(new SiltfinSpiritwalker());
 ;		}
 		
 		private ArrayList<Minion> list = new ArrayList<Minion>();

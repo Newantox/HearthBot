@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class MechanicalDragonling extends Minion {
 
-	public MechanicalDragonling(int target) {
-		super("Mechanical Dragonling",target,1,2,1);
+	public MechanicalDragonling() {
+		super("Mechanical Dragonling",-1,1,2,1);
 		setRace(Race.MECH);
 	}
 	

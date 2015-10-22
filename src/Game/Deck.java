@@ -1,7 +1,5 @@
 package Game;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,19 +9,19 @@ import Game.Heroes.Hero;
 
 public class Deck {
 	
-	private Map<Card, Integer> deck;
+	private Map<PlayableCard, Integer> deck;
 	
-	public Deck(Map<Card, Integer> deck) {
-		this.deck = new HashMap<Card, Integer>();
+	public Deck(Map<PlayableCard, Integer> deck) {
+		this.deck = new HashMap<PlayableCard, Integer>();
 		(this.deck).putAll(deck);
 	}
 	
 	public Deck() {
-		this.deck = new HashMap<Card, Integer>();
+		this.deck = new HashMap<PlayableCard, Integer>();
 	}
 
-	public Deck add(Card card, int amount) {
-		Map<Card, Integer> temp = new HashMap<Card, Integer>();
+	public Deck add(PlayableCard card, int amount) {
+		Map<PlayableCard, Integer> temp = new HashMap<PlayableCard, Integer>();
 		temp.putAll(deck);
 		if (temp.containsKey(card)) temp.put(card, temp.get(card) + amount);
 		else temp.put(card,amount);
@@ -31,8 +29,8 @@ public class Deck {
 		return new Deck(temp);
 	}
 	
-	public Deck remove(Card card) {
-		Map<Card, Integer> temp = new HashMap<Card, Integer>();
+	public Deck remove(PlayableCard card) {
+		Map<PlayableCard, Integer> temp = new HashMap<PlayableCard, Integer>();
 		temp.putAll(deck);
 		if (temp.get(card) > 1) temp.put(card, temp.get(card) - 1);
 		else temp.remove(card);
@@ -41,7 +39,7 @@ public class Deck {
 	
 	public int getSize() {
 		int k = 0;
-		for (Card card : deck.keySet()) {
+		for (PlayableCard card : deck.keySet()) {
 			k += deck.get(card);
 		}
 		return k;
@@ -51,7 +49,7 @@ public class Deck {
 		if (deck.size()<=0) return hero.fatigue(state);
 		else {
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-			for (Card card : deck.keySet()) {
+			for (PlayableCard card : deck.keySet()) {
 				Hero newHero = hero.fresh();
 				
 				Hand newHand = (hero.getMyHand()).add(pos,card);

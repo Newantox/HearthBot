@@ -1,12 +1,12 @@
 package Game.Minions;
 
-import Game.Battlecrys.ElvenArcherBC;
+import Game.Battlecrys.ChooseTargetDamageBC;
 
 public class ElvenArcher extends Minion {
 
-	public ElvenArcher(int target) {
-		super("Elven Archer",target,1,1,1);
-		battlecrys.add(new ElvenArcherBC());;
+	public ElvenArcher() {
+		super("Elven Archer",-1,1,1,1);
+		battlecrys.add(new ChooseTargetDamageBC(1));;
 	}
 	
 	public ElvenArcher(Minion m) {

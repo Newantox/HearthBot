@@ -3,43 +3,47 @@ package Game.Minions;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
+import Game.Character;
 import Game.BoardState;
+import Game.CardType;
 import Game.MyTurnState;
 import Game.Auras.Aura;
-import Game.Battlecrys.MinionBattlecry;
+import Game.Battlecrys.Battlecry;
+import Game.Buffs.Buff;
 import Game.DeathEffects.DeathEffect;
-import Game.Deathrattles.MinionDeathrattle;
+import Game.Deathrattles.Deathrattle;
 import Game.EndTurnEffects.EndTurnEffect;
 import Game.Heroes.Hero;
-import Game.Inspires.MinionInspire;
+import Game.Inspires.Inspire;
 import Game.StartTurnEffects.StartTurnEffect;
 import Game.SummonEffects.SummonEffect;
 
-public class Minion {
+public class Minion implements Character {
+	private double id;
 	private String name;
 	private int mypos;
 	private int cost;
 	private int atk;
-	private int hp;
+	private int damageTaken;
 	private int maxHP;
+	private int attacksTaken;
+	private int maxAttacks;
 	private Race race;
-	private boolean ready;
+	private boolean summonSickness;
 	private boolean charge;
 	private boolean divineshield;
 	private boolean taunt;
 	private boolean stealth;
-	private boolean windfury;
 	private int spelldamage;
 	private boolean frozen;
+	private boolean immune;
 	
-	private int tempHPChange;
-	private int tempAtkChange;
+	private ArrayList<Buff> buffs;
+	private ArrayList<Buff> tempbuffs;
 	
-	private boolean deadCheck;
-	
-	protected ArrayList<MinionBattlecry> battlecrys;
-	protected ArrayList<MinionDeathrattle> deathrattles;
-	protected ArrayList<MinionInspire> inspires;
+	protected ArrayList<Battlecry> battlecrys;
+	protected ArrayList<Deathrattle> deathrattles;
+	protected ArrayList<Inspire> inspires;
 	
 	protected ArrayList<Aura> auras;
 	protected ArrayList<SummonEffect> summonEffects;
@@ -48,27 +52,31 @@ public class Minion {
 	protected ArrayList<EndTurnEffect> endTurnEffects;
 	
 	public Minion (String name, int mypos, int cost, int atk,int maxHP) {
+		this.id = Math.random();
 		this.name = name;
 		this.mypos = mypos;
 		this.cost = cost;
 		this.atk = atk;
-		this.hp = maxHP;
+		this.damageTaken = 0;
 		this.maxHP = maxHP;
 		this.setRace(Race.NORMAL);
-		this.ready = false;
+		this.summonSickness = true;
 		this.charge = false;
 		this.divineshield = false;
 		this.taunt = false;
 		this.stealth = false;
-		this.windfury = false;
+		this.attacksTaken = 0;
+		this.maxAttacks = 1;
 		this.setSpelldamage(0);
 		this.frozen = false;
-		this.tempHPChange = 0;
-		this.tempAtkChange = 0;
+		this.immune = false;
 		
-		this.battlecrys = new ArrayList<MinionBattlecry>();
-		this.deathrattles = new ArrayList<MinionDeathrattle>();
-		this.inspires = new ArrayList<MinionInspire>();
+		this.buffs = new ArrayList<Buff>();
+		this.tempbuffs = new ArrayList<Buff>();
+		
+		this.battlecrys = new ArrayList<Battlecry>();
+		this.deathrattles = new ArrayList<Deathrattle>();
+		this.inspires = new ArrayList<Inspire>();
 		
 		this.auras = new ArrayList<Aura>();
 		this.summonEffects = new ArrayList<SummonEffect>();
@@ -77,6 +85,22 @@ public class Minion {
 		this.endTurnEffects = new ArrayList<EndTurnEffect>();
 	}
 	
+	public ArrayList<Buff> getBuffs() {
+		return buffs;
+	}
+
+	public void setBuffs(ArrayList<Buff> buffs) {
+		this.buffs = buffs;
+	}
+	
+	public ArrayList<Buff> getTempBuffs() {
+		return tempbuffs;
+	}
+
+	public void setTempBuffs(ArrayList<Buff> tempbuffs) {
+		this.tempbuffs = tempbuffs;
+	}
+
 	public ArrayList<StartTurnEffect> getStartTurnEffects() {
 		return startTurnEffects;
 	}
@@ -94,24 +118,27 @@ public class Minion {
 	}
 
 	public Minion(Minion m) {
+		this.setId(m.getId());
 		this.setName(m.getName());
 		this.setMyPos(m.getMyPos());
 		this.setCost(m.getCost());
 		this.setAtk(m.getAtk());
-		this.setHP(m.getHP());
+		this.setDamageTaken(m.getDamageTaken());
 		this.setMaxHP(m.getMaxHP());
 		this.setRace(m.getRace());
-		this.setReady(m.isReady());
+		this.setSummonSickness(m.isSummonSickness());
 		this.setCharge(m.isCharge());
 		this.setDivineShield(m.isDivineShield());
 		this.setTaunt(m.isTaunt());
 		this.setStealth(m.isStealth());
-		this.setWindfury(m.getWindfury());
+		this.setAttacksTaken(m.getAttacksTaken());
+		this.setMaxAttacks(m.getMaxAttacks());
 		this.setSpelldamage(m.getSpelldamage());
 		this.setFrozen(m.isFrozen());
+		this.setImmune(m.isImmune());
 		
-		this.setTempHPChange(m.getTempHPChange());
-		this.setTempAtkChange(m.getTempAtkChange());
+		this.buffs = m.getBuffs();
+		this.tempbuffs = m.getTempBuffs();
 		
 		this.battlecrys = m.getBattlecrys();
 		this.deathrattles = m.getDeathrattles();
@@ -124,52 +151,42 @@ public class Minion {
 		this.endTurnEffects = m.getEndTurnEffects();
 		
 	}
-
-	public boolean getWindfury() {
-		return windfury;
-	}
-
-	public void setWindfury(boolean windfury) {
-		this.windfury = windfury;
-	}
-
-	public int getTempHPChange() {
-		return tempHPChange;
-	}
-
-	public void setTempHPChange(int tempHPChange) {
-		this.tempHPChange = tempHPChange;
-	}
-
-	public int getTempAtkChange() {
-		return tempAtkChange;
-	}
-
-	public void setTempAtkChange(int tempAtkChange) {
-		this.tempAtkChange = tempAtkChange;
+	
+	public Minion(int target) {
+		try {
+			Constructor<? extends Minion> constructor = getClass().getDeclaredConstructor(int.class) ;
+		    constructor.newInstance(target) ;
+		}
+		catch( Exception e ) {
+		    System.out.println( e ) ;
+		}
 	}
 	
-	public ArrayList<MinionBattlecry> getBattlecrys() {
+	public Minion() {
+		this(0);
+	}
+	
+	public ArrayList<Battlecry> getBattlecrys() {
 		return battlecrys;
 	}
 
-	public void setBattlecrys(ArrayList<MinionBattlecry> battlecrys) {
+	public void setBattlecrys(ArrayList<Battlecry> battlecrys) {
 		this.battlecrys = battlecrys;
 	}
 
-	public ArrayList<MinionDeathrattle> getDeathrattles() {
+	public ArrayList<Deathrattle> getDeathrattles() {
 		return deathrattles;
 	}
 
-	public void setDeathrattles(ArrayList<MinionDeathrattle> deathrattles) {
+	public void setDeathrattles(ArrayList<Deathrattle> deathrattles) {
 		this.deathrattles = deathrattles;
 	}
 
-	public ArrayList<MinionInspire> getInspires() {
+	public ArrayList<Inspire> getInspires() {
 		return inspires;
 	}
 
-	public void setInspires(ArrayList<MinionInspire> inspires) {
+	public void setInspires(ArrayList<Inspire> inspires) {
 		this.inspires = inspires;
 	}
 
@@ -215,7 +232,7 @@ public class Minion {
 	}
 
 	public boolean canAttack() {
-		return (ready && (atk > 0));
+		return ((charge || !summonSickness) && (attacksTaken<maxAttacks) && (getAtk() > 0));
 	}
 	
 	public boolean isAttackable(BoardState oldstate) {
@@ -235,8 +252,12 @@ public class Minion {
 		this.atk = atk;
 	}
 
-	public int getHP() {
-		return hp;
+	public int getDamageTaken() {
+		return damageTaken;
+	}
+	
+	public int getCurrentHP() {
+		return (getMaxHP()-getDamageTaken());
 	}
 
 	public void setMaxHP(int max) {
@@ -247,16 +268,16 @@ public class Minion {
 		return maxHP;
 	}
 
-	public void setHP(int hp) {
-		this.hp = hp;
+	public void setDamageTaken(int damageTaken) {
+		this.damageTaken = damageTaken;
 	}
 
-	public boolean isReady() {
-		return ready;
+	public boolean isSummonSickness() {
+		return summonSickness;
 	}
 
-	public void setReady(boolean ready) {
-		this.ready = ready;
+	public void setSummonSickness(boolean summonSickness) {
+		this.summonSickness = summonSickness;
 	}
 
 	public String getName() {
@@ -283,7 +304,7 @@ public class Minion {
 		this.frozen = frozen;
 	}
 	
-	public void addDeathrattle(MinionDeathrattle DR) {
+	public void addDeathrattle(Deathrattle DR) {
 		deathrattles.add(DR);
 	}
 	
@@ -371,7 +392,7 @@ public class Minion {
 		
 		Minion newAttacker = new Minion(this);
 		
-		newAttacker.setReady(false);
+		newAttacker.setAttacksTaken(newAttacker.getAttacksTaken()+1);
 		newMySide.set(mypos,newAttacker);
 		
 		BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
@@ -385,7 +406,7 @@ public class Minion {
 		amounts.add(target.getAtk());
 		amounts.add(newAttacker.getAtk());
 		
-		return tempstate.simultaneousDamage(minions,amounts);
+		return tempstate.simultaneousDamage(new ArrayList<Hero>(),minions,amounts);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -394,7 +415,7 @@ public class Minion {
 		
 		Minion newAttacker = new Minion(this);
 		
-		newAttacker.setReady(false);
+		newAttacker.setAttacksTaken(newAttacker.getAttacksTaken()+1);
 		newMySide.set(mypos, newAttacker);
 		
 		BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
@@ -412,8 +433,9 @@ public class Minion {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 			
 			if (divineshield) newMinion.setDivineShield(false);
-			else if (amount >= hp) destroy(oldstate);
-			else newMinion.setHP(newMinion.getHP()-amount);
+			else newMinion.setDamageTaken(newMinion.getDamageTaken()+amount);
+			
+			if (newMinion.getDamageTaken() >= newMinion.getMaxHP()) return destroy(oldstate);
 			
 			newMySide.set(mypos, newMinion);
 			
@@ -423,8 +445,9 @@ public class Minion {
 			ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
 			
 			if (divineshield) newMinion.setDivineShield(false);
-			else if (amount >= hp) destroy(oldstate);
-			else newMinion.setHP(newMinion.getHP()-amount);
+			else newMinion.setDamageTaken(newMinion.getDamageTaken()+amount);
+			
+			if (newMinion.getDamageTaken() >= newMinion.getMaxHP()) return destroy(oldstate);
 			
 			newOppSide.set(mypos-7, newMinion);
 			
@@ -452,8 +475,6 @@ public class Minion {
 				if (position >= 7 && position > mypos) newPositionsInPlayOrder.set((oldstate.getPositionsInPlayOrder()).indexOf(position), position-1);
 			}
 		}
-	
-		//deadCheck = true;
 		
 		if (mypos < 7) {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
@@ -477,95 +498,167 @@ public class Minion {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public BoardState changeAtkHP(BoardState oldstate, int amountAtk, int amountHP) {
-		//if (deadCheck) return oldstate;
+	public MyTurnState heal(BoardState oldstate, int amount) {
+		Minion newMinion = new Minion(this);
 		
-		Minion defender = new Minion(this);
-		
-		defender.setAtk(defender.getAtk() + amountAtk);
-		defender.setHP(defender.getHP() + amountHP);
-		defender.setMaxHP(defender.getMaxHP() + amountHP);
-		System.out.println("Changing"+defender.getAtk()+" "+oldstate.getEnemy().getHP());
-		
-		if (mypos<7) {
+		if (mypos < 7) {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
-			newMySide.set(mypos,defender);
-		
+			
+			if (amount >= damageTaken) newMinion.setDamageTaken(0);
+			else newMinion.setDamageTaken(newMinion.getDamageTaken()-amount);
+			
+			newMySide.set(mypos, newMinion);
+			
 			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 		}
-		
 		else {
 			ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
-			newOppSide.set(mypos-7,defender);
 			
-		    return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+			if (amount >= damageTaken) newMinion.setDamageTaken(0);
+			else newMinion.setDamageTaken(newMinion.getDamageTaken()-amount);
+			
+			newOppSide.set(mypos-7, newMinion);
+			
+			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public BoardState changeAttributes(BoardState oldstate, boolean charge, boolean divineshield, boolean taunt, boolean stealth, boolean windfury, int spelldamage, boolean frozen) {
-		ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
+	public Minion applyBuff(Buff buff) {
 		Minion newMinion = new Minion(this);
 		
-		newMySide.set(mypos,newMinion);
-        BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
-        
-        newMinion.setCharge(charge);
- 		newMinion.setDivineShield(divineshield);
- 		newMinion.setTaunt(taunt);
- 		newMinion.setStealth(stealth);
- 		newMinion.setWindfury(windfury);
- 		newMinion.setSpelldamage(spelldamage);
- 		newMinion.setFrozen(frozen);
+		ArrayList<Buff> newBuffs = (ArrayList<Buff>) (newMinion.getBuffs()).clone();
+	    newBuffs.add(buff);
+	    newMinion.setBuffs(newBuffs);
+	    
+	    buff.apply(newMinion);
  		
- 		return tempstate;
+ 		return newMinion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Minion removeBuff(double id) {
+		Minion newMinion = new Minion(this);
+		
+		ArrayList<Buff> newBuffs = (ArrayList<Buff>) (newMinion.getBuffs()).clone();
+	    
+		for (int i = newBuffs.size()-1; i>=0; i--) {
+			if ((newBuffs.get(i)).getID()==id) {
+				(newBuffs.get(i)).remove(newMinion);
+				newBuffs.remove(i);
+				newMinion.setBuffs(newBuffs);
+				return newMinion;
+			}
+		}
+ 		return newMinion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Minion applyTempBuff(Buff buff) {
+		Minion newMinion = new Minion(this);
+		
+		ArrayList<Buff> newTempBuffs = (ArrayList<Buff>) (newMinion.getTempBuffs()).clone();
+	    newTempBuffs.add(buff);
+	    newMinion.setBuffs(newTempBuffs);
+	    
+	    buff.apply(newMinion);
+ 		
+ 		return newMinion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Minion removeTempBuff(double id) {
+		Minion newMinion = new Minion(this);
+		
+		ArrayList<Buff> newTempBuffs = (ArrayList<Buff>) (newMinion.getTempBuffs()).clone();
+	    
+		for (int i = newTempBuffs.size()-1; i>=0; i--) {
+			if ((newTempBuffs.get(i)).getID()==id) {
+				(newTempBuffs.get(i)).remove(newMinion);
+				newTempBuffs.remove(i);
+				newMinion.setBuffs(newTempBuffs);
+				return newMinion;
+			}
+		}
+ 		return newMinion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Minion removeBuffs() {
+		Minion newMinion = new Minion(this);
+		
+		ArrayList<Buff> newBuffs = (ArrayList<Buff>) (newMinion.getBuffs()).clone();
+		ArrayList<Buff> newTempBuffs = (ArrayList<Buff>) (newMinion.getTempBuffs()).clone();
+		
+		for (int i = newBuffs.size()-1 ; i>=0; i--) {
+			(newBuffs.get(i)).remove(newMinion);
+			newBuffs.remove(i);
+		}
+		
+		for (int i = newTempBuffs.size()-1 ; i>=0; i--) {
+			(newTempBuffs.get(i)).remove(newMinion);
+			newTempBuffs.remove(i);
+		}
+
+			
+	    newMinion.setBuffs(newBuffs);
+	    newMinion.setTempBuffs(newTempBuffs);
+ 		
+ 		return newMinion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Minion removeTempBuffs() {
+		Minion newMinion = new Minion(this);
+	
+		ArrayList<Buff> newTempBuffs = (ArrayList<Buff>) (newMinion.getTempBuffs()).clone();
+		
+		for (int i = newTempBuffs.size()-1 ; i>=0; i--) {
+			(newTempBuffs.get(i)).remove(newMinion);
+			newTempBuffs.remove(i);
+		}
+		
+	    newMinion.setTempBuffs(newTempBuffs);
+ 		
+ 		return newMinion;
 	}
         
 	@SuppressWarnings("unchecked")
 	public MyTurnState silence(BoardState oldstate) {
-		try
-	      {
-	        Constructor<? extends Minion> constructor = getClass().getDeclaredConstructor(int.class) ;
-	        ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
-	        Minion newMinion = constructor.newInstance(mypos);
-	         
-	        newMySide.set(mypos,newMinion);
-	        MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
-	         
-	        newMinion.setHP(Math.min(newMinion.getMaxHP(),hp));
-	        
-	        newMinion.setCharge(false);
-	 		newMinion.setDivineShield(false);
-	 		newMinion.setTaunt(false);
-	 		newMinion.setStealth(false);
-	 		newMinion.setWindfury(false);
-	 		newMinion.setSpelldamage(0);
-	 		newMinion.setFrozen(false);
-	 		newMinion.setTempHPChange(0);
-	 		newMinion.setTempAtkChange(0);
+		ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
+	    Minion newMinion = new Minion(this);
 	 		
-	 		newMinion.setBattlecrys(new ArrayList<MinionBattlecry>());
-			newMinion.setDeathrattles(new ArrayList<MinionDeathrattle>());
-			newMinion.setInspires(new ArrayList<MinionInspire>());
+	    newMySide.set(mypos,newMinion);
+	    MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+	         
+	    newMinion = newMinion.removeBuffs();
+	    
+	    newMinion.setCharge(false);
+		 newMinion.setDivineShield(false);
+		 newMinion.setTaunt(false);
+		 newMinion.setStealth(false);
+		 newMinion.setMaxAttacks(1);
+		 newMinion.setSpelldamage(0);
+		 newMinion.setFrozen(false);
+		 newMinion.setImmune(false);
+	 		
+	    newMinion.setBattlecrys(new ArrayList<Battlecry>());
+	    newMinion.setDeathrattles(new ArrayList<Deathrattle>());
+		newMinion.setInspires(new ArrayList<Inspire>());
 			
-			tempstate = oldstate.removeAuras(newMinion);
+		tempstate = oldstate.removeAuras(newMinion);
 			
-			newMinion.setAuras(new ArrayList<Aura>());
-			newMinion.setSummonEffects(new ArrayList<SummonEffect>());
-			newMinion.setDeathEffects(new ArrayList<DeathEffect>());
-			newMinion.setStartTurnEffects(new ArrayList<StartTurnEffect>());
-			newMinion.setEndTurnEffects(new ArrayList<EndTurnEffect>());
+		newMinion.setAuras(new ArrayList<Aura>());
+		newMinion.setSummonEffects(new ArrayList<SummonEffect>());
+		newMinion.setDeathEffects(new ArrayList<DeathEffect>());
+		newMinion.setStartTurnEffects(new ArrayList<StartTurnEffect>());
+		newMinion.setEndTurnEffects(new ArrayList<EndTurnEffect>());
 			
-			//Perform twice to offset removal above
-			tempstate = tempstate.applyAuras(newMinion);
-			tempstate = tempstate.applyAuras(newMinion);
+		//Perform twice to offset removal above
+		tempstate = tempstate.applyAuras(newMinion);
+		tempstate = tempstate.applyAuras(newMinion);
 			
-			return tempstate;
-	      }
-		catch( Exception e )
-	      {
-	        return oldstate;
-	      }
+		return tempstate;
 	}
 	
 	public void setAuras(ArrayList<Aura> auras) {
@@ -582,7 +675,7 @@ public class Minion {
 
 	public MyTurnState battleCry(MyTurnState oldstate) {
 		MyTurnState tempstate = oldstate;
-		for (MinionBattlecry battlecry : battlecrys) {
+		for (Battlecry battlecry : battlecrys) {
 			tempstate =  battlecry.trigger(this,tempstate);
 		}
 		return tempstate;
@@ -590,7 +683,7 @@ public class Minion {
 	
 	public MyTurnState deathRattle(MyTurnState oldstate) {
 		MyTurnState tempstate = oldstate;
-		for (MinionDeathrattle deathrattle : deathrattles) {
+		for (Deathrattle deathrattle : deathrattles) {
 			tempstate =  deathrattle.trigger(this,tempstate);
 		}
 		return tempstate;
@@ -598,7 +691,7 @@ public class Minion {
 	
 	public MyTurnState inspire(MyTurnState oldstate) {
 		MyTurnState tempstate = oldstate;
-		for (MinionInspire inspire : inspires) {
+		for (Inspire inspire : inspires) {
 			tempstate = (BoardState) inspire.trigger(this,tempstate);
 		}
 		return tempstate;
@@ -611,17 +704,34 @@ public class Minion {
 		if (mypos != other.getMyPos()) return false;
 		if (cost != other.getCost()) return false;
 		if (atk != other.getAtk()) return false;
-		if (hp != other.getHP()) return false;
+		if (damageTaken != other.getDamageTaken()) return false;
 		if (maxHP != other.getMaxHP()) return false;
-		if (ready != other.isReady()) return false;
+		if (summonSickness != other.isSummonSickness()) return false;
 		if (charge != other.isCharge()) return false;
 		if (divineshield != other.isDivineShield()) return false;
 		if (taunt != other.isTaunt()) return false;
 		if (stealth != other.isStealth()) return false;
+		if (attacksTaken != other.getAttacksTaken()) return false;
+		if (maxAttacks != other.getMaxAttacks()) return false;
 		if (frozen != other.isFrozen()) return false;
-		if (tempHPChange != other.getTempHPChange()) return false;
-		if (tempAtkChange != other.getTempAtkChange()) return false;
+		if (immune != other.isImmune()) return false;
 		return true;
+	}
+	
+	public int getAttacksTaken() {
+		return attacksTaken;
+	}
+
+	public void setAttacksTaken(int attacksTaken) {
+		this.attacksTaken = attacksTaken;
+	}
+
+	public int getMaxAttacks() {
+		return maxAttacks;
+	}
+
+	public void setMaxAttacks(int maxAttacks) {
+		this.maxAttacks = maxAttacks;
 	}
 
 	public Race getRace() {
@@ -638,6 +748,37 @@ public class Minion {
 
 	public void setSpelldamage(int spelldamage) {
 		this.spelldamage = spelldamage;
+	}
+
+	@Override
+	public MyTurnState playCard(BoardState oldstate, Character target) {
+		Minion newMinion = new Minion(this);
+		if (target.getMyPos()==14) newMinion.setMyPos(0);
+		else newMinion.setMyPos(target.getMyPos()+1);
+		
+		return newMinion.play(oldstate);
+	}
+
+	@Override
+	public CardType getType() {
+		return CardType.MINION;
+	}
+	
+	public void setImmune(boolean b) {
+		immune = b;
+	}
+
+	@Override
+	public boolean isImmune() {
+		return immune;
+	}
+
+	public double getId() {
+		return id;
+	}
+
+	public void setId(double id) {
+		this.id = id;
 	}
 
 }

@@ -4,8 +4,8 @@ import Game.Auras.StormwindChampionAura;
 
 public class StormwindChampion extends Minion {
 
-	public StormwindChampion(int target) {
-		super("Stormwind Champion",target,7,6,6);
+	public StormwindChampion() {
+		super("Stormwind Champion",-1,7,6,6);
 		auras.add(new StormwindChampionAura());
 	}
 	

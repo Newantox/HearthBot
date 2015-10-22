@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class KoboldGeomancer extends Minion {
 
-	public KoboldGeomancer(int target) {
-		super("Kobold Geomancer",target,2,2,2);
+	public KoboldGeomancer() {
+		super("Kobold Geomancer",-1,2,2,2);
 		setSpelldamage(1);
 	}
 	

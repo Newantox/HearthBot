@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class GoldshireFootman extends Minion {
 
-	public GoldshireFootman(int target) {
-		super("Goldshire Footman",target,1,1,2);
+	public GoldshireFootman() {
+		super("Goldshire Footman",-1,1,1,2);
 		setTaunt(true);
 	}
 	

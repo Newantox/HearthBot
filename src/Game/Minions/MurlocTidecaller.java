@@ -4,8 +4,8 @@ import Game.SummonEffects.MurlocTidecallerSE;
 
 public class MurlocTidecaller extends Minion {
 	
-	public MurlocTidecaller(int target) {
-		super("Murloc Tidecaller",target,1,1,2);
+	public MurlocTidecaller() {
+		super("Murloc Tidecaller",-1,1,1,2);
 		setRace(Race.MURLOC);
 		addSummonEffect(new MurlocTidecallerSE());
 	}

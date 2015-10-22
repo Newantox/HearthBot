@@ -1,23 +1,22 @@
 package Game.Auras;
 
+import Game.Buffs.AdditiveBuff;
 import Game.Minions.Minion;
 import Game.Minions.Race;
 import Game.MyTurnState;
 
 public class MurlocWarleaderAura extends Aura {
 	
-	@Override
-	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
-		if ((target.getRace()).equals(Race.MURLOC)) {
-			return oldstate.changeAtkHP(target,2,1);
-		}
-		else return oldstate;
+	private double id;
+
+	public MurlocWarleaderAura() {
+		id = Math.random();
 	}
 	
 	@Override
-	public MyTurnState remove(MyTurnState oldstate, Minion source, Minion target) {
+	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
 		if ((target.getRace()).equals(Race.MURLOC)) {
-			return oldstate.changeAtkHP(target,-2,-1);
+			return oldstate.applyBuff(target.getId(), new AdditiveBuff(id,2,1,0));
 		}
 		else return oldstate;
 	}

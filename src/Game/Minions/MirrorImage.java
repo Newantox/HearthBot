@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class MirrorImage extends Minion {
 	
-	public MirrorImage(int target) {
-		super("Mirror Image",target,0,0,2);
+	public MirrorImage() {
+		super("Mirror Image",-1,0,0,2);
 		setTaunt(true);
 	}
 	

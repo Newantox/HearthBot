@@ -4,8 +4,8 @@ import Game.DeathEffects.SiltfinSpiritwalkerDE;
 
 public class SiltfinSpiritwalker extends Minion {
 	
-	public SiltfinSpiritwalker(int target) {
-		super("Siltfin Spiritwalker",target,4,2,5);
+	public SiltfinSpiritwalker() {
+		super("Siltfin Spiritwalker",-1,4,2,5);
 		setRace(Race.MURLOC);
 		addDeathEffect(new SiltfinSpiritwalkerDE());
 	}

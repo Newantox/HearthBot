@@ -27,8 +27,9 @@ public class PaladinPower extends HeroPower {
 		
 		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getPositionsInPlayOrder(), oldstate.getEnemyHandSize());
 	
-		Minion minion = new SilverHandRecruit(tempstate.numberOfAlliedMinions());
-		return  minion.place(tempstate);
+		Minion minion = new SilverHandRecruit();
+		minion.setMyPos(tempstate.numberOfAlliedMinions());
+		return  tempstate.placeMinion(minion);
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package Game.Minions;
 
-import Game.Battlecrys.FireElementalBC;
+import Game.Battlecrys.ChooseTargetDamageBC;
 
 public class FireElemental extends Minion {
 
-	public FireElemental(int target) {
-		super("Fire Elemental",target,6,6,5);
-		battlecrys.add(new FireElementalBC());
+	public FireElemental() {
+		super("Fire Elemental",-1,6,6,5);
+		battlecrys.add(new ChooseTargetDamageBC(3));
 	}
 	
 	public FireElemental(Minion m) {

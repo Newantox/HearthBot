@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class FrostwolfGrunt extends Minion {
 
-	public FrostwolfGrunt(int target) {
-		super("Frostwolf Grunt",target,2,2,2);
+	public FrostwolfGrunt() {
+		super("Frostwolf Grunt",-1,2,2,2);
 		setTaunt(true);
 	}
 	

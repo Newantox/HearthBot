@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class WorgenInfiltrator extends Minion {
 	
-	public WorgenInfiltrator(int target) {
-		super("Worgen Infiltrator",target,1,2,1);
+	public WorgenInfiltrator() {
+		super("Worgen Infiltrator",-1,1,2,1);
 		setStealth(true);
 	}
 	

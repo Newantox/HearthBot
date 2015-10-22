@@ -1,10 +1,12 @@
 package Game.Minions;
 
+import Game.Battlecrys.ChooseTargetHealBC;
+
 public class VoodooDoctor extends Minion {
 
-	public VoodooDoctor(int target) {
-		super("Voodoo Doctor",target,1,2,1);
-		battlecrys.add(new VoodooDoctorBC());
+	public VoodooDoctor() {
+		super("Voodoo Doctor",-1,1,2,1);
+		battlecrys.add(new ChooseTargetHealBC(2));
 	}
 	
 	public VoodooDoctor(Minion m) {

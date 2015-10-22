@@ -1,11 +1,13 @@
 package Game.Minions;
 
+import Game.EndTurnEffects.HealingTotemET;
+
 public class HealingTotem extends Minion {
 
-	public HealingTotem(int target) {
-		super("Healing Totem",target,1,0,2);
+	public HealingTotem() {
+		super("Healing Totem",-1,1,0,2);
 		setRace(Race.TOTEM);
-		addEndTurnEffect(new HealingTotemET());
+		endTurnEffects.add(new HealingTotemET());
 	}
 	
 	public HealingTotem(Minion m) {

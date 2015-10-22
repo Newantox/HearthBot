@@ -1,6 +1,7 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
+import Game.Character;
 import Game.MyTurnState;
 import Game.Minions.Minion;
 import Game.Minions.SilverHandRecruit;
@@ -13,11 +14,12 @@ public class MusterForBattle extends UntargettedSpell {
 	}
 
 	@Override
-	public MyTurnState playCard(BoardState oldstate, int target) {
+	public MyTurnState playCard(BoardState oldstate, Character target) {
 		int i = oldstate.numberOfAlliedMinions();
 		MyTurnState tempstate = oldstate;
 		while (i<7 && i<oldstate.numberOfAlliedMinions()+3) {
-			Minion minion = new SilverHandRecruit(i);
+			Minion minion = new SilverHandRecruit();
+			minion.setMyPos(i);
 			tempstate = tempstate.placeMinion(minion);
 		}
 		return tempstate.equipHeroWeapon(new LightsJustice());

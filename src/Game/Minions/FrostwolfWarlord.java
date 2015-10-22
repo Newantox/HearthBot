@@ -1,9 +1,11 @@
 package Game.Minions;
 
+import Game.Battlecrys.FrostwolfWarlordBC;
+
 public class FrostwolfWarlord extends Minion {
 
-	public FrostwolfWarlord(int target) {
-		super("Frostwolf Warlord",target,5,4,4);
+	public FrostwolfWarlord() {
+		super("Frostwolf Warlord",-1,5,4,4);
 		battlecrys.add(new FrostwolfWarlordBC());
 	}
 	

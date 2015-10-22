@@ -36,11 +36,13 @@ public class SwapCards implements Action {
 		MyTurnState newState = oldstate;
 		
 		if (newHand.getSize()==3) turn = 1;
-		else {turn = 2; newHand.add(4,new TheCoin());}
+		else {turn = 2; newHand.add(new TheCoin());}
 		
-		for (int position : positions) {
-			newDeck = newDeck.add((newHand.raw()).get(position), 1);
-			newHand = newHand.remove(position);
+		for (int i = newHand.getSize()-1; i>=0; i--) {
+			if (positions.contains(i)) {
+				newDeck = newDeck.add((newHand.raw()).get(i), 1);
+				newHand = newHand.remove(i);
+			}
 		}
 		
 		newHero.setMyDeck(newDeck);

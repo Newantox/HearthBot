@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class IronbarkProtector extends Minion {
 
-	public IronbarkProtector(int target) {
-		super("Ironbark Protector",target,8,8,8);
+	public IronbarkProtector() {
+		super("Ironbark Protector",-1,8,8,8);
 		setTaunt(true);
 	}
 	

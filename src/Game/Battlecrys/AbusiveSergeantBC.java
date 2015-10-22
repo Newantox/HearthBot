@@ -1,20 +1,21 @@
 package Game.Battlecrys;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import Game.BoardState;
 import Game.ChoiceState;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.Actions.ChoiceAction;
+import Game.Buffs.AdditiveBuff;
 import Game.Minions.Minion;
 import Search.Action;
 
-public class AbusiveSergeantBC extends MinionBattlecry {
+public class AbusiveSergeantBC extends Battlecry {
 
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int position : oldstate.getPositionsInPlayOrder()) {
 			if (position<7) {
@@ -36,31 +37,10 @@ public class AbusiveSergeantBC extends MinionBattlecry {
 			this.target = target;
 		}
 
-		@SuppressWarnings("unchecked")
 		public MyTurnState result(BoardState oldstate) {
-			Minion defender;
-			
-			if (target<7) {
-				ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
-				
-				defender = new Minion((oldstate.getMySide()).get(target));
-				
-				defender.setTempAtkChange(defender.getTempAtkChange() + 2);
-				newMySide.set(target, defender);
-				
-				return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
-			}
-			
-			else {
-				ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
-				
-				defender = new Minion((oldstate.getOppSide()).get(target-7));
-				
-				defender.setTempAtkChange(defender.getTempAtkChange() + 2);
-				newOppSide.set(target, defender);
-				
-			    return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
-			}
+			Minion minion = (oldstate.getMySide()).get(target);
+
+			return oldstate.applyTempBuff(minion.getId(),new AdditiveBuff(-1,2,0,0));
 		}
 
 		@Override

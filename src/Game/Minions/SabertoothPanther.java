@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class SabertoothPanther extends Minion {
 
-	public SabertoothPanther(int target) {
-		super("Sabertooth Panther",target,2,3,2);
+	public SabertoothPanther() {
+		super("Sabertooth Panther",-1,2,3,2);
 		setRace(Race.BEAST);
 		setStealth(true);
 	}

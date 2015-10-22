@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class MurlocRaider extends Minion {
 
-	public MurlocRaider(int target) {
-		super("Murloc Raider",target,1,2,1);
+	public MurlocRaider() {
+		super("Murloc Raider",-1,1,2,1);
 		setRace(Race.MURLOC);
 	}
 	

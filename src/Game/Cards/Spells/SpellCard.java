@@ -1,9 +1,9 @@
 package Game.Cards.Spells;
 
-import Game.Card;
 import Game.CardType;
+import Game.PlayableCard;
 
-public abstract class SpellCard implements Card {
+public abstract class SpellCard implements PlayableCard {
 	private String name;
 	private int cost;
 	

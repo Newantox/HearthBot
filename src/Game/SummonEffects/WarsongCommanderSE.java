@@ -1,13 +1,15 @@
 package Game.SummonEffects;
 
 import Game.MyTurnState;
+import Game.PlayableCard;
+import Game.Buffs.AttributeBuff;
 import Game.Minions.Minion;
 
 public class WarsongCommanderSE extends SummonEffect {
 	
-	public MyTurnState perform(MyTurnState oldstate, Minion source, Minion minion) {
+	public MyTurnState perform(MyTurnState oldstate, PlayableCard source, Minion minion) {
 		if (minion.getAtk()<=3) {
-			return oldstate.changeAttributes(minion, true, minion.isDivineShield(), minion.isTaunt(), minion.isStealth(), minion.getWindfury(), minion.getSpelldamage(), minion.isFrozen());
+			return oldstate.applyBuff(minion.getId(), new AttributeBuff(-1,1,0,0,0,0,0,0,0));
 		}
 		else return oldstate;
 	}

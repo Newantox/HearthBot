@@ -1,6 +1,7 @@
 package Game.Cards.Spells.TargettedSpell;
 
 import Game.BoardState;
+import Game.Character;
 import Game.MyTurnState;
 import Game.TargetsType;
 
@@ -13,7 +14,7 @@ public class HammerOfWrath extends TargettedSpell {
 	private int damage = 3;
 
 	@Override
-	public MyTurnState playCard(BoardState oldstate, int target) {
+	public MyTurnState playCard(BoardState oldstate, Character target) {
 		MyTurnState tempstate = oldstate.spellDamageTarget(target, damage);
 		
 		return tempstate.drawCard();

@@ -1,19 +1,20 @@
 package Game.Actions;
 
 import Game.BoardState;
-import Game.Card;
+import Game.Character;
 import Game.Hand;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.Heroes.Hero;
 import Search.Action;
 
 public class PlayCard implements Action {
 	
-	private Card card;
-	private int target;
+	private PlayableCard card;
+	private Character target;
 	private int pos;
 	
-	public PlayCard(Card card, int target, int pos) {
+	public PlayCard(PlayableCard card, Character target, int pos) {
 		this.card = card;
 		this.target = target;
 		this.pos = pos;

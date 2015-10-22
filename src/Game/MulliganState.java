@@ -36,6 +36,7 @@ public class MulliganState implements State {
 
 	@Override
 	public MyTurnState getActionResult(Action action) {
+		action.print();
 		return action.result(state);
 	}
 
@@ -64,7 +65,7 @@ public class MulliganState implements State {
 		return false;
 	}
 	
-	private boolean goodStart(Card card) {
+	private boolean goodStart(PlayableCard card) {
 		if (card.getCost()<=3) return true;
 		else return false;
 	}

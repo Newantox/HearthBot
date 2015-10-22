@@ -4,8 +4,8 @@ import Game.Auras.OldMurkEyeAura;
 
 public class OldMurkEye extends Minion {
 
-	public OldMurkEye(int target) {
-		super("Old Murk-Eye",target,4,2,4);
+	public OldMurkEye() {
+		super("Old Murk-Eye",-1,4,2,4);
 		setRace(Race.MURLOC);
 		setCharge(true);
 		auras.add(new OldMurkEyeAura());

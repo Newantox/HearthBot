@@ -4,8 +4,8 @@ import Game.Battlecrys.NightbladeBC;
 
 public class Nightblade extends Minion {
 
-	public Nightblade(int target) {
-		super("Nightblade",target,5,4,4);
+	public Nightblade() {
+		super("Nightblade",-1,5,4,4);
 		battlecrys.add(new NightbladeBC());
 	}
 	

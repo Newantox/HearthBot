@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class RiverCrocolisk extends Minion {
 
-	public RiverCrocolisk(int target) {
-		super("River Crocolisk",target,2,2,3);
+	public RiverCrocolisk() {
+		super("River Crocolisk",-1,2,2,3);
 		setRace(Race.BEAST);
 	}
 	

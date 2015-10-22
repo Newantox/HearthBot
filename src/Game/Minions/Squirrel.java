@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class Squirrel extends Minion {
 
-	public Squirrel(int target) {
-		super("Squirrel",target,1,1,1);
+	public Squirrel() {
+		super("Squirrel",-1,1,1,1);
 		setRace(Race.BEAST);
 	}
 	

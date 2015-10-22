@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class TundraRhino extends Minion {
 
-	public TundraRhino(int target) {
-		super("Tundra Rhino",target,5,2,5);
+	public TundraRhino() {
+		super("Tundra Rhino",-1,5,2,5);
 		setRace(Race.BEAST);
 		auras.add(new TundraRhinoAura());
 	}

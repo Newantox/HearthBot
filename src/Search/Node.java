@@ -20,6 +20,15 @@ public class Node {
 		else { this.depth = parent.depth + 1; this.gn = action.cost() + parent.gn;}
 	}
 	
+	public Node(Node n) {
+		this.parent = n.parent;
+		this.action = n.action;
+		this.state = n.state;
+		this.done = n.done;
+		this.depth = n.depth;
+		this.gn = n.gn;
+	}
+	
 	public double getValue() {
 		return state.getValue(this);
 	}

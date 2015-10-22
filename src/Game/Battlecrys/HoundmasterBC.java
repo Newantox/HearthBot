@@ -6,19 +6,22 @@ import java.util.Set;
 import Game.BoardState;
 import Game.ChoiceState;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.Actions.ChoiceAction;
+import Game.Buffs.AdditiveBuff;
+import Game.Buffs.AttributeBuff;
 import Game.Minions.Minion;
 import Game.Minions.Race;
 import Search.Action;
 
-public class HoundmasterBC extends MinionBattlecry {
+public class HoundmasterBC extends Battlecry {
 	
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int position : oldstate.getPositionsInPlayOrder()) {
 			if (position<7) {
-				if (((oldstate.getMySide()).get(position)).isTargettable() && ((oldstate.getMySide()).get(position)).getRace()==Race.BEAST) actions.add(new HoundmasterChoice(minion,position));
+				if (((oldstate.getMySide()).get(position)).isTargettable() && ((oldstate.getMySide()).get(position)).getRace()==Race.BEAST) actions.add(new HoundmasterChoice((Minion) minion,position));
 			}	
 		}
 		if (actions.size()==0) return oldstate;
@@ -38,12 +41,10 @@ public class HoundmasterBC extends MinionBattlecry {
 		public MyTurnState result(BoardState oldstate) {
 			
 			Minion minion = (oldstate.getMySide()).get(target);
-				
-			BoardState tempstate = minion.changeAttributes(oldstate,minion.isCharge(),minion.isDivineShield(),true,minion.isStealth(),minion.getWindfury(),minion.getSpelldamage(),minion.isFrozen());	
 			
-			minion = (tempstate.getMySide()).get(target);
+			MyTurnState tempstate = oldstate.applyBuff(minion.getId(), new AttributeBuff(-1,0,0,1,0,0,0,0,0));
 			
-			return tempstate.changeAtkHP(minion, 2, 2);
+			return tempstate.applyBuff(minion.getId(), new AdditiveBuff(-1,2,2,0));
 			    
 		}
 

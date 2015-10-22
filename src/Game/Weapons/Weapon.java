@@ -3,35 +3,49 @@ package Game.Weapons;
 import java.util.ArrayList;
 
 import Game.BoardState;
+import Game.CardType;
+import Game.Character;
 import Game.MyTurnState;
-import Game.Battlecrys.WeaponBattlecry;
-import Game.Deathrattles.WeaponDeathrattle;
+import Game.PlayableCard;
+import Game.Battlecrys.Battlecry;
+import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
-import Game.Inspires.WeaponInspire;
+import Game.Inspires.Inspire;
 import Game.Minions.Minion;
 
-public class Weapon {
+public class Weapon implements PlayableCard {
+	private double id;
 	private String name;
 	private int cost;
 	private int atk;
 	private int durability;
 	
-	protected ArrayList<WeaponBattlecry> battlecrys;
-	protected ArrayList<WeaponDeathrattle> deathrattles;
-	protected ArrayList<WeaponInspire> inspires;
+	protected ArrayList<Battlecry> battlecrys;
+	protected ArrayList<Deathrattle> deathrattles;
+	protected ArrayList<Inspire> inspires;
 	
 	public Weapon(String name, int cost, int atk, int durability) {
+		this.id = Math.random();
 		this.name = name;
 		this.cost = cost;
 		this.atk = atk;
 		this.setDurability(durability);
 		
-		this.battlecrys = new ArrayList<WeaponBattlecry>();
-		this.deathrattles = new ArrayList<WeaponDeathrattle>();
-		this.inspires = new ArrayList<WeaponInspire>();
+		this.battlecrys = new ArrayList<Battlecry>();
+		this.deathrattles = new ArrayList<Deathrattle>();
+		this.inspires = new ArrayList<Inspire>();
 	}
 	
+	public double getId() {
+		return id;
+	}
+
+	public void setId(double id) {
+		this.id = id;
+	}
+
 	public Weapon(Weapon w) {
+		this.id = w.getId();
 			this.name = w.getName();
 			this.cost = w.getCost();
 			this.atk = w.getAtk();
@@ -42,27 +56,27 @@ public class Weapon {
 			this.inspires = w.getInspires();
 	}
 	
-	public ArrayList<WeaponBattlecry> getBattlecrys() {
+	public ArrayList<Battlecry> getBattlecrys() {
 		return battlecrys;
 	}
 
-	public void setBattlecrys(ArrayList<WeaponBattlecry> battlecrys) {
+	public void setBattlecrys(ArrayList<Battlecry> battlecrys) {
 		this.battlecrys = battlecrys;
 	}
 
-	public ArrayList<WeaponDeathrattle> getDeathrattles() {
+	public ArrayList<Deathrattle> getDeathrattles() {
 		return deathrattles;
 	}
 
-	public void setDeathrattles(ArrayList<WeaponDeathrattle> deathrattles) {
+	public void setDeathrattles(ArrayList<Deathrattle> deathrattles) {
 		this.deathrattles = deathrattles;
 	}
 
-	public ArrayList<WeaponInspire> getInspires() {
+	public ArrayList<Inspire> getInspires() {
 		return inspires;
 	}
 
-	public void setInspires(ArrayList<WeaponInspire> inspires) {
+	public void setInspires(ArrayList<Inspire> inspires) {
 		this.inspires = inspires;
 	}
 
@@ -102,44 +116,34 @@ public class Weapon {
 		return new Weapon(this);
 	}
 	
-	public MyTurnState attackWith(BoardState oldstate, Minion defender) {
-		Hero hero = (oldstate.getHero()).fresh();
-		hero.setReady(false);
-		BoardState tempstate1 = hero.damage(oldstate,defender.getAtk());
-		MyTurnState tempstate2 = defender.damage(tempstate1,atk);
-		if (hero.getMyPos()==14) return tempstate2.changeHeroWeaponAtkDurability(0,-1);
-		else return tempstate2.changeEnemyWeaponAtkDurability(0,-1);
+	public MyTurnState attackWith(BoardState oldstate, Hero defender) {
+		return oldstate.heroAttack(id,defender);
 	}
 	
-	public MyTurnState attackWith(BoardState oldstate, Hero defender) {
-		Hero hero = (oldstate.getHero()).fresh();
-		BoardState tempstate = defender.damage(oldstate,atk);
-		hero.setReady(false);
-		tempstate =  new BoardState(tempstate.getViewType(),hero,tempstate.getEnemy(),tempstate.getOppSide(),tempstate.getMySide(),tempstate.getPositionsInPlayOrder(),tempstate.getEnemyHandSize());
-		if (hero.getMyPos()==14) return tempstate.changeHeroWeaponAtkDurability(0,-1);
-		else return tempstate.changeEnemyWeaponAtkDurability(0,-1);
+	public MyTurnState attackWith(BoardState oldstate, Minion defender) {
+		return oldstate.heroAttack(id,defender);
 	}
 	
 	public MyTurnState battleCry(MyTurnState oldstate) {
 		MyTurnState tempstate = oldstate;
-		for (WeaponBattlecry battlecry : battlecrys) {
-			tempstate = battlecry.trigger(tempstate);
+		for (Battlecry battlecry : battlecrys) {
+			tempstate = battlecry.trigger(this,tempstate);
 		}
 		return tempstate;
 	}
 	
 	public MyTurnState deathRattle(MyTurnState oldstate) {
 		MyTurnState tempstate = oldstate;
-		for (WeaponDeathrattle deathrattle : deathrattles) {
-			tempstate = deathrattle.trigger(tempstate);
+		for (Deathrattle deathrattle : deathrattles) {
+			tempstate = deathrattle.trigger(this,tempstate);
 		}
 		return tempstate;
 	}
 	
 	public MyTurnState inspire(BoardState oldstate) {
 		MyTurnState tempstate = oldstate;
-		for (WeaponInspire inspire : inspires) {
-			tempstate = inspire.trigger(tempstate);
+		for (Inspire inspire : inspires) {
+			tempstate = inspire.trigger(this,tempstate);
 		}
 		return tempstate;
 	}
@@ -152,6 +156,16 @@ public class Weapon {
 		if (atk != other.getAtk()) return false;
 		if (durability != other.getDurability()) return false;
 		return true;
+	}
+
+	@Override
+	public MyTurnState playCard(BoardState oldstate, Character target) {
+		return (oldstate.getHero()).equipWeapon(oldstate, this);
+	}
+
+	@Override
+	public CardType getType() {
+		return CardType.WEAPON;
 	} 
 	
 }

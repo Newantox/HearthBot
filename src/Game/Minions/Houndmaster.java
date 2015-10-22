@@ -4,8 +4,8 @@ import Game.Battlecrys.HoundmasterBC;
 
 public class Houndmaster extends Minion {
 
-	public Houndmaster(int target) {
-		super("Houndmaster",target,4,4,3);
+	public Houndmaster() {
+		super("Houndmaster",-1,4,4,3);
 		battlecrys.add(new HoundmasterBC());
 	}
 	

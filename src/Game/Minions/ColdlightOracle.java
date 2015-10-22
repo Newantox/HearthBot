@@ -4,8 +4,8 @@ import Game.Battlecrys.ColdlightOracleBC;
 
 public class ColdlightOracle extends Minion {
 	
-	public ColdlightOracle(int target) {
-		super("Coldlight Oracle",target,3,2,2);
+	public ColdlightOracle() {
+		super("Coldlight Oracle",-1,3,2,2);
 		setRace(Race.MURLOC);
 		battlecrys.add(new ColdlightOracleBC());
 	}

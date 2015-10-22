@@ -1,14 +1,13 @@
 package Game;
 
+import java.util.ArrayList;
 import java.util.Set;
 
-import Game.Battlecrys.MinionBattlecry;
-import Game.Battlecrys.WeaponBattlecry;
-import Game.Deathrattles.MinionDeathrattle;
-import Game.Deathrattles.WeaponDeathrattle;
+import Game.Battlecrys.Battlecry;
+import Game.Buffs.Buff;
+import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
-import Game.Inspires.MinionInspire;
-import Game.Inspires.WeaponInspire;
+import Game.Inspires.Inspire;
 import Game.Minions.Minion;
 import Game.Weapons.Weapon;
 import Search.Action;
@@ -69,13 +68,13 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState changeHeroWeaponAtkDurability(int amountAtk, int amountDurability) {
-		return state.changeHeroWeaponAtkDurability(amountAtk,amountDurability);
+	public MyTurnState changeHeroWeaponAtkDurability(double id, int amountAtk, int amountDurability) {
+		return state.changeHeroWeaponAtkDurability(id, amountAtk,amountDurability);
 	}
 	
 	@Override
-	public MyTurnState changeEnemyWeaponAtkDurability(int amountAtk, int amountDurability) {
-		return state.changeEnemyWeaponAtkDurability(amountAtk,amountDurability);
+	public MyTurnState changeEnemyWeaponAtkDurability(double id, int amountAtk, int amountDurability) {
+		return state.changeEnemyWeaponAtkDurability(id, amountAtk,amountDurability);
 	}
 	
 	@Override
@@ -84,43 +83,18 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState changeAtkHP(Minion minion, int amountAtk, int amountHP) {
-		return state.changeAtkHP(minion, amountAtk, amountHP);
-	}
-	
-	@Override
-	public MyTurnState changeAttributes(Minion minion, boolean charge, boolean divineshield, boolean taunt, boolean stealth, boolean windfury, int spelldamage, boolean frozen) {
-		return state.changeAttributes(minion,charge,divineshield,taunt,stealth,windfury,spelldamage,frozen);
-	}
-	
-	@Override
-	public MyTurnState performBC(MinionBattlecry battlecry, Minion minion) {
-		return state.performBC(battlecry, minion);
+	public MyTurnState performBC(Battlecry battlecry, PlayableCard card) {
+		return state.performBC(battlecry, card);
 	}
 
 	@Override
-	public MyTurnState performDR(MinionDeathrattle deathrattle, Minion minion) {
-		return state.performDR(deathrattle, minion);
+	public MyTurnState performDR(Deathrattle deathrattle, PlayableCard card) {
+		return state.performDR(deathrattle, card);
 	}
 	
 	@Override
-	public MyTurnState performBC(WeaponBattlecry battlecry) {
-		return state.performBC(battlecry);
-	}
-	
-	@Override
-	public MyTurnState performDR(WeaponDeathrattle deathrattle) {
-		return state.performDR(deathrattle);
-	}
-	
-	@Override
-	public MyTurnState performInspire(MinionInspire inspire, Minion minion) {
-		return state.performInspire(inspire, minion);
-	}
-	
-	@Override
-	public MyTurnState performInspire(WeaponInspire inspire) {
-		return state.performInspire(inspire);
+	public MyTurnState performInspire(Inspire inspire, PlayableCard card) {
+		return state.performInspire(inspire, card);
 	}
 	
 	@Override
@@ -197,19 +171,47 @@ public class ChoiceState implements MyTurnState {
 
 	@Override
 	public MyTurnState doStartTurnEffects(Hero hero) {
-		// TODO Auto-generated method stub
-		return null;
+		return state.doStartTurnEffects(hero);
 	}
 
 	@Override
 	public MyTurnState doEndTurnEffects(Hero hero) {
-		// TODO Auto-generated method stub
-		return null;
+		return state.doEndTurnEffects(hero);
 	}
 
 	@Override
 	public MyTurnState viewBiased() {
 		return new ChoiceState((BoardState) state.viewBiased(), actions);
+	}
+
+	@Override
+	public MyTurnState applyBuff(double minionID, Buff buff) {
+		return state.applyBuff(minionID,buff);
+	}
+
+	@Override
+	public MyTurnState removeBuff(double  minionID, double id) {
+		return state.removeBuff(minionID,id);
+	}
+
+	@Override
+	public MyTurnState damage(Character defender, int atk) {
+		return state.damage(defender,atk);
+	}
+
+	@Override
+	public MyTurnState heroAttack(double id, Hero defender) {
+		return state.heroAttack(id, defender);
+	}
+
+	@Override
+	public MyTurnState heroAttack(double id, Minion defender) {
+		return state.heroAttack(id, defender);
+	}
+
+	@Override
+	public MyTurnState simultaneousHeal(TargetsType enemyminions, int i, ArrayList<Minion> arrayList) {
+		return state.simultaneousHeal(enemyminions, i, arrayList);
 	}
 	
 }

@@ -1,13 +1,15 @@
 package Game.Heroes;
 
 import Game.BoardState;
+import Game.CardType;
+import Game.Character;
 import Game.Deck;
 import Game.Hand;
 import Game.MyTurnState;
 import Game.Heroes.HeroPowers.HeroPower;
 import Game.Weapons.Weapon;
 
-public class Hero {
+public class Hero implements Character {
 	private String name;
 	private int myPos;
 	private int HP;
@@ -22,12 +24,13 @@ public class Hero {
 	private Weapon weapon;
 	private boolean ready;
 	private boolean powerUsed;
+	private boolean immune;
 	
 	private HeroPower power;
 	
-	public Hero(String name, int mypos, int HP, int maxHP, int Armour, int currentMana, int totalMana, Hand myHand, Deck myDeck, int overload, int fatigue, Weapon weapon) {
+	public Hero(String name, int myPos, int HP, int maxHP, int Armour, int currentMana, int totalMana, Hand myHand, Deck myDeck, int overload, int fatigue, Weapon weapon) {
 		this.name = name;
-		this.myPos = mypos;
+		this.myPos = myPos;
 		this.HP = HP;
 		this.maxHP = maxHP;
 		this.armour = Armour;
@@ -40,6 +43,7 @@ public class Hero {
 		this.weapon = weapon;
 		this.ready = true;
 		this.powerUsed = false;
+		this.immune = false;
 	}
 
 	public Hero(Hero h) {
@@ -57,8 +61,13 @@ public class Hero {
 		this.ready = h.isReady();
 		this.powerUsed = h.getPowerUsed();
 		this.power = h.getHeroPower();
+		this.immune = h.isImmune();
 	}
 	
+	public void setImmune(boolean immune) {
+		this.immune = immune;
+	}
+
 	public int getFatigue() {
 		return fatigue;
 	}
@@ -118,12 +127,17 @@ public class Hero {
 	public void setOverload(int overload) {
 		this.overload = overload;
 	}
+	
+	public int getAtk() {
+		if (weapon.equals(null)) return 0;
+		else return weapon.getAtk();
+	}
 
 	public Hero fresh() {
 		return new Hero(this);
 	}
 	
-	public BoardState damage(BoardState oldstate, int amount) {
+	public MyTurnState damage(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		if (hero.getArmour()>=amount) hero.setArmour(hero.getArmour()-2);
 		else {int additional = amount - hero.getArmour(); hero.setArmour(0); hero.setHP(hero.getHP()-additional);}
@@ -131,7 +145,7 @@ public class Hero {
 		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
 	}
 	
-	public BoardState heal(BoardState oldstate, int amount) {
+	public MyTurnState heal(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setHP(Math.min(hero.getHP()+amount,hero.getMaxHP()));
 		
@@ -277,5 +291,25 @@ public class Hero {
 		else if (!weapon.equals(other.getWeapon())) return false;
 		if (ready != other.isReady()) return false;
 		return true;
+	}
+
+	@Override
+	public int getCost() {
+		return 0;
+	}
+
+	@Override
+	public MyTurnState playCard(BoardState oldstate, Character target) {
+		return null;
+	}
+
+	@Override
+	public CardType getType() {
+		return CardType.HERO;
+	}
+
+	@Override
+	public boolean isImmune() {
+		return immune;
 	}
 }

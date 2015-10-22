@@ -4,8 +4,8 @@ import Game.Battlecrys.AbusiveSergeantBC;
 
 public class AbusiveSergeant extends Minion {
 
-	public AbusiveSergeant(int target) {
-		super("Abusive Sergeant",target,1,2,1);
+	public AbusiveSergeant() {
+		super("Abusive Sergeant",-1,1,2,1);
 		battlecrys.add(new AbusiveSergeantBC());
 		
 	}

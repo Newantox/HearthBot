@@ -118,6 +118,7 @@ public class PlayGame {
 			if(stack.isEmpty()) return (MyTurnState) startState;
 			else {
 				node = stack.pop();
+				if ((node.action)==(null)) node = stack.pop();
 				currentState = startState.getActionResult(node.action);
 				currentState = currentState.resolveRNG();
 			}

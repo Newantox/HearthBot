@@ -2,7 +2,9 @@ package Main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import Game.BoardState;
 import Game.Card;
@@ -10,6 +12,7 @@ import Game.Deck;
 import Game.GameGoalTest;
 import Game.GamePrinting;
 import Game.Hand;
+import Game.MulliganState;
 import Game.MyTurnState;
 import Game.ViewType;
 import Game.Minions.AbusiveSergeant;
@@ -23,22 +26,11 @@ import Game.Minions.Murloc;
 import Game.Minions.MurlocTidecaller;
 import Game.Minions.MurlocWarleader;
 import Game.Minions.ShieldedMinibot;
+import Game.Minions.SouthseaDeckhand;
 import Game.Minions.Wisp;
 import Game.Minions.Wolfrider;
 import Game.Actions.PlayCard;
-import Game.Cards.Minions.AbusiveSergeantCard;
-import Game.Cards.Minions.ArgentSquireCard;
-import Game.Cards.Minions.GrimscaleOracleCard;
-import Game.Cards.Minions.KnifeJugglerCard;
-import Game.Cards.Minions.LeperGnomeCard;
-import Game.Cards.Minions.LootHoarderCard;
-import Game.Cards.Minions.MurlocCard;
-import Game.Cards.Minions.MurlocScoutCard;
-import Game.Cards.Minions.MurlocTidehunterCard;
-import Game.Cards.Minions.MurlocWarleaderCard;
-import Game.Cards.Minions.ShieldedMinibotCard;
-import Game.Cards.Minions.SouthseaDeckhandCard;
-import Game.Cards.Minions.WolfriderCard;
+import Game.Actions.SwapCards;
 import Game.Cards.Spells.TargettedSpell.BlessingOfMight;
 import Game.Cards.Spells.TargettedSpell.Fireball;
 import Game.Cards.Spells.TargettedSpell.HammerOfWrath;
@@ -48,8 +40,6 @@ import Game.Cards.Spells.Untargetted.DivineFavour;
 import Game.Cards.Spells.Untargetted.Equality;
 import Game.Cards.Spells.Untargetted.MusterForBattle;
 import Game.Cards.Spells.Untargetted.TheCoin;
-import Game.Cards.Weapons.SwordOfJusticeCard;
-import Game.Cards.Weapons.TruesilverChampionCard;
 import Game.Heroes.Hero;
 import Game.Heroes.Uther;
 import Game.Minions.Minion;
@@ -57,6 +47,8 @@ import Game.SummonEffects.KnifeJugglerSE;
 import Game.SummonEffects.SummonEffect;
 import Game.SummonEffects.SwordOfJusticeSE;
 import Game.Weapons.FieryWarAxe;
+import Game.Weapons.SwordOfJustice;
+import Game.Weapons.TruesilverChampion;
 import GameSearch.GameHeuristic;
 import Search.AStarFunction;
 import Search.BestFirstFrontier;
@@ -90,51 +82,63 @@ public class Test {
 	//	initMy[5].setReady(true);
 	//  initMy[6].setReady(true);
 		
-	//	myHand.add(new ArgentSquireCard());
+	//	myHand.add(new ArgentSquire());
 	//	myHand.add(new Equality());
-	//	myHand.add(new AbusiveSergeantCard());
+	//	myHand.add(new AbusiveSergeant());
 	//	myHand.add(new DivineFavour());
 	//	myHand.add(new TheCoin());
-	//	myHand.add(new MurlocTidehunterCard());
-	//	myHand.add(new MurlocScoutCard());
-	//	myHand.add(new MurlocWarleaderCard());
-	//	myHand.add(new MurlocCard());
-	//	myHand.add(new GrimscaleOracleCard());
+	//	myHand.add(new MurlocTidehunter());
+	//	myHand.add(new MurlocScout());
+	//	myHand.add(new MurlocWarleader());
+	//	myHand.add(new Murloc());
+	//	myHand.add(new GrimscaleOracle());
 		
 		//int startmana = 10;
 		Deck myDeck = new Deck();
 		myDeck = myDeck.add(new BlessingOfMight(),2);
 		myDeck = myDeck.add(new Equality(),2);
-		myDeck = myDeck.add(new ShieldedMinibotCard(),2);
-		myDeck = myDeck.add(new SwordOfJusticeCard(),1);
-	/*	myDeck = myDeck.add(new DivineFavour(),2);
+		myDeck = myDeck.add(new ShieldedMinibot(),2);
+		myDeck = myDeck.add(new SwordOfJustice(),1);
+		myDeck = myDeck.add(new DivineFavour(),2);
 		myDeck = myDeck.add(new MusterForBattle(),2);
-		myDeck = myDeck.add(new TruesilverChampionCard(),2);
+		myDeck = myDeck.add(new TruesilverChampion(),2);
 		myDeck = myDeck.add(new Consecration(),2);
 		myDeck = myDeck.add(new HammerOfWrath(),2);
 		myDeck = myDeck.add(new AvengingWrath(),1);
-		myDeck = myDeck.add(new AbusiveSergeantCard(),2);
-		myDeck = myDeck.add(new ArgentSquireCard(),2);
-		myDeck = myDeck.add(new LeperGnomeCard(),2);
-		myDeck = myDeck.add(new SouthseaDeckhandCard(),2);
-		myDeck = myDeck.add(new KnifeJugglerCard(),2);
-		myDeck = myDeck.add(new LootHoarderCard(),1);
-		myDeck = myDeck.add(new WolfriderCard(), 1);*/
+		myDeck = myDeck.add(new AbusiveSergeant(),2);
+		myDeck = myDeck.add(new ArgentSquire(),2);
+		myDeck = myDeck.add(new LeperGnome(),2);
+		myDeck = myDeck.add(new SouthseaDeckhand(),2);
+		myDeck = myDeck.add(new KnifeJuggler(),2);
+		myDeck = myDeck.add(new LootHoarder(),1);
+		myDeck = myDeck.add(new Wolfrider(), 1);
 		
 		Hero hero1 = new Uther("Uther",14,30,30,0,1,1,new Hand(), myDeck, 0, 0, null);
 		Hero hero2 = new Uther("Uther2",15,30,30,0,1,1,new Hand(), myDeck, 0, 0, null);
 		
 		MyTurnState config = new BoardState(ViewType.UNBIASED,hero1,hero2,new ArrayList<Minion>(),new ArrayList<Minion>(),new ArrayList<Integer>(),0);
 		
-		/*config = config.drawCard();
+	/*	config = config.drawCard();
 		config = config.drawCard();
 		config = config.drawCard();
 		config = config.drawCard();
 		config = config.resolveRNG();
-		config = config.placeMinion(new KnifeJuggler(0));
-		config = config.placeMinion(new ShieldedMinibot(1));
-		config = config.resolveRNG();
-		config.print();*/
+		config.print();
+		
+		//config = config.getActionResult(new PlayCard(new KnifeJuggler(),hero1,0));
+		//config = config.getActionResult(new PlayCard(new ShieldedMinibot(),hero1,0));##
+		//config = config.resolveRNG();
+		
+		State config2 = new MulliganState((BoardState) config);
+		
+		Set<Integer> tempset = new HashSet<Integer>();
+		tempset.add(1);
+		tempset.add(3);
+		
+		config2 = config2.getActionResult(new SwapCards(tempset, 0));
+		config2 = ((MyTurnState) config2).resolveRNG();
+		
+		config2.print();*/
 		
 		
 		Player player1 = new Player(hero1);

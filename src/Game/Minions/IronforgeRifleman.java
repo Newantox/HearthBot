@@ -1,12 +1,12 @@
 package Game.Minions;
 
-import Game.Battlecrys.IronforgeRiflemanBC;
+import Game.Battlecrys.ChooseTargetDamageBC;
 
 public class IronforgeRifleman extends Minion {
 
-	public IronforgeRifleman(int target) {
-		super("Ironforge Rifleman",target,3,2,2);
-		battlecrys.add(new IronforgeRiflemanBC());
+	public IronforgeRifleman() {
+		super("Ironforge Rifleman",-1,3,2,2);
+		battlecrys.add(new ChooseTargetDamageBC(1));
 	}
 	
 	public IronforgeRifleman(Minion m) {

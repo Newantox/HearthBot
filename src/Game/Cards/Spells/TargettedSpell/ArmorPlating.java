@@ -1,8 +1,10 @@
 package Game.Cards.Spells.TargettedSpell;
 
 import Game.BoardState;
+import Game.Character;
 import Game.MyTurnState;
 import Game.TargetsType;
+import Game.Buffs.AdditiveBuff;
 import Game.Minions.Minion;
 
 public class ArmorPlating extends TargettedSpell {
@@ -12,11 +14,8 @@ public class ArmorPlating extends TargettedSpell {
 	}
 
 	@Override
-	public MyTurnState playCard(BoardState oldstate, int target) {
-		Minion defender;
-		if (target<7) defender = (oldstate.getMySide()).get(target);
-		else defender = (oldstate.getOppSide()).get(target);
-		return defender.changeAtkHP(oldstate,0,1);
+	public MyTurnState playCard(BoardState oldstate, Character target) {
+		return oldstate.applyBuff(((Minion) target).getId(), new AdditiveBuff(-1,0,1,0));
 	}
 
 	@Override

@@ -4,23 +4,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 import Game.BoardState;
-import Game.Card;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.RandomState;
 import Game.StateProbabilityPair;
+import Game.Heroes.Hero;
 import Game.MinionLists.BeastCardList;
-import Game.MinionLists.MurlocList;
 import Game.Minions.Minion;
 
-public class WebspinnerDR extends MinionDeathrattle {
+public class WebspinnerDR extends Deathrattle {
 
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
-		if (oldstate.numberOfAlliedMinions() < 7) {
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
+		Hero hero;
+		if (((Minion) minion).getMyPos() < 7) hero = oldstate.getHero();
+		else hero = oldstate.getEnemy();
+		if (hero.getMyHandSize()<10) {
 			BeastCardList beastCards = new BeastCardList();
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-			for (Card card : beastCards.get()) {
-				list.add(new StateProbabilityPair(oldstate.addCardToHand(hero,murloc) , (double)1 / (beastCards.get()).size()));
+			for (PlayableCard card : beastCards.get()) {
+				list.add(new StateProbabilityPair(oldstate.addCardToHand(hero,card) , (double)1 / (beastCards.get()).size()));
 			}
 			return new RandomState(list);
 		}

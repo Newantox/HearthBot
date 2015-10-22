@@ -2,13 +2,14 @@ package Game.Deathrattles;
 
 import Game.BoardState;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.Minions.Minion;
 
-public class BloodmageThalnosDR extends MinionDeathrattle {
+public class BloodmageThalnosDR extends Deathrattle {
 
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
-		if (minion.getMyPos() < 7) return oldstate.drawCard();
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
+		if (((Minion) minion).getMyPos() < 7) return oldstate.drawCard();
 		else return oldstate.enemyDrawCard();
 	}
 

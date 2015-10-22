@@ -2,12 +2,12 @@ package Game.Battlecrys;
 
 import Game.BoardState;
 import Game.MyTurnState;
-import Game.Minions.Minion;
+import Game.PlayableCard;
 
-public class AcidicSwampOozeBC extends MinionBattlecry {
+public class AcidicSwampOozeBC extends Battlecry {
 
 		@Override
-		public MyTurnState perform(Minion minion, BoardState oldstate) {
+		public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 			return (oldstate.getEnemy()).destroyWeapon(oldstate);
 		}
 

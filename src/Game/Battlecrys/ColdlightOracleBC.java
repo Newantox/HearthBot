@@ -2,12 +2,12 @@ package Game.Battlecrys;
 
 import Game.BoardState;
 import Game.MyTurnState;
-import Game.Minions.Minion;
+import Game.PlayableCard;
 
-public class ColdlightOracleBC extends MinionBattlecry {
+public class ColdlightOracleBC extends Battlecry {
 
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		MyTurnState tempstate = oldstate.enemyDrawCard();
 		tempstate = tempstate.enemyDrawCard();
 		tempstate = tempstate.drawCard();

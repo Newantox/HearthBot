@@ -1,6 +1,7 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.BoardState;
+import Game.Character;
 import Game.MyTurnState;
 
 public class TheCoin extends UntargettedSpell {
@@ -10,7 +11,7 @@ public class TheCoin extends UntargettedSpell {
 	}
 
 	@Override
-	public MyTurnState playCard(BoardState oldstate, int target) {
+	public MyTurnState playCard(BoardState oldstate, Character target) {
 		return (oldstate.getHero()).useMana(oldstate, -1);
 	}
 

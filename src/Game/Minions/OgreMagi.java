@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class OgreMagi extends Minion {
 
-	public OgreMagi(int target) {
-		super("Ogre Magi",target,4,4,4);
+	public OgreMagi() {
+		super("Ogre Magi",-1,4,4,4);
 		setSpelldamage(1);
 	}
 	

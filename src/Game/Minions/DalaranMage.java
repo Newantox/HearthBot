@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class DalaranMage extends Minion {
 
-	public DalaranMage(int target) {
-		super("Dalaran Mage",target,3,1,4);
+	public DalaranMage() {
+		super("Dalaran Mage",-1,3,1,4);
 		setSpelldamage(1);
 	}
 	

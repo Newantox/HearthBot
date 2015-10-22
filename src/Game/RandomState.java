@@ -1,17 +1,17 @@
 package Game;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import Game.Battlecrys.MinionBattlecry;
-import Game.Battlecrys.WeaponBattlecry;
-import Game.Deathrattles.MinionDeathrattle;
-import Game.Deathrattles.WeaponDeathrattle;
+import Game.Battlecrys.Battlecry;
+import Game.Buffs.Buff;
+import Game.Character;
+import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
-import Game.Inspires.MinionInspire;
-import Game.Inspires.WeaponInspire;
+import Game.Inspires.Inspire;
 import Game.Minions.Minion;
 import Game.Weapons.Weapon;
 import Search.Action;
@@ -56,12 +56,30 @@ public class RandomState implements MyTurnState {
 		}
 		return new RandomState(list);
 	}
+	
+	@Override
+	public MyTurnState damage(Character character, int amount) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().damage(character,amount),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
 
 	@Override
 	public MyTurnState damageRandomHittable(TargetsType targets, int amount) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(thing.getState().damageRandomHittable(targets,amount),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState simultaneousHeal(TargetsType targets, int amount, ArrayList<Minion> exceptions) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().simultaneousHeal(targets,amount,exceptions),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
@@ -94,91 +112,64 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState changeHeroWeaponAtkDurability(int amountAtk, int amountDurability) {
+	public MyTurnState changeHeroWeaponAtkDurability(double weaponID, int amountAtk, int amountDurability) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).changeHeroWeaponAtkDurability(amountAtk,amountDurability),thing.getProbability()));
+			list.add(new StateProbabilityPair((thing.getState()).changeHeroWeaponAtkDurability(weaponID, amountAtk,amountDurability),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
 
 	@Override
-	public MyTurnState changeEnemyWeaponAtkDurability(int amountAtk, int amountDurability) {
+	public MyTurnState changeEnemyWeaponAtkDurability(double weaponID, int amountAtk, int amountDurability) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).changeEnemyWeaponAtkDurability(amountAtk,amountDurability),thing.getProbability()));
+			list.add(new StateProbabilityPair((thing.getState()).changeEnemyWeaponAtkDurability(weaponID, amountAtk,amountDurability),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState changeAttributes(Minion minion, boolean charge, boolean divineshield, boolean taunt, boolean stealth, boolean windfury, int spelldamage, boolean frozen) {
+	public MyTurnState performBC(Battlecry battlecry, PlayableCard card) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).changeAttributes(minion,charge,divineshield,taunt,stealth,windfury,spelldamage,frozen),thing.getProbability()));
+			list.add(new StateProbabilityPair(battlecry.trigger(card,thing.getState()),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState changeAtkHP(Minion minion, int amountAtk, int amountHP) {
+	public MyTurnState performDR(Deathrattle deathrattle, PlayableCard card) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).changeAtkHP(minion,amountAtk,amountHP),thing.getProbability()));
+			list.add(new StateProbabilityPair(deathrattle.trigger(card,thing.getState()),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState performBC(MinionBattlecry battlecry, Minion minion) {
+	public MyTurnState performInspire(Inspire inspire, PlayableCard card) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(battlecry.trigger(minion,thing.getState()),thing.getProbability()));
+			list.add(new StateProbabilityPair(inspire.trigger(card,thing.getState()),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState performDR(MinionDeathrattle deathrattle, Minion minion) {
+	public MyTurnState applyBuff(double minionID, Buff buff) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(deathrattle.trigger(minion,thing.getState()),thing.getProbability()));
+			list.add(new StateProbabilityPair((thing.getState()).applyBuff(minionID,buff),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState performBC(WeaponBattlecry battlecry) {
+	public MyTurnState removeBuff(double minionID, double id) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(battlecry.trigger(thing.getState()),thing.getProbability()));
-		}
-		return new RandomState(list);
-	}
-	
-	@Override
-	public MyTurnState performDR(WeaponDeathrattle deathrattle) {
-		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(deathrattle.trigger(thing.getState()),thing.getProbability()));
-		}
-		return new RandomState(list);
-	}
-	
-	@Override
-	public MyTurnState performInspire(MinionInspire inspire, Minion minion) {
-		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(inspire.trigger(minion,thing.getState()),thing.getProbability()));
-		}
-		return new RandomState(list);
-	}
-	
-	@Override
-	public MyTurnState performInspire(WeaponInspire inspire) {
-		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair(inspire.trigger(thing.getState()),thing.getProbability()));
+			list.add(new StateProbabilityPair((thing.getState()).removeBuff(minionID,id),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}
@@ -233,6 +224,24 @@ public class RandomState implements MyTurnState {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).doEndTurnEffects(hero),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState heroAttack(double id, Hero defender) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).heroAttack(id,defender),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+
+	@Override
+	public MyTurnState heroAttack(double id, Minion defender) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).heroAttack(id,defender),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}

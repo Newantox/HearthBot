@@ -1,14 +1,18 @@
 package Game.Battlecrys;
 
-import Game.BoardState;
-import Game.Minions.Minion;
-import Search.State;
+import java.util.ArrayList;
 
-public class DarkscaleHealerBC extends MinionBattlecry {
+import Game.BoardState;
+import Game.MyTurnState;
+import Game.PlayableCard;
+import Game.TargetsType;
+import Game.Minions.Minion;
+
+public class DarkscaleHealerBC extends Battlecry {
 
 	@Override
-	//public MyTurnState perform(Minion minion, BoardState oldstate) {
-		return oldstate.drawCard();
+	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
+		return oldstate.simultaneousHeal(TargetsType.ALLYCHAR, 2, new ArrayList<Minion>());
 	}
 
 }

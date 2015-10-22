@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class Succubus extends Minion {
 
-	public Succubus(int target) {
-		super("Succubus",target,2,4,3);
+	public Succubus() {
+		super("Succubus",-1,2,4,3);
 		setRace(Race.DEMON);
 		battlecrys.add(new SuccubusBC());
 	}

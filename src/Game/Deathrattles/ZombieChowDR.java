@@ -2,13 +2,14 @@ package Game.Deathrattles;
 
 import Game.BoardState;
 import Game.MyTurnState;
+import Game.PlayableCard;
 import Game.Minions.Minion;
 
-public class ZombieChowDR extends MinionDeathrattle {
+public class ZombieChowDR extends Deathrattle {
 
 	@Override
-	public MyTurnState perform(Minion minion, BoardState oldstate) {
-		if (minion.getMyPos() < 7) return (oldstate.getEnemy()).heal(oldstate, 5);
+	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
+		if (((Minion) minion).getMyPos() < 7) return (oldstate.getEnemy()).heal(oldstate, 5);
 		else return (oldstate.getHero()).heal(oldstate, 5);
 	}
 

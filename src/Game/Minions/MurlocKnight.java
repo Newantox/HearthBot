@@ -4,8 +4,8 @@ import Game.Inspires.MurlocKnightInspire;
 
 public class MurlocKnight extends Minion {
 	
-	public MurlocKnight(int target) {
-		super("Murloc Knight",target,4,3,4);
+	public MurlocKnight() {
+		super("Murloc Knight",-1,4,3,4);
 		setRace(Race.MURLOC);
 		inspires.add(new MurlocKnightInspire());
 	}

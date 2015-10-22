@@ -17,12 +17,13 @@ public class Gorehowl extends Weapon {
 	
 	@Override
 	public MyTurnState attackWith(BoardState oldstate, Minion defender) {
-		Hero hero = (oldstate.getHero()).fresh();
-		hero.setReady(false);
-		BoardState tempstate1 = hero.damage(oldstate,defender.getAtk());
-		MyTurnState tempstate2 = defender.damage(tempstate1,getAtk());
-		
-		if (hero.getMyPos()==14) return tempstate2.changeHeroWeaponAtkDurability(-1,0);
-		else return tempstate2.changeEnemyWeaponAtkDurability(-1,0);
+		Hero newHero = oldstate.getHero().fresh();
+		newHero.setReady(false);
+			
+		MyTurnState tempstate = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		tempstate.damage(newHero,defender.getAtk());
+		tempstate = tempstate.damage(defender,newHero.getWeapon().getAtk());
+			
+		return tempstate.changeHeroWeaponAtkDurability(getId(),0,-1);
 	}
 }

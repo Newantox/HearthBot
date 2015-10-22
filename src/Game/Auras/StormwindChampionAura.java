@@ -1,19 +1,21 @@
 package Game.Auras;
 
 import Game.MyTurnState;
+import Game.Buffs.AdditiveBuff;
 import Game.Minions.Minion;
 
 public class StormwindChampionAura extends Aura {
 
-	@Override
-	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
-		if ((source.getMyPos()<7 && target.getMyPos()<7) || (source.getMyPos()>=7 && target.getMyPos()>=7)) return oldstate.changeAtkHP(target,1,1);
-		else return oldstate;
+	private double id;
+
+	public StormwindChampionAura() {
+		id = Math.random();
 	}
 	
 	@Override
-	public MyTurnState remove(MyTurnState oldstate, Minion source, Minion target) {
-		if ((source.getMyPos()<7 && target.getMyPos()<7) || (source.getMyPos()>=7 && target.getMyPos()>=7)) return oldstate.changeAtkHP(target,-1,-1);
+	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
+		if ((source.getMyPos()<7 && target.getMyPos()<7) || (source.getMyPos()>=7 && target.getMyPos()>=7)) return oldstate.applyBuff(target.getId(), new AdditiveBuff(id,1,1,0));
 		else return oldstate;
 	}
+
 }

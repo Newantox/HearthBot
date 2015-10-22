@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class Panther extends Minion {
 
-	public Panther(int target) {
-		super("Panther",target,2,3,2);
+	public Panther() {
+		super("Panther",-1,2,3,2);
 		setRace(Race.BEAST);
 	}
 	

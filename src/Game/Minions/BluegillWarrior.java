@@ -2,8 +2,8 @@ package Game.Minions;
 
 public class BluegillWarrior extends Minion {
 	
-	public BluegillWarrior(int target) {
-		super("Bluegill Warrior",target,2,2,1);
+	public BluegillWarrior() {
+		super("Bluegill Warrior",-1,2,2,1);
 		setRace(Race.MURLOC);
 		setCharge(true);
 	}
