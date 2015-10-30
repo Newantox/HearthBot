@@ -5,7 +5,11 @@ import Game.Minions.Minion;
 
 public abstract class Aura {
 	
-	private double id;
+	private int id;
+	
+	public Aura() {
+		id = (int) Math.ceil(Math.random()*10000);
+	}
 
 	public abstract MyTurnState apply(MyTurnState oldstate, Minion source, Minion target);
 	
@@ -13,7 +17,7 @@ public abstract class Aura {
 		return oldstate.removeBuff(target.getId(),getId());
 	}
 
-	public double getId() {
+	public int getId() {
 		return id;
 	}
 }

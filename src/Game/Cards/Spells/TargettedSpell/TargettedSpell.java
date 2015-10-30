@@ -1,6 +1,7 @@
 package Game.Cards.Spells.TargettedSpell;
 
 import Game.CardType;
+import Game.Character;
 import Game.TargetsType;
 import Game.Cards.Spells.SpellCard;
 
@@ -16,5 +17,9 @@ public abstract class TargettedSpell extends SpellCard {
 	}
 	
 	public abstract TargetsType getTargets();
+	
+	public void playPrint(Character target) {
+		System.out.println("Cast "+getName()+" "+"at "+target.getName());
+	}
 
 }

@@ -28,9 +28,9 @@ public class RandomState implements MyTurnState {
 	@Override
 	public Set<Action> getApplicableActions() {
 		Set<Action> actions = new LinkedHashSet<Action>();		
-		for (int i = 0; i < states.size(); i++) {
-			actions.add(new IndexAction(i));
-		}
+		//for (int i = 0; i < states.size(); i++) {
+		//	actions.add(new IndexAction(i));
+		//}
 		return actions;
 	}
 
@@ -112,7 +112,7 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState changeHeroWeaponAtkDurability(double weaponID, int amountAtk, int amountDurability) {
+	public MyTurnState changeHeroWeaponAtkDurability(int weaponID, int amountAtk, int amountDurability) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).changeHeroWeaponAtkDurability(weaponID, amountAtk,amountDurability),thing.getProbability()));
@@ -121,7 +121,7 @@ public class RandomState implements MyTurnState {
 	}
 
 	@Override
-	public MyTurnState changeEnemyWeaponAtkDurability(double weaponID, int amountAtk, int amountDurability) {
+	public MyTurnState changeEnemyWeaponAtkDurability(int weaponID, int amountAtk, int amountDurability) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).changeEnemyWeaponAtkDurability(weaponID, amountAtk,amountDurability),thing.getProbability()));
@@ -157,7 +157,7 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState applyBuff(double minionID, Buff buff) {
+	public MyTurnState applyBuff(int minionID, Buff buff) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).applyBuff(minionID,buff),thing.getProbability()));
@@ -166,7 +166,7 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState removeBuff(double minionID, double id) {
+	public MyTurnState removeBuff(int minionID, int id) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).removeBuff(minionID,id),thing.getProbability()));
@@ -229,7 +229,7 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState heroAttack(double id, Hero defender) {
+	public MyTurnState heroAttack(int id, Hero defender) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).heroAttack(id,defender),thing.getProbability()));
@@ -238,7 +238,7 @@ public class RandomState implements MyTurnState {
 	}
 
 	@Override
-	public MyTurnState heroAttack(double id, Minion defender) {
+	public MyTurnState heroAttack(int id, Minion defender) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair((thing.getState()).heroAttack(id,defender),thing.getProbability()));
@@ -269,6 +269,15 @@ public class RandomState implements MyTurnState {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
 			list.add(new StateProbabilityPair(thing.getState().equipEnemyWeapon(weapon),thing.getProbability()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState removeTempEffects() {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair(thing.getState().removeTempEffects(),thing.getProbability()));
 		}
 		return new RandomState(list);
 	}

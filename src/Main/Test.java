@@ -25,10 +25,12 @@ import Game.Minions.LootHoarder;
 import Game.Minions.Murloc;
 import Game.Minions.MurlocTidecaller;
 import Game.Minions.MurlocWarleader;
+import Game.Minions.Ragnaros;
 import Game.Minions.ShieldedMinibot;
 import Game.Minions.SouthseaDeckhand;
 import Game.Minions.Wisp;
 import Game.Minions.Wolfrider;
+import Game.Actions.EndTurn;
 import Game.Actions.PlayCard;
 import Game.Actions.SwapCards;
 import Game.Cards.Spells.TargettedSpell.BlessingOfMight;
@@ -113,41 +115,59 @@ public class Test {
 		myDeck = myDeck.add(new LootHoarder(),1);
 		myDeck = myDeck.add(new Wolfrider(), 1);
 		
+		Deck enemyDeck = new Deck();
+		enemyDeck = enemyDeck.add(new BlessingOfMight(),2);
+		enemyDeck = enemyDeck.add(new Equality(),2);
+		enemyDeck = enemyDeck.add(new ShieldedMinibot(),2);
+		enemyDeck = enemyDeck.add(new SwordOfJustice(),1);
+		enemyDeck = enemyDeck.add(new DivineFavour(),2);
+		enemyDeck = enemyDeck.add(new MusterForBattle(),2);
+		enemyDeck = enemyDeck.add(new TruesilverChampion(),2);
+		enemyDeck = enemyDeck.add(new Consecration(),2);
+		enemyDeck = enemyDeck.add(new HammerOfWrath(),2);
+		enemyDeck = enemyDeck.add(new AvengingWrath(),1);
+		enemyDeck = enemyDeck.add(new AbusiveSergeant(),2);
+		enemyDeck = enemyDeck.add(new ArgentSquire(),2);
+		enemyDeck = enemyDeck.add(new LeperGnome(),2);
+		enemyDeck = enemyDeck.add(new SouthseaDeckhand(),2);
+		enemyDeck = enemyDeck.add(new KnifeJuggler(),2);
+		enemyDeck = enemyDeck.add(new LootHoarder(),1);
+		enemyDeck = enemyDeck.add(new Wolfrider(), 1);
+		
 		Hero hero1 = new Uther("Uther",14,30,30,0,1,1,new Hand(), myDeck, 0, 0, null);
-		Hero hero2 = new Uther("Uther2",15,30,30,0,1,1,new Hand(), myDeck, 0, 0, null);
+		Hero hero2 = new Uther("Uther2",15,30,30,0,1,1,new Hand(), enemyDeck, 0, 0, null);
 		
 		MyTurnState config = new BoardState(ViewType.UNBIASED,hero1,hero2,new ArrayList<Minion>(),new ArrayList<Minion>(),new ArrayList<Integer>(),0);
 		
-	/*	config = config.drawCard();
-		config = config.drawCard();
-		config = config.drawCard();
+		/*config = config.drawCard();
+		config = config.resolveRNG();
 		config = config.drawCard();
 		config = config.resolveRNG();
-		config.print();
+		config = config.drawCard();
+		config = config.resolveRNG();
+		config = config.drawCard();
+		config = config.resolveRNG();
+		config.print();*/
 		
-		//config = config.getActionResult(new PlayCard(new KnifeJuggler(),hero1,0));
-		//config = config.getActionResult(new PlayCard(new ShieldedMinibot(),hero1,0));##
+	//	config = config.getActionResult(new PlayCard(new KnifeJuggler(),hero1,0));
+		//config = config.resolveRNG();
+		//config = config.getActionResult(new PlayCard(new ShieldedMinibot(),hero1,0));
 		//config = config.resolveRNG();
 		
-		State config2 = new MulliganState((BoardState) config);
-		
-		Set<Integer> tempset = new HashSet<Integer>();
-		tempset.add(1);
-		tempset.add(3);
-		
-		config2 = config2.getActionResult(new SwapCards(tempset, 0));
-		config2 = ((MyTurnState) config2).resolveRNG();
-		
-		config2.print();*/
+		config = config.getActionResult(new PlayCard(new Ragnaros(),hero1,0));
+		config = ((MyTurnState) config).resolveRNG();
+		config = config.getActionResult(new EndTurn());
+		config = ((MyTurnState) config).resolveRNG();
+		config.print();
 		
 		
-		Player player1 = new Player(hero1);
-		Player player2 = new Player(hero2);
+		//Player player1 = new Player(hero1);
+		//Player player2 = new Player(hero2);
 		
-		PlayGame simulation = new PlayGame(player1,player2);
+		//PlayGame simulation = new PlayGame(player1,player2);
 		
-		if (simulation.play()==1) System.out.println("Player 1 wins");
-		else System.out.println("Player 2 wins");
+		//if (simulation.play()==1) System.out.println("Player 1 wins");
+		//else System.out.println("Player 2 wins");
 		
 		/*System.out.println("A Star graph search on game");
 		System.out.println();

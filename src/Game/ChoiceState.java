@@ -68,12 +68,12 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState changeHeroWeaponAtkDurability(double id, int amountAtk, int amountDurability) {
+	public MyTurnState changeHeroWeaponAtkDurability(int id, int amountAtk, int amountDurability) {
 		return state.changeHeroWeaponAtkDurability(id, amountAtk,amountDurability);
 	}
 	
 	@Override
-	public MyTurnState changeEnemyWeaponAtkDurability(double id, int amountAtk, int amountDurability) {
+	public MyTurnState changeEnemyWeaponAtkDurability(int id, int amountAtk, int amountDurability) {
 		return state.changeEnemyWeaponAtkDurability(id, amountAtk,amountDurability);
 	}
 	
@@ -185,12 +185,12 @@ public class ChoiceState implements MyTurnState {
 	}
 
 	@Override
-	public MyTurnState applyBuff(double minionID, Buff buff) {
+	public MyTurnState applyBuff(int minionID, Buff buff) {
 		return state.applyBuff(minionID,buff);
 	}
 
 	@Override
-	public MyTurnState removeBuff(double  minionID, double id) {
+	public MyTurnState removeBuff(int minionID, int id) {
 		return state.removeBuff(minionID,id);
 	}
 
@@ -200,18 +200,23 @@ public class ChoiceState implements MyTurnState {
 	}
 
 	@Override
-	public MyTurnState heroAttack(double id, Hero defender) {
+	public MyTurnState heroAttack(int id, Hero defender) {
 		return state.heroAttack(id, defender);
 	}
 
 	@Override
-	public MyTurnState heroAttack(double id, Minion defender) {
+	public MyTurnState heroAttack(int id, Minion defender) {
 		return state.heroAttack(id, defender);
 	}
 
 	@Override
 	public MyTurnState simultaneousHeal(TargetsType enemyminions, int i, ArrayList<Minion> arrayList) {
 		return state.simultaneousHeal(enemyminions, i, arrayList);
+	}
+
+	@Override
+	public MyTurnState removeTempEffects() {
+		return state.removeTempEffects();
 	}
 	
 }

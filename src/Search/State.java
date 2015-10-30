@@ -14,6 +14,7 @@ public interface State {
 	
 	boolean isGameWon();
 	void print();
+	boolean isTurnEnded();
 
 	
 }

@@ -23,14 +23,11 @@ public class ChooseTargetBuffBC extends Battlecry {
 	@Override
 	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
-		for (int position : oldstate.getPositionsInPlayOrder()) {
-			if (position<7) {
-				if (((oldstate.getMySide()).get(position)).isTargettable()) actions.add(new TargetChoice(oldstate.getMySide().get(position)));
-			}
+		for (int id : oldstate.getIdsInPlayOrder()) {
+			Minion targetMinion = oldstate.findMinion(id);
 			
-			else if (((oldstate.getOppSide()).get(position-7)).isTargettable()) actions.add(new TargetChoice(oldstate.getOppSide().get(position-7)));
+			if (targetMinion.isTargettable()) actions.add(new TargetChoice(id));
 		}
-		
 		if (actions.size()==0) return oldstate;
 		return new ChoiceState(oldstate,actions);
 	}
@@ -38,20 +35,20 @@ public class ChooseTargetBuffBC extends Battlecry {
 	
 	public class TargetChoice extends ChoiceAction {
 		
-		private Minion target;
+		private int id;
 		
-		public TargetChoice(Minion target) {
-			this.target = target;
+		public TargetChoice(int id) {
+			this.id = id;
 		}
 		
 		@Override
 		public MyTurnState result(BoardState oldstate) {
-			return oldstate.applyBuff(target.getId(),buff);
+			return oldstate.applyBuff(id,buff);
 		}
 
 		@Override
 		public void print() {
-			System.out.println("Buff minion at "+target);
+			System.out.println("Buff minion");
 			
 		}
 		

@@ -13,7 +13,7 @@ public class RandomPlayout implements Search {
 		State currentState = initialConfig;
 		Node currentNode = new Node(null,null,currentState);
 		
-		while (!currentState.getApplicableActions().isEmpty()) {
+		while (!currentState.isTurnEnded() && !currentState.getApplicableActions().isEmpty()) {
 			Action action = takeRandom(currentState.getApplicableActions());
 			currentState = currentState.getActionResult(action);
 			currentNode = new Node(new Node(currentNode),action,currentState);

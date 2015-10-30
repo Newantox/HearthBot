@@ -42,7 +42,7 @@ public class Hand {
 	}
 	
 	public void print() {
-		String s = "         | ";
+		String s = "   | ";
 		for (PlayableCard card : hand) s = s+card.getName()+" | ";
 		System.out.println(s);
 	}

@@ -40,11 +40,7 @@ public class PlayCard implements Action {
 
 	@Override
 	public void print() {
-		System.out.print("Play ");
-		System.out.print(card.getName());
-		System.out.print(" at ");
-		System.out.println(target);
-		System.out.println();
+		card.playPrint(target);
 	}
 
 

@@ -22,7 +22,7 @@ public class MulliganState implements State {
 	public Set<Action> getApplicableActions() {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		Hand hand = (state.getHero()).getMyHand();
-		
+		System.out.println(hand.getSize());
 		for (Set<Integer> positions : powerSetOfPositions(hand)) {
 			int improvement = 0;
 			for (int position : positions) if (!goodStart((hand.raw()).get(position))) improvement += -1;
@@ -36,7 +36,7 @@ public class MulliganState implements State {
 
 	@Override
 	public MyTurnState getActionResult(Action action) {
-		action.print();
+		if (action==null) return state;
 		return action.result(state);
 	}
 
@@ -105,6 +105,11 @@ public class MulliganState implements State {
 	    	sets.add(set);
 	    }		
 	    return sets;
+	}
+
+	@Override
+	public boolean isTurnEnded() {
+		return false;
 	}
 	
 }

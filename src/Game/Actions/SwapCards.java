@@ -21,7 +21,7 @@ public class SwapCards implements Action {
 
 	@Override
 	public double cost() {
-		return improvement;
+		return -improvement;
 	}
 
 	@Override
@@ -48,12 +48,13 @@ public class SwapCards implements Action {
 		newHero.setMyDeck(newDeck);
 		newHero.setMyHand(newHand);
 	
-		newState = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		newState = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
 	
 		for (int position : positions) {
 			newState = newState.drawCard(position);
 		}
-	
+		
+		if (turn==1) newState.drawCard();
 		if (turn==2) newState.setTurnEnded(true);
 		
 		return newState;

@@ -14,7 +14,7 @@ import Game.Inspires.Inspire;
 import Game.Minions.Minion;
 
 public class Weapon implements PlayableCard {
-	private double id;
+	private int id;
 	private String name;
 	private int cost;
 	private int atk;
@@ -25,7 +25,7 @@ public class Weapon implements PlayableCard {
 	protected ArrayList<Inspire> inspires;
 	
 	public Weapon(String name, int cost, int atk, int durability) {
-		this.id = Math.random();
+		this.id = (int) Math.ceil(Math.random()*10000);
 		this.name = name;
 		this.cost = cost;
 		this.atk = atk;
@@ -36,11 +36,11 @@ public class Weapon implements PlayableCard {
 		this.inspires = new ArrayList<Inspire>();
 	}
 	
-	public double getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(double id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -161,6 +161,10 @@ public class Weapon implements PlayableCard {
 	@Override
 	public MyTurnState playCard(BoardState oldstate, Character target) {
 		return (oldstate.getHero()).equipWeapon(oldstate, this);
+	}
+	
+	public void playPrint(Character target) {
+		System.out.println("Play "+getName());
 	}
 
 	@Override

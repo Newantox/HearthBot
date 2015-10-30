@@ -26,11 +26,13 @@ public class PlayGame {
 	public int play() {
 		
 		BoardState startState = setUpGame();
-		
+		System.out.println("Handsize "+startState.getHero().getMyHandSize()+","+startState.getEnemyHandSize());
 		State mulliganStates = new MulliganState(startState);
 		Node solution = player2.getSolution(mulliganStates);
 		
 		startState = (BoardState) perform(mulliganStates,solution);
+		
+		startState.print();
 		
 		startState = swapSides(startState);
 		
@@ -40,25 +42,38 @@ public class PlayGame {
 		
 		startState = (BoardState) perform(mulliganStates,solution);
 		
+		System.out.println("Player 1 ended turn");
+		startState.print();
+		
 		startState = swapSides(startState);
 		
 		MyTurnState currentState = startState;
+		int turncount = 1;
 		
 		while (true) {
+			System.out.println("Player 2 turn "+turncount);
 			while(!currentState.isTurnEnded()) {
+				if ( currentState.getApplicableActions().size()>0) System.out.println(currentState.getApplicableActions().size());
 				solution = player2.getSolution(currentState.viewBiased());
 				currentState = perform(currentState,solution);
+				if (player1.goalTest(currentState)) return 1;
 				if (player2.goalTest(currentState)) return 2;
 			}
-			
+			System.out.println("Player 2 ended turn");
+			currentState.print();
 			currentState.setTurnEnded(false);
 			currentState = swapSides((BoardState) currentState);
-			
+			currentState.print();
+			turncount+=1;
+			System.out.println("Player 1 turn "+turncount);
 			while(!currentState.isTurnEnded()) {
-			solution = player1.getSolution(currentState.viewBiased());
+				solution = player1.getSolution(currentState.viewBiased());
 				currentState = perform(currentState,solution);
 				if (player1.goalTest(currentState)) return 1;
+				if (player2.goalTest(currentState)) return 2;
 			}
+			System.out.println("Player 1 ended turn");
+			currentState.print();
 			
 			currentState.setTurnEnded(false);
 			currentState = swapSides((BoardState) currentState);
@@ -88,18 +103,12 @@ public class PlayGame {
 			newOppSide.add(newMinion);
 		}
 		
-		ArrayList<Integer> newPositions = new ArrayList<Integer>();
-		
-		for (int position : config.getPositionsInPlayOrder()) {
-			if (position<7) newPositions.add(position+7);
-			else newPositions.add(position-7);
-		}
-		
-		
 		int newEnemyHandSize = (config.getHero()).getMyHandSize();
 		
-		return new BoardState(config.getViewType(),newHero,newEnemy,newMySide,newOppSide,newPositions,newEnemyHandSize);
+		BoardState tempstate =  new BoardState(config.getViewType(),newHero,newEnemy,newMySide,newOppSide,config.getIdsInPlayOrder(),newEnemyHandSize);
+		tempstate.setTurnEnded(false);
 		
+		return tempstate;
 	}
 	
 	public MyTurnState perform(State startState,Node solution) {
@@ -118,14 +127,14 @@ public class PlayGame {
 			if(stack.isEmpty()) return (MyTurnState) startState;
 			else {
 				node = stack.pop();
-				if ((node.action)==(null)) node = stack.pop();
 				currentState = startState.getActionResult(node.action);
 				currentState = currentState.resolveRNG();
 			}
 			
 			while (!stack.isEmpty()) {
 				node = stack.pop();
-			
+				if (currentState.getActionResult(node.action)==null) {System.out.print("Problem with "); node.action.print();}
+				node.action.print();
 				currentState = currentState.getActionResult(node.action);
 				currentState = currentState.resolveRNG();
 		
@@ -136,17 +145,23 @@ public class PlayGame {
 	}
 	
 	public BoardState setUpGame() {
-		MyTurnState startState = new BoardState(ViewType.UNBIASED, player2.getInitialHero(), player1.getInitialHero(), new ArrayList<Minion>(), new ArrayList<Minion>(), new ArrayList<Integer>(), ((player1.getInitialHero()).getMyHandSize()));
-		System.out.println("Deck size: "+((BoardState) startState).getHero().getMyDeck().getSize());
+		
+		MyTurnState startState = new BoardState(ViewType.UNBIASED, player1.getInitialHero(), player2.getInitialHero(), new ArrayList<Minion>(), new ArrayList<Minion>(), new ArrayList<Integer>(), 0);
+		startState = swapSides((BoardState) startState);
+		
 		for (int i = 0; i<4; i++) {
 			startState = startState.drawCard();
 			startState = startState.resolveRNG();
+			System.out.println("Hand size player 2 drawing"+((BoardState) startState).getHero().getMyHandSize()+","+((BoardState) startState).getEnemyHandSize());
 		}
 		for (int i = 0; i<3; i++) {
 			startState = startState.enemyDrawCard();
 			startState = startState.resolveRNG();
+			System.out.println("Hand size player 1 drawing "+((BoardState) startState).getHero().getMyHandSize()+","+((BoardState) startState).getEnemyHandSize());
+			
 		}
 		
+		System.out.println("Hand size start"+((BoardState) startState).getHero().getMyHandSize()+","+((BoardState) startState).getEnemyHandSize());
 		return (BoardState) startState;
 	}
 

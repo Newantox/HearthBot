@@ -25,7 +25,6 @@ public class Deck {
 		temp.putAll(deck);
 		if (temp.containsKey(card)) temp.put(card, temp.get(card) + amount);
 		else temp.put(card,amount);
-		System.out.println("Card added, unique cards: "+temp.size());
 		return new Deck(temp);
 	}
 	
@@ -52,15 +51,16 @@ public class Deck {
 			for (PlayableCard card : deck.keySet()) {
 				Hero newHero = hero.fresh();
 				
-				Hand newHand = (hero.getMyHand()).add(pos,card);
+				Hand newHand = new Hand(newHero.getMyHand().raw());
+				if (newHand.getSize()<10) newHand = newHand.add(pos,card);
 				Deck newDeck = remove(card);
 				
 				newHero.setMyHand(newHand);
 				newHero.setMyDeck(newDeck);
 				
 				double probability = ((double) deck.get(card))/getSize();
-				if (newHero.getMyPos()==14) list.add(new StateProbabilityPair(new BoardState(state.getViewType(),newHero,state.getEnemy(),state.getOppSide(),state.getMySide(),state.getPositionsInPlayOrder(),state.getEnemyHandSize()), probability));
-				else list.add(new StateProbabilityPair(new BoardState(state.getViewType(),state.getHero(),newHero,state.getOppSide(),state.getMySide(),state.getPositionsInPlayOrder(),state.getEnemyHandSize()+1), probability));
+				if (newHero.getMyPos()==14) list.add(new StateProbabilityPair(new BoardState(state.getViewType(),newHero,state.getEnemy(),state.getOppSide(),state.getMySide(),state.getIdsInPlayOrder(),state.getEnemyHandSize()), probability));
+				else list.add(new StateProbabilityPair(new BoardState(state.getViewType(),state.getHero(),newHero,state.getOppSide(),state.getMySide(),state.getIdsInPlayOrder(),Math.max(10,state.getEnemyHandSize()+1)), probability));
 			}
 			return new RandomState(list);
 		}

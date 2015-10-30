@@ -27,8 +27,8 @@ public interface MyTurnState extends State {
 	MyTurnState performBC(Battlecry battlecry, PlayableCard card);
 	MyTurnState performDR(Deathrattle deathrattle, PlayableCard card);
 	MyTurnState performInspire(Inspire inspire, PlayableCard card);
-	MyTurnState changeHeroWeaponAtkDurability(double id, int amountAtk, int amountDurability);
-	MyTurnState changeEnemyWeaponAtkDurability(double id, int amountAtk, int amountDurability);
+	MyTurnState changeHeroWeaponAtkDurability(int id, int amountAtk, int amountDurability);
+	MyTurnState changeEnemyWeaponAtkDurability(int id, int amountAtk, int amountDurability);
 	MyTurnState giveWeapon(Hero hero, Weapon weapon);
 	MyTurnState equipHeroWeapon(Weapon weapon);
 	MyTurnState equipEnemyWeapon(Weapon weapon);
@@ -36,8 +36,8 @@ public interface MyTurnState extends State {
 	MyTurnState removeAuras(Minion minion);
 	MyTurnState doSummonEffects(Minion minion);
 	MyTurnState doDeathEffects(Minion minion);
-	MyTurnState applyBuff(double minionID, Buff buff);
-	MyTurnState removeBuff(double minionID, double id);
+	MyTurnState applyBuff(int minionID, Buff buff);
+	MyTurnState removeBuff(int minionID, int id);
 	
 	MyTurnState simultaneousHeal(TargetsType enemyminions, int i, ArrayList<Minion> arrayList);
 	
@@ -50,7 +50,9 @@ public interface MyTurnState extends State {
 
 	MyTurnState damage(Character defender, int atk);
 
-	MyTurnState heroAttack(double id, Hero defender);
-	MyTurnState heroAttack(double id, Minion defender);
+	MyTurnState heroAttack(int id, Hero defender);
+	MyTurnState heroAttack(int id, Minion defender);
+
+	MyTurnState removeTempEffects();
 
 }

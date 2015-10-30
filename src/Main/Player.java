@@ -29,8 +29,8 @@ public class Player {
 		this.initialHero = initialHero;
 	}
 	
-	public Node getSolution(State mulliganStates) {
-		return search.solution(mulliganStates, test, 1);
+	public Node getSolution(State state) {
+		return search.solution(state, test, 1);
 	}
 	
 	public boolean goalTest(MyTurnState currentState) {

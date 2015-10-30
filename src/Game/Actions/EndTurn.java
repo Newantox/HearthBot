@@ -13,11 +13,11 @@ public class EndTurn implements Action {
 
 	@Override
 	public MyTurnState result(BoardState oldstate) {
-		MyTurnState tempstate = oldstate;
-		tempstate.setTurnEnded(true);
 		
-		tempstate = tempstate.doEndTurnEffects(oldstate.getHero());
-		return tempstate.doStartTurnEffects(oldstate.getHero());
+		MyTurnState tempstate = oldstate.doEndTurnEffects(oldstate.getHero());
+		tempstate = tempstate.doStartTurnEffects(oldstate.getEnemy());
+		tempstate.setTurnEnded(true);
+		return tempstate;
 		
 	}
 

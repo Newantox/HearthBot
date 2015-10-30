@@ -18,34 +18,30 @@ public class HungryCrabBC extends Battlecry {
 	@Override
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
-		for (int position : oldstate.getPositionsInPlayOrder()) {
-			if (position<7) {
-				if (((oldstate.getMySide()).get(position)).isTargettable() && ((oldstate.getMySide()).get(position)).getRace()==Race.MURLOC) actions.add(new HungryCrabChoice((Minion) minion,position));
-			}
+		for (int id : oldstate.getIdsInPlayOrder()) {
+			Minion targetMinion = oldstate.findMinion(id);
 			
-			else if (((oldstate.getOppSide()).get(position-7)).isTargettable() && ((oldstate.getMySide()).get(position)).getRace()==Race.MURLOC) actions.add(new HungryCrabChoice((Minion) minion,position));
+			if (targetMinion.isTargettable() && targetMinion.getRace().equals(Race.MURLOC)) actions.add(new HungryCrabChoice((Minion) minion,id));
 		}
 		if (actions.size()==0) return oldstate;
-		else return new ChoiceState(oldstate,actions);
+		return new ChoiceState(oldstate,actions);
 	}
 	
 	
 	public class HungryCrabChoice extends ChoiceAction {
 		
 		private Minion source;
-		private int target;
+		private int id;
 		
-		public HungryCrabChoice(Minion source, int target) {
+		public HungryCrabChoice(Minion source, int id) {
 			this.source = source;
-			this.target = target;
+			this.id = id;
 		}
 
 		@Override
 		public MyTurnState result(BoardState oldstate) {
 			
-			Minion defender;
-			if (target<7) defender = (oldstate.getMySide()).get(target);
-			else defender = (oldstate.getOppSide()).get(target-7);
+			Minion defender = oldstate.findMinion(id);
 				
 			MyTurnState tempstate = defender.destroy(oldstate);	
 			return tempstate.applyBuff(source.getId(), new AdditiveBuff(-1,2,2,0));
@@ -54,7 +50,7 @@ public class HungryCrabBC extends Battlecry {
 
 		@Override
 		public void print() {
-			System.out.println("Hungry Crab destroys murloc at "+target);
+			System.out.println("Hungry Crab destroys murloc");
 			
 		}
 	}

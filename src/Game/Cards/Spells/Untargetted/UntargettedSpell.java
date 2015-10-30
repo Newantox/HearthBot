@@ -1,6 +1,7 @@
 package Game.Cards.Spells.Untargetted;
 
 import Game.CardType;
+import Game.Character;
 import Game.Cards.Spells.SpellCard;
 
 public abstract class UntargettedSpell extends SpellCard {
@@ -11,5 +12,9 @@ public abstract class UntargettedSpell extends SpellCard {
 
 	public CardType getType() {
 		return CardType.UNTARGETTEDSPELL;
+	}
+	
+	public void playPrint(Character target) {
+		System.out.println("Cast "+getName());
 	}
 }

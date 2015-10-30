@@ -9,6 +9,7 @@ import Game.ChoiceState;
 import Game.MyTurnState;
 import Game.PlayableCard;
 import Game.Actions.ChoiceAction;
+import Game.Minions.Minion;
 import Search.Action;
 
 public class ChooseTargetHealBC extends Battlecry {
@@ -22,12 +23,10 @@ public class ChooseTargetHealBC extends Battlecry {
 	@Override
 	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
-		for (int position : oldstate.getPositionsInPlayOrder()) {
-			if (position<7) {
-				if (((oldstate.getMySide()).get(position)).isTargettable()) actions.add(new TargetChoice(oldstate.getMySide().get(position)));
-			}
+		for (int id : oldstate.getIdsInPlayOrder()) {
+			Minion targetMinion = oldstate.findMinion(id);
 			
-			else if (((oldstate.getOppSide()).get(position-7)).isTargettable()) actions.add(new TargetChoice(oldstate.getOppSide().get(position-7)));
+			if (targetMinion.isTargettable()) actions.add(new TargetChoice(targetMinion));
 		}
 		actions.add(new TargetChoice(oldstate.getHero()));
 		actions.add(new TargetChoice(oldstate.getEnemy()));
@@ -52,7 +51,7 @@ public class ChooseTargetHealBC extends Battlecry {
 
 		@Override
 		public void print() {
-			System.out.println("Heal minion at "+target);
+			System.out.println("Heal "+target.getName());
 			
 		}
 		

@@ -17,28 +17,20 @@ public class ColdlightSeerBC extends Battlecry {
 		ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 		ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
 		
-		for(int position : oldstate.getPositionsInPlayOrder()) {
-			if (position!=((Minion) minion).getMyPos()) {
-				Minion subject;
-				Minion newMinion;
-				if (position<7) {
-					subject = (oldstate.getMySide()).get(position);
-					if ((subject.getRace()).equals(Race.MURLOC)) {
-						newMinion = subject.applyBuff(new AdditiveBuff(-1,0,2,0));
-						newMySide.set(position, newMinion);
-					}
-				}
-				else {
-					subject = (oldstate.getOppSide()).get(position-7);
-					if ((subject.getRace()).equals(Race.MURLOC)) {
-						newMinion = subject.applyBuff(new AdditiveBuff(-1,0,2,0));
-						newOppSide.set(position-7, newMinion);
-					}
-				}
+		for(int id : oldstate.getIdsInPlayOrder()) {
+			if (id!=((Minion) minion).getId()) {
+	
+				Minion newMinion = oldstate.findMinion(id);
+				if ((newMinion.getRace()).equals(Race.MURLOC)) {
+					newMinion = newMinion.applyBuff(new AdditiveBuff(-1,0,2,0));
+				}		
+					
+				if (newMinion.getMyPos()<7) newMySide.set(newMinion.getMyPos(), newMinion);
+				else newOppSide.set(newMinion.getMyPos(), newMinion);
 			}
 		}
 					
-		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getPositionsInPlayOrder(),oldstate.getEnemyHandSize());
+		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
 	}
 
 }
