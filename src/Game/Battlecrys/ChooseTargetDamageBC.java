@@ -24,7 +24,7 @@ public class ChooseTargetDamageBC extends Battlecry {
 	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id);
+			Minion targetMinion = oldstate.findMinion(id,"");
 			
 			if (targetMinion.isTargettable()) actions.add(new TargetChoice(targetMinion));
 		}
@@ -52,6 +52,12 @@ public class ChooseTargetDamageBC extends Battlecry {
 		@Override
 		public void print() {
 			System.out.println("Damage "+target.getName());
+			
+		}
+		
+		@Override
+		public String output() {
+			return ("Abusive Sergeant buffs minion");
 			
 		}
 		

@@ -20,9 +20,9 @@ public class HoundmasterBC extends Battlecry {
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id);
+			Minion targetMinion = oldstate.findMinion(id,"");
 			
-			if (targetMinion.isTargettable() && targetMinion.getRace().equals(Race.BEAST)) actions.add(new HoundmasterChoice(id));
+			if (targetMinion.isTargettable() && targetMinion.getRace().equals(Race.BEAST)) actions.add(new HoundmasterChoice(id,targetMinion.getName()));
 		}
 		if (actions.size()==0) return oldstate;
 		return new ChoiceState(oldstate,actions);
@@ -32,23 +32,31 @@ public class HoundmasterBC extends Battlecry {
 	public class HoundmasterChoice extends ChoiceAction {
 		
 		private int id;
+		private String name;
 		
-		public HoundmasterChoice(int id) {
+		public HoundmasterChoice(int id,String name) {
 			this.id = id;
+			this.name = name;
 		}
 
 		@Override
 		public MyTurnState result(BoardState oldstate) {
 			
-			MyTurnState tempstate = oldstate.applyBuff(id, new AttributeBuff(-1,0,0,1,0,0,0,0,0));
+			MyTurnState tempstate = oldstate.applyBuff(id,name, new AttributeBuff(-1,0,0,1,0,0,0,0,0));
 			
-			return tempstate.applyBuff(id, new AdditiveBuff(-1,2,2,0));
+			return tempstate.applyBuff(id,name, new AdditiveBuff(-1,2,2,0));
 			    
 		}
 
 		@Override
 		public void print() {
 			System.out.println("Houndmaster buffs minion");
+			
+		}
+		
+		@Override
+		public String output() {
+			return ("Abusive Sergeant buffs minion");
 			
 		}
 	}

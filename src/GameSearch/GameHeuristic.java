@@ -5,8 +5,8 @@ import Search.NodeFunction;
 
 public class GameHeuristic implements NodeFunction {
 	
-	public double getValue(Node n) {
-		return (n.state).getValue(n);
+	public double getValue(Node n,double minionWeight, double hpWeight) {
+		return (n.state).getValue(n,minionWeight,hpWeight);
 	}
 			
 }

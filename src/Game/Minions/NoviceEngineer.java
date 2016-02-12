@@ -5,7 +5,7 @@ import Game.Battlecrys.NoviceEngineerBC;
 public class NoviceEngineer extends Minion {
 
 	public NoviceEngineer() {
-		super("Novice Engineer",-1,2,1,1);
+		super("Novice Engineer",2,1,1);
 		battlecrys.add(new NoviceEngineerBC());
 	}
 	

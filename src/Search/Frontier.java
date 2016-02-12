@@ -6,4 +6,6 @@ public interface Frontier {
 	abstract boolean empty();
 	abstract Node remove();
 	abstract int maxNodes();
+	abstract double getMinionWeight();
+	abstract double getHpWeight();
 }

@@ -16,10 +16,10 @@ public class MurlocKnightInspire extends Inspire {
 	@Override
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		if (oldstate.numberOfAlliedMinions() < 7) {
-			MurlocList murlocs = new MurlocList(((Minion) minion).getMyPos()+1);
+			MurlocList murlocs = new MurlocList();
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 			for (Minion murloc : murlocs.get()) {
-				list.add(new StateProbabilityPair(oldstate.placeMinion(murloc) , (double)1 / (murlocs.get()).size()));
+				list.add(new StateProbabilityPair(oldstate.placeMinion(murloc,oldstate.findPosition(((Minion) minion).getId(),((Minion) minion).getName())+1) , (double)1 / (murlocs.get()).size(), murloc.getName()+" is summoned by Murloc Knight inspire"));
 			}
 			return new RandomState(list);
 		}

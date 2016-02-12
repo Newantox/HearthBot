@@ -18,9 +18,9 @@ public class AbusiveSergeantBC extends Battlecry {
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id);
+			Minion targetMinion = oldstate.findMinion(id,"");
 			
-			if (targetMinion.isTargettable()) actions.add(new AbusiveSergeantChoice(id));
+			if (targetMinion.isTargettable()) actions.add(new AbusiveSergeantChoice(id,targetMinion.getName()));
 		}
 		if (actions.size()==0) return oldstate;
 		return new ChoiceState(oldstate,actions);
@@ -30,18 +30,26 @@ public class AbusiveSergeantBC extends Battlecry {
 	public class AbusiveSergeantChoice extends ChoiceAction {
 		
 		private int id;
+		private String name;
 		
-		public AbusiveSergeantChoice(int id) {
+		public AbusiveSergeantChoice(int id, String name) {
 			this.id = id;
+			this.name = name;
 		}
 
 		public MyTurnState result(BoardState oldstate) {
-			return oldstate.applyTempBuff(id,new AdditiveBuff(-1,2,0,0));
+			return oldstate.applyTempBuff(id,name,new AdditiveBuff(-1,2,0,0));
 		}
 
 		@Override
 		public void print() {
 			System.out.println("Abusive Sergeant buffs minion");
+			
+		}
+		
+		@Override
+		public String output() {
+			return "Abusive Sergeant buffs minion";
 			
 		}
 

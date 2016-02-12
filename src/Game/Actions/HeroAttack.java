@@ -25,7 +25,7 @@ public class HeroAttack implements Action {
 	}
 	
 	public MyTurnState result(BoardState oldstate) {
-		return (hero.getWeapon()).attackWith(oldstate,defender);
+		return oldstate.heroAttack(weapon.getId(),defender);
 	}
 	
 	public void print() {
@@ -35,5 +35,12 @@ public class HeroAttack implements Action {
 		System.out.println(defender.getName());
 		System.out.println();
 	}
+	
+	public String output() {
+		String newline = System.getProperty("line.separator");
+		String s = "Hero "+hero.getName()+" attacks enemy minion "+defender.getName()+newline;
+		return s;
+	}
+
 	
 }

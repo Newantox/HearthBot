@@ -5,7 +5,7 @@ import Game.Battlecrys.MinionCompanionBC;
 public class MurlocTidehunter extends Minion {
 
 	public MurlocTidehunter() {
-		super("Murloc Tidehunter",-1,2,2,1);
+		super("Murloc Tidehunter",2,2,1);
 		setRace(Race.MURLOC);
 		battlecrys.add(new MinionCompanionBC(new MurlocScout()));
 		

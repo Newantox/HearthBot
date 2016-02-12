@@ -5,7 +5,7 @@ import Game.EndTurnEffects.RagnarosET;
 public class Ragnaros extends Minion {
 
 	public Ragnaros() {
-		super("Ragnaros",-1,8,8,8);
+		super("Ragnaros",8,8,8);
 		endTurnEffects.add(new RagnarosET());
 	}
 	

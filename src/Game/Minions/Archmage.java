@@ -3,7 +3,7 @@ package Game.Minions;
 public class Archmage extends Minion {
 
 	public Archmage() {
-		super("Archmage",-1,6,4,7);
+		super("Archmage",6,4,7);
 		setSpelldamage(1);
 	}
 	

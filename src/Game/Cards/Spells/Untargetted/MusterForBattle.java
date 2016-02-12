@@ -19,8 +19,8 @@ public class MusterForBattle extends UntargettedSpell {
 		MyTurnState tempstate = oldstate;
 		while (i<7 && i<oldstate.numberOfAlliedMinions()+3) {
 			Minion minion = new SilverHandRecruit();
-			minion.setMyPos(i);
-			tempstate = tempstate.placeMinion(minion);
+			tempstate = tempstate.placeMinion(minion,i);
+			i++;
 		}
 		return tempstate.equipHeroWeapon(new LightsJustice());
 	}

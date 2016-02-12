@@ -10,7 +10,7 @@ public class FrostwolfWarlordBC extends Battlecry {
 
 	@Override
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
-		return oldstate.applyBuff(((Minion) minion).getId(), new AdditiveBuff(-1, oldstate.numberOfAlliedMinions(), oldstate.numberOfAlliedMinions(), 0));
+		return oldstate.applyBuff(((Minion) minion).getId(),((Minion) minion).getName(), new AdditiveBuff(-1, oldstate.numberOfAlliedMinions(), oldstate.numberOfAlliedMinions(), 0));
 	}
 
 }

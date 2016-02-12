@@ -5,7 +5,7 @@ import Game.Battlecrys.DarkscaleHealerBC;
 public class DarkscaleHealer extends Minion {
 
 	public DarkscaleHealer() {
-		super("Darkscale Healer",-1,5,4,5);
+		super("Darkscale Healer",5,4,5);
 		battlecrys.add(new DarkscaleHealerBC());
 	}
 	

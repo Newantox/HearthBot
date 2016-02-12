@@ -5,7 +5,7 @@ import Game.Battlecrys.ColdlightSeerBC;
 public class ColdlightSeer extends Minion {
 
 	public ColdlightSeer() {
-		super("Coldlight Seer",-1,3,2,3);
+		super("Coldlight Seer",3,2,3);
 		setRace(Race.MURLOC);
 		battlecrys.add(new ColdlightSeerBC());
 	}

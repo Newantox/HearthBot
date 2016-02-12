@@ -5,7 +5,7 @@ import Game.Deathrattles.ZombieChowDR;
 public class ZombieChow extends Minion {
 
 	public ZombieChow() {
-		super("Zombie Chow",-1,1,2,3);
+		super("Zombie Chow",1,2,3);
 		addDeathrattle(new ZombieChowDR());
 	}
 	

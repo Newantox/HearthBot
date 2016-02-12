@@ -3,7 +3,7 @@ package Game.Minions;
 public class SouthseaDeckhand extends Minion {
 
 	public SouthseaDeckhand() {
-		super("Southsea Deckhand",-1,1,2,1);
+		super("Southsea Deckhand",1,2,1);
 		setRace(Race.PIRATE);
 	}
 	

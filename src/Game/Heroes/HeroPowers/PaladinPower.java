@@ -25,17 +25,20 @@ public class PaladinPower extends HeroPower {
 		hero.setPowerUsed(true);
 		hero.setCurrentMana(hero.getCurrentMana()-manacost);
 		
-		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getIdsInPlayOrder(), oldstate.getEnemyHandSize());
+		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getIdsInPlayOrder(), oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
 	
 		Minion minion = new SilverHandRecruit();
-		minion.setMyPos(tempstate.numberOfAlliedMinions());
-		return  tempstate.placeMinion(minion);
+		return  tempstate.placeMinion(minion,tempstate.numberOfAlliedMinions());
 	}
 
 	@Override
 	public void print() {
-		System.out.print("Uther uses hero power");
+		System.out.println("Uther uses hero power");
 
+	}
+	
+	public String output() {
+		return "Uther uses hero power";
 	}
 
 }

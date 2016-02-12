@@ -8,22 +8,22 @@ import Game.MyTurnState;
 import Game.PlayableCard;
 import Game.RandomState;
 import Game.StateProbabilityPair;
+import Game.TargetsType;
 import Game.Heroes.Hero;
 import Game.MinionLists.BeastCardList;
-import Game.Minions.Minion;
 
 public class WebspinnerDR extends Deathrattle {
 
 	@Override
-	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
+	public MyTurnState perform(BoardState oldstate, PlayableCard minion, TargetsType side) {
 		Hero hero;
-		if (((Minion) minion).getMyPos() < 7) hero = oldstate.getHero();
+		if (side.equals(TargetsType.ALLYCHAR)) hero = oldstate.getHero();
 		else hero = oldstate.getEnemy();
 		if (hero.getMyHandSize()<10) {
 			BeastCardList beastCards = new BeastCardList();
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 			for (PlayableCard card : beastCards.get()) {
-				list.add(new StateProbabilityPair(oldstate.addCardToHand(hero,card) , (double)1 / (beastCards.get()).size()));
+				list.add(new StateProbabilityPair(oldstate.addCardToHand(hero,card) , (double)1 / (beastCards.get()).size(), hero.getName()+" gets "+card.getName()+" from Webspinner DR"));
 			}
 			return new RandomState(list);
 		}

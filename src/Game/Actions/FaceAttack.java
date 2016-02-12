@@ -34,5 +34,12 @@ public class FaceAttack implements Action {
 		System.out.println(defender.getName());
 		System.out.println();
 	}
+	
+	public String output() {
+		String newline = System.getProperty("line.separator");
+		String s = "Minion "+attacker.getName()+" attacks enemy hero "+defender.getName()+newline;
+		return s;
+	}
+
 
 }

@@ -5,7 +5,7 @@ import Game.DeathEffects.ScavengingHyenaDE;
 public class ScavengingHyena extends Minion {
 
 	public ScavengingHyena() {
-		super("Scavenging Hyena",-1,2,2,2);
+		super("Scavenging Hyena",2,2,2);
 		setRace(Race.BEAST);
 		addDeathEffect(new ScavengingHyenaDE());
 	}

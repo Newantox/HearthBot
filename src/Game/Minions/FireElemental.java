@@ -5,7 +5,7 @@ import Game.Battlecrys.ChooseTargetDamageBC;
 public class FireElemental extends Minion {
 
 	public FireElemental() {
-		super("Fire Elemental",-1,6,6,5);
+		super("Fire Elemental",6,6,5);
 		battlecrys.add(new ChooseTargetDamageBC(3));
 	}
 	

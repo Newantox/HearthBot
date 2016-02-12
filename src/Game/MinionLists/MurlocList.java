@@ -20,7 +20,7 @@ import Game.Minions.SiltfinSpiritwalker;
 
 public class MurlocList {
 	
-		public MurlocList(int target) {
+		public MurlocList() {
 			list.add(new BluegillWarrior());
 			list.add(new ColdlightOracle());
 			list.add(new ColdlightSeer());

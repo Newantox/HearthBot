@@ -5,7 +5,7 @@ import Game.Battlecrys.ChooseTargetDamageBC;
 public class IronforgeRifleman extends Minion {
 
 	public IronforgeRifleman() {
-		super("Ironforge Rifleman",-1,3,2,2);
+		super("Ironforge Rifleman",3,2,2);
 		battlecrys.add(new ChooseTargetDamageBC(1));
 	}
 	

@@ -3,7 +3,7 @@ package Game.Minions;
 public class SabertoothLion extends Minion {
 
 	public SabertoothLion() {
-		super("Sabertooth Lion",-1,2,2,1);
+		super("Sabertooth Lion",2,2,1);
 		setRace(Race.BEAST);
 		setCharge(true);
 	}

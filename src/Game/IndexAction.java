@@ -29,5 +29,9 @@ public class IndexAction implements Action {
 		System.out.println("Random case "+index);
 
 	}
+	
+	public String output() {
+		return "";
+	}
 
 }

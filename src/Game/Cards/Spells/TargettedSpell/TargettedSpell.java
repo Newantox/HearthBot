@@ -19,7 +19,11 @@ public abstract class TargettedSpell extends SpellCard {
 	public abstract TargetsType getTargets();
 	
 	public void playPrint(Character target) {
-		System.out.println("Cast "+getName()+" "+"at "+target.getName());
+		System.out.println("Cast "+getName()+" at "+target.getName());
+	}
+	
+	public String playOutput(Character target) {
+		return "Cast "+getName()+" at "+target.getName();
 	}
 
 }

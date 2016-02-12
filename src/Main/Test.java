@@ -5,15 +5,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
+import GUI.UI;
 import Game.BoardState;
 import Game.Card;
 import Game.Deck;
 import Game.GameGoalTest;
+import Game.GamePlay;
 import Game.GamePrinting;
 import Game.Hand;
 import Game.MulliganState;
 import Game.MyTurnState;
+import Game.TargetsType;
 import Game.ViewType;
 import Game.Minions.AbusiveSergeant;
 import Game.Minions.AcidicSwampOoze;
@@ -52,11 +56,16 @@ import Game.Weapons.FieryWarAxe;
 import Game.Weapons.SwordOfJustice;
 import Game.Weapons.TruesilverChampion;
 import GameSearch.GameHeuristic;
+import MCTS.MCTS;
+import MCTS.MCTSNode;
 import Search.AStarFunction;
+import Search.Action;
 import Search.BestFirstFrontier;
+import Search.BlindGreedySearch;
 import Search.Frontier;
 import Search.GraphSearch;
 import Search.Node;
+import Search.RandomPlayout;
 import Search.Search;
 import Search.State;
 
@@ -66,9 +75,11 @@ public class Test {
 		GamePrinting Printer = new GamePrinting();
 		GameGoalTest goalTest = new GameGoalTest();
 		
-		Frontier frontier = new BestFirstFrontier(new AStarFunction(new GameHeuristic()));
+	//	Frontier frontier = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),0.5,0.5);
+	//	Frontier frontier2 = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),0.5,0.5);
+	//	Frontier frontier3 = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),0.5,0.5);
 		
-		Search search = new GraphSearch(frontier);
+	//	Search search = new GraphSearch(frontier);
 		
 		//initOpp.add(new LootHoarder(7));
 		//initMy.add(new MurlocTidecaller(0));
@@ -101,12 +112,12 @@ public class Test {
 		myDeck = myDeck.add(new Equality(),2);
 		myDeck = myDeck.add(new ShieldedMinibot(),2);
 		myDeck = myDeck.add(new SwordOfJustice(),1);
-		myDeck = myDeck.add(new DivineFavour(),2);
+	//	myDeck = myDeck.add(new DivineFavour(),2);
 		myDeck = myDeck.add(new MusterForBattle(),2);
 		myDeck = myDeck.add(new TruesilverChampion(),2);
 		myDeck = myDeck.add(new Consecration(),2);
 		myDeck = myDeck.add(new HammerOfWrath(),2);
-		myDeck = myDeck.add(new AvengingWrath(),1);
+		//myDeck = myDeck.add(new AvengingWrath(),1);
 		myDeck = myDeck.add(new AbusiveSergeant(),2);
 		myDeck = myDeck.add(new ArgentSquire(),2);
 		myDeck = myDeck.add(new LeperGnome(),2);
@@ -120,12 +131,12 @@ public class Test {
 		enemyDeck = enemyDeck.add(new Equality(),2);
 		enemyDeck = enemyDeck.add(new ShieldedMinibot(),2);
 		enemyDeck = enemyDeck.add(new SwordOfJustice(),1);
-		enemyDeck = enemyDeck.add(new DivineFavour(),2);
+//		enemyDeck = enemyDeck.add(new DivineFavour(),2);
 		enemyDeck = enemyDeck.add(new MusterForBattle(),2);
 		enemyDeck = enemyDeck.add(new TruesilverChampion(),2);
 		enemyDeck = enemyDeck.add(new Consecration(),2);
 		enemyDeck = enemyDeck.add(new HammerOfWrath(),2);
-		enemyDeck = enemyDeck.add(new AvengingWrath(),1);
+		//enemyDeck = enemyDeck.add(new AvengingWrath(),1);
 		enemyDeck = enemyDeck.add(new AbusiveSergeant(),2);
 		enemyDeck = enemyDeck.add(new ArgentSquire(),2);
 		enemyDeck = enemyDeck.add(new LeperGnome(),2);
@@ -134,37 +145,93 @@ public class Test {
 		enemyDeck = enemyDeck.add(new LootHoarder(),1);
 		enemyDeck = enemyDeck.add(new Wolfrider(), 1);
 		
-		Hero hero1 = new Uther("Uther",14,30,30,0,1,1,new Hand(), myDeck, 0, 0, null);
-		Hero hero2 = new Uther("Uther2",15,30,30,0,1,1,new Hand(), enemyDeck, 0, 0, null);
+		Hero hero1 = new Uther("Uther",TargetsType.ALLYCHAR,30,30,0,0,0,new Hand(), myDeck, 0, 0, null);
+		Hero hero2 = new Uther("Uther2",TargetsType.ENEMYCHAR,30,30,0,0,0,new Hand(), enemyDeck, 0, 0, null);
 		
-		MyTurnState config = new BoardState(ViewType.UNBIASED,hero1,hero2,new ArrayList<Minion>(),new ArrayList<Minion>(),new ArrayList<Integer>(),0);
+	//	MyTurnState config = new BoardState(ViewType.UNBIASED,hero1,hero2,new ArrayList<Minion>(),new ArrayList<Minion>(),new ArrayList<Integer>(),0,false);
 		
-		/*config = config.drawCard();
-		config = config.resolveRNG();
+	/*	config = config.drawCard();
 		config = config.drawCard();
-		config = config.resolveRNG();
 		config = config.drawCard();
-		config = config.resolveRNG();
 		config = config.drawCard();
-		config = config.resolveRNG();
+		config = config.resolveRNG(true);
+		config = config.enemyDrawCard();
+		config = config.enemyDrawCard();
+		config = config.enemyDrawCard();
+		config = config.enemyDrawCard();
+		config = config.resolveRNG(true);
+		config = config.resolveRNG(true);
+		MCTSNode ndai = new MCTS(new RandomPlayout(),new RandomPlayout()).solution(config, goalTest, 0);
+		System.out.println("dsifnvisnfinfisenfisenfisn");
+		MCTSNode temp = ndai;
+		Stack<Action> stack = new Stack<Action>();
+		while (temp!=null) {
+			stack.push(temp.getAction());
+			temp = temp.getParent();
+		}
+		System.out.println(stack.size());
+		while (!stack.isEmpty()) {
+			Action printe = stack.pop();
+			if (printe!=null) printe.print();
+		}
+		System.out.println("dsifnvisnfinfisenfisenfisn");
+		config = (MyTurnState) ndai.getState();
+		//config = config.getActionResult(new PlayCard(new KnifeJuggler(),hero1,0));
+		//config = config.resolveRNG(true);
+		//config = config.getActionResult(new PlayCard(new ShieldedMinibot(),hero1,0));
+		//config = config.resolveRNG(true);
+		
+		//config = config.getActionResult(new PlayCard(new Ragnaros(),hero1,0));
+		//config = ((MyTurnState) config).resolveRNG(true);
+		//config = config.getActionResult(new EndTurn());
+		//config = ((MyTurnState) config).resolveRNG(true);
+		config = config.resolveRNG(true);
 		config.print();*/
 		
-	//	config = config.getActionResult(new PlayCard(new KnifeJuggler(),hero1,0));
-		//config = config.resolveRNG();
-		//config = config.getActionResult(new PlayCard(new ShieldedMinibot(),hero1,0));
-		//config = config.resolveRNG();
+		int gamecount = 0;
+		int onescore = 0;
+		int twoscore = 0;
 		
-		config = config.getActionResult(new PlayCard(new Ragnaros(),hero1,0));
-		config = ((MyTurnState) config).resolveRNG();
-		config = config.getActionResult(new EndTurn());
-		config = ((MyTurnState) config).resolveRNG();
-		config.print();
+		ArrayList<GamePlay> games = new ArrayList<GamePlay>();
 		
+	//	for (int i = 0; i <= 10; i++) {
+		//	for (int j = 0; j<=10; j++) {
+				
+				double x = (double) 3 / 10;
+				double y = (double) 7 / 10;
+				
 		
-		//Player player1 = new Player(hero1);
-		//Player player2 = new Player(hero2);
+				Frontier frontier = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),x,1-x);
+				Frontier frontier2 = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),y,1-y);
 		
-		//PlayGame simulation = new PlayGame(player1,player2);
+				while (gamecount<10) {
+			
+					//Player player1 = new Player(new RandomPlayout(), hero1);
+					Player player1 = new Player(new BlindGreedySearch(frontier),hero1);
+					//Player player1 = new Player(new MCTS(new BlindGreedySearch(frontier),new BlindGreedySearch(frontier2)),hero1);
+					Player player2 = new Player(new BlindGreedySearch(frontier2),hero2);
+					//Player player2 = new Player(new RandomPlayout(), hero2);
+			
+					PlayGame simulation = new PlayGame(player1,player2);
+					//PlayOut simulation = new PlayOut(config,new MCTS(new RandomPlayout(),new RandomPlayout()), new BlindGreedySearch(frontier2));
+			
+		
+					if (simulation.play(true,null)==1) {onescore++; System.out.println("1:"+onescore);}
+					else {twoscore++; System.out.println("2:"+twoscore);}
+					games.add(simulation.gameplay);
+					gamecount++;
+					System.out.println("Games:"+gamecount);
+				}
+				
+				System.out.println("Player 1: "+onescore+" , Player 2 :"+twoscore);
+				gamecount = 0;
+				onescore = 0;
+				twoscore = 0;
+			
+		
+		UI ui = new UI();
+		ui.setGames(games);
+		ui.buildScreen();
 		
 		//if (simulation.play()==1) System.out.println("Player 1 wins");
 		//else System.out.println("Player 2 wins");

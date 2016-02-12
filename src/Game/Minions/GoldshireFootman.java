@@ -3,7 +3,7 @@ package Game.Minions;
 public class GoldshireFootman extends Minion {
 
 	public GoldshireFootman() {
-		super("Goldshire Footman",-1,1,1,2);
+		super("Goldshire Footman",1,1,2);
 		setTaunt(true);
 	}
 	

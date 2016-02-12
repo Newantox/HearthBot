@@ -78,8 +78,8 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState placeMinion(Minion minion) {
-		return state.placeMinion(minion);
+	public MyTurnState placeMinion(Minion minion, int position) {
+		return state.placeMinion(minion, position);
 	}
 	
 	@Override
@@ -88,8 +88,8 @@ public class ChoiceState implements MyTurnState {
 	}
 
 	@Override
-	public MyTurnState performDR(Deathrattle deathrattle, PlayableCard card) {
-		return state.performDR(deathrattle, card);
+	public MyTurnState performDR(Deathrattle deathrattle, PlayableCard card, TargetsType side) {
+		return state.performDR(deathrattle, card, side);
 	}
 	
 	@Override
@@ -113,8 +113,8 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState doDeathEffects(Minion minion) {
-		return state.doDeathEffects(minion);
+	public MyTurnState doDeathEffects(Minion minion, TargetsType side) {
+		return state.doDeathEffects(minion,side);
 	}
 	
 	@Override
@@ -132,21 +132,21 @@ public class ChoiceState implements MyTurnState {
 		return state.equipEnemyWeapon(weapon);
 	}
 	
-	public MyTurnState resolveRNG() {
+	public MyTurnState resolveRNG(boolean b) {
 		return this;
 	}
 	
-	public double getValue(Node n) {
-		return state.getValue(n);
+	public double getValue(Node n,double minionWeight, double hpWeight) {
+		return state.getValue(n,minionWeight,hpWeight);
 	}
 	
-	public double getBestValue(Node n) {
+	public double getBestValue(Node n, double minionWeight, double hpWeight) {
 		System.out.println("Choice");
 		double best = 1000;
 		 for (Action action : getApplicableActions()) {
 			 Node newnode = new Node(n,action,getActionResult(action));
-			 if (newnode.getBestValue() < best) {
-				 best = newnode.getBestValue();
+			 if (newnode.getBestValue(minionWeight,hpWeight) < best) {
+				 best = newnode.getBestValue(minionWeight,hpWeight);
 				 n.bestNode = newnode;
 				 n.best = best;
 			 }
@@ -168,6 +168,23 @@ public class ChoiceState implements MyTurnState {
 		System.out.println("------------");
 		
 	}
+	
+	@Override
+	public String output() {
+		String s = "<html><br>"+state.output();
+		s = s+"<br>";
+		s = s+"<br>";
+		s = s+("Choice of:");
+		for (Action action : actions) {
+			s = s+"<br>";
+			s = s+"<br>";
+			s = s+action.output();
+		}
+		s = s+"<br>";
+		s = s+"<br>";
+		s = s+("------------");
+		return s+"</html>";
+	}
 
 	@Override
 	public MyTurnState doStartTurnEffects(Hero hero) {
@@ -185,13 +202,13 @@ public class ChoiceState implements MyTurnState {
 	}
 
 	@Override
-	public MyTurnState applyBuff(int minionID, Buff buff) {
-		return state.applyBuff(minionID,buff);
+	public MyTurnState applyBuff(int minionID, String name, Buff buff) {
+		return state.applyBuff(minionID,name,buff);
 	}
 
 	@Override
-	public MyTurnState removeBuff(int minionID, int id) {
-		return state.removeBuff(minionID,id);
+	public MyTurnState removeBuff(int minionID, String name, int id) {
+		return state.removeBuff(minionID,name,id);
 	}
 
 	@Override
@@ -217,6 +234,21 @@ public class ChoiceState implements MyTurnState {
 	@Override
 	public MyTurnState removeTempEffects() {
 		return state.removeTempEffects();
+	}
+
+	@Override
+	public MyTurnState endTurn(Hero hero) {
+		return state.endTurn(hero);
+	}
+
+	@Override
+	public MyTurnState addCardToMyHand(PlayableCard card) {
+		return state.addCardToMyHand(card);
+	}
+	
+	@Override
+	public MyTurnState addCardToEnemyHand(PlayableCard card) {
+		return state.addCardToEnemyHand(card);
 	}
 	
 }

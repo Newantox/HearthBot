@@ -9,8 +9,8 @@ public class AStarFunction implements NodeFunction {
 	}
 
 	@Override
-	public double getValue(Node n) {
-		return n.gn + hn.getValue(n);
+	public double getValue(Node n,double minionWeight, double hpWeight) {
+		return n.gn + hn.getValue(n,minionWeight,hpWeight);
 	}
 
 }

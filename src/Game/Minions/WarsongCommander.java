@@ -5,7 +5,7 @@ import Game.SummonEffects.WarsongCommanderSE;
 public class WarsongCommander extends Minion {
 
 	public WarsongCommander() {
-		super("Warsong Commander",-1,3,2,3);
+		super("Warsong Commander",3,2,3);
 		addSummonEffect(new WarsongCommanderSE());
 	}
 	

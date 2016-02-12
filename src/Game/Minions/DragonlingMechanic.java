@@ -5,7 +5,7 @@ import Game.Battlecrys.MinionCompanionBC;
 public class DragonlingMechanic extends Minion {
 
 	public DragonlingMechanic() {
-		super("Dragonling Mechanic",-1,4,2,4);
+		super("Dragonling Mechanic",4,2,4);
 		battlecrys.add(new MinionCompanionBC(new MechanicalDragonling()));
 	}
 	

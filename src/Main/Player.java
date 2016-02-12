@@ -21,12 +21,13 @@ public class Player {
 	
 	//Search search = new GraphSearch(frontier);
 	
-	Search search = new RandomPlayout();
+	Search search;
 
 	private Hero initialHero;
 	
-	public Player(Hero initialHero) {
+	public Player(Search search, Hero initialHero) {
 		this.initialHero = initialHero;
+		this.search = search;
 	}
 	
 	public Node getSolution(State state) {

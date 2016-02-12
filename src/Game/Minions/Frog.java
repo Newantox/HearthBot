@@ -3,7 +3,7 @@ package Game.Minions;
 public class Frog extends Minion {
 
 	public Frog() {
-		super("Frog",-1,0,1,1);
+		super("Frog",0,1,1);
 		setRace(Race.BEAST);
 		setTaunt(true);
 	}

@@ -32,6 +32,7 @@ public class PlayCard implements Action {
 		Hand newMyHand = newHero.getMyHand();
 		
 		newMyHand = newMyHand.remove(pos);
+		newHero.setMyHand(newMyHand);
 		
 		BoardState tempstate = newHero.useMana(oldstate,card.getCost());
 		
@@ -42,6 +43,11 @@ public class PlayCard implements Action {
 	public void print() {
 		card.playPrint(target);
 	}
+	
+	public String output() {
+		return card.playOutput(target);
+	}
+
 
 
 }

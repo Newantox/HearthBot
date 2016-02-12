@@ -3,7 +3,7 @@ package Game.Minions;
 public class YoungDragonhawk extends Minion {
 
 	public YoungDragonhawk() {
-		super("Young Dragonhawk",-1,1,1,1);
+		super("Young Dragonhawk",1,1,1);
 		setRace(Race.BEAST);
 		setMaxAttacks(2);
 	}

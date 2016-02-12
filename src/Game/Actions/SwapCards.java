@@ -27,16 +27,16 @@ public class SwapCards implements Action {
 	@Override
 	public MyTurnState result(BoardState oldstate) {
 		
-		int turn;
-		
 		Hero newHero = (oldstate.getHero()).fresh();
 		Hand newHand = newHero.getMyHand();
 		Deck newDeck = newHero.getMyDeck();
 		
-		MyTurnState newState = oldstate;
+		boolean flag;
 		
-		if (newHand.getSize()==3) turn = 1;
-		else {turn = 2; newHand.add(new TheCoin());}
+		if (newHero.getMyHand().getSize()==3) flag = true;
+		else flag = false;
+		
+		MyTurnState newState = oldstate;
 		
 		for (int i = newHand.getSize()-1; i>=0; i--) {
 			if (positions.contains(i)) {
@@ -48,16 +48,14 @@ public class SwapCards implements Action {
 		newHero.setMyDeck(newDeck);
 		newHero.setMyHand(newHand);
 	
-		newState = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
+		newState = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
 	
 		for (int position : positions) {
 			newState = newState.drawCard(position);
 		}
 		
-		if (turn==1) newState.drawCard();
-		if (turn==2) newState.setTurnEnded(true);
-		
-		return newState;
+		if (flag) return newState.doStartTurnEffects(newHero);
+		else return newState.addCardToMyHand(new TheCoin());
 	
 	}
 
@@ -70,5 +68,18 @@ public class SwapCards implements Action {
 			System.out.println(s);
 		}
 	}
+	
+	public String output() {
+		String newline = System.getProperty("line.separator");
+		String s;
+		if (positions.size()==0) s = ("Keep hand.");
+		else {
+			s = "Swap out cards in positions: ";
+			for (int position : positions) s = s+" "+position;
+			s = s+newline;
+		}
+		return s;
+	}
+
 
 }

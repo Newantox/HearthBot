@@ -5,7 +5,7 @@ import Game.Battlecrys.FrostwolfWarlordBC;
 public class FrostwolfWarlord extends Minion {
 
 	public FrostwolfWarlord() {
-		super("Frostwolf Warlord",-1,5,4,4);
+		super("Frostwolf Warlord",5,4,4);
 		battlecrys.add(new FrostwolfWarlordBC());
 	}
 	

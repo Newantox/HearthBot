@@ -5,6 +5,7 @@ import java.util.Set;
 
 import Game.GameGoalTest2;
 import Game.StopWatch;
+import Game.Actions.EndTurn;
 
 public class RandomPlayout implements Search {
 
@@ -13,23 +14,23 @@ public class RandomPlayout implements Search {
 		State currentState = initialConfig;
 		Node currentNode = new Node(null,null,currentState);
 		
-		while (!currentState.isTurnEnded() && !currentState.getApplicableActions().isEmpty()) {
+		while (!currentState.getApplicableActions().isEmpty()) {
 			Action action = takeRandom(currentState.getApplicableActions());
+			
 			currentState = currentState.getActionResult(action);
 			currentNode = new Node(new Node(currentNode),action,currentState);
 			if (currentState.isGameWon()) return currentNode;
+			else return currentNode;
 		}
 		return currentNode;
 	}
 
 	public Action takeRandom(Set<Action> set) {
-		Set<Action> holder = set;
 		double number = Math.random();
-		Action backup = null;
+		Action backup = new EndTurn();
 		for (Action action : set) {
-			backup = action;
-			if (number > 1.0/holder.size()) {
-				number -= 1.0/holder.size();
+			if (number > 1.0/set.size()) {
+				number -= 1.0/set.size();
 			}
 			else return action;
 		}

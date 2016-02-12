@@ -41,18 +41,18 @@ public class MulliganState implements State {
 	}
 
 	@Override
-	public double getValue(Node n) {
-		return state.getValue(n);
+	public double getValue(Node n,double minionWeight, double hpWeight) {
+		return state.getValue(n,minionWeight,hpWeight);
 	}
 
 	@Override
-	public double getBestValue(Node node) {
+	public double getBestValue(Node node, double minionWeight, double hpWeight) {
 		System.out.println("Mulligan");
 		double best = 1000;
 		 for (Action action : getApplicableActions()) {
 			 Node newnode = new Node(node,action,getActionResult(action));
-			 if (newnode.getBestValue() < best) {
-				 best = newnode.getBestValue();
+			 if (newnode.getBestValue(minionWeight,hpWeight) < best) {
+				 best = newnode.getBestValue(minionWeight,hpWeight);
 				 node.bestNode = newnode;
 				 node.best = best;
 			 }
@@ -76,6 +76,16 @@ public class MulliganState implements State {
 		System.out.println("");
 		((state.getHero()).getMyHand()).print();
 		
+	}
+	
+	@Override
+	public String output() {
+		
+		String s = "<html><center><br>"+("                  Mulligan");
+		s = s+"<br>";
+		s = s+"<br>";
+		s = s+((state.getHero()).getMyHand()).output();
+		return s+"</center></html>";
 	}
 	
 	public Set<Set<Integer>> powerSetOfPositions(Hand hand) {

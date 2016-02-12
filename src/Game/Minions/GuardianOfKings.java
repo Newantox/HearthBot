@@ -5,7 +5,7 @@ import Game.Battlecrys.GuardianOfKingsBC;
 public class GuardianOfKings extends Minion {
 
 	public GuardianOfKings() {
-		super("Guardian Of Kings",-1,7,5,6);
+		super("Guardian Of Kings",7,5,6);
 		battlecrys.add(new GuardianOfKingsBC());
 	}
 	

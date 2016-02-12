@@ -37,7 +37,7 @@ public class GraphSearch implements Search {
 		while(!frontier.empty() && timer.elapsedTime() < 55) {
 			Node n = frontier.remove();
 			if (goalTest.isGoal(n.state)) {System.out.println("Game won"); lastSearch = k; return n;}
-			double nbest = n.getValue();
+			double nbest = n.getValue(frontier.getMinionWeight(),frontier.getHpWeight());
 			System.out.println(nbest);
 			if (nbest < bestscore) {best = n; bestscore = nbest;}
 			//switch (n.state.getStatetype()) {

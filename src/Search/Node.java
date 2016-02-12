@@ -29,14 +29,14 @@ public class Node {
 		this.gn = n.gn;
 	}
 	
-	public double getValue() {
-		return state.getValue(this);
+	public double getValue(double minionWeight, double hpWeight) {
+		return state.getValue(this,minionWeight,hpWeight);
 	}
 	
-	public double getBestValue() {
+	public double getBestValue(double minionWeight, double hpWeight) {
 		if (!done) {
 			done = true;
-			return state.getBestValue(this);
+			return state.getBestValue(this,minionWeight,hpWeight);
 		}
 		else return best;
 	}

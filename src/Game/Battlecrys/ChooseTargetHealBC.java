@@ -24,7 +24,7 @@ public class ChooseTargetHealBC extends Battlecry {
 	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id);
+			Minion targetMinion = oldstate.findMinion(id,"");
 			
 			if (targetMinion.isTargettable()) actions.add(new TargetChoice(targetMinion));
 		}
@@ -52,6 +52,12 @@ public class ChooseTargetHealBC extends Battlecry {
 		@Override
 		public void print() {
 			System.out.println("Heal "+target.getName());
+			
+		}
+		
+		@Override
+		public String output() {
+			return ("Abusive Sergeant buffs minion");
 			
 		}
 		

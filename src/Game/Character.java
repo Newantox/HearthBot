@@ -13,8 +13,6 @@ public interface Character extends PlayableCard {
 	public boolean canAttack();
 
 	public int getAtk();
-
-	public int getMyPos();
 	
 	public boolean isImmune();
 

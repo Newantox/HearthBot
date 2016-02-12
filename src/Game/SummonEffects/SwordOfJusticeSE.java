@@ -2,31 +2,32 @@ package Game.SummonEffects;
 
 import Game.MyTurnState;
 import Game.PlayableCard;
+import Game.TargetsType;
 import Game.Buffs.AdditiveBuff;
 import Game.Minions.Minion;
 import Game.Weapons.Weapon;
 
 public class SwordOfJusticeSE extends SummonEffect {
 	
-	private int side;
-	
-	public SwordOfJusticeSE(int side) {
-		this.side = side;
+	public SwordOfJusticeSE() {
 	}
 
 	@Override
-	public MyTurnState perform(MyTurnState oldstate, PlayableCard weapon, Minion minion) {
-		if (minion.getMyPos() < 7 && side==14) {
-			MyTurnState tempstate = oldstate.applyBuff(minion.getId(),new AdditiveBuff(-1,1,1,0));
+	public MyTurnState perform(MyTurnState oldstate, PlayableCard weapon, Minion minion, TargetsType side) {
+		MyTurnState tempstate = oldstate.applyBuff(minion.getId(),minion.getName(),new AdditiveBuff(-1,1,1,0));
+		
+		if (side.equals(TargetsType.ALLYCHAR)) {
 			return tempstate.changeHeroWeaponAtkDurability(((Weapon) weapon).getId(),0,-1);
 		}
 			
-		else if (minion.getMyPos() >= 7 && side==15) {
-			MyTurnState tempstate = oldstate.applyBuff(minion.getId(),new AdditiveBuff(-1,1,1,0));
+		else {
 			return tempstate.changeEnemyWeaponAtkDurability(((Weapon) weapon).getId(),0,-1);
 		}
-		
-		else return oldstate;
+	}
+
+	@Override
+	public TargetsType getEffectRange() {
+		return TargetsType.ALLYMINIONS;
 	}
 
 }

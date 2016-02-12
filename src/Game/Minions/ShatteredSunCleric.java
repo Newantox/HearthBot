@@ -6,7 +6,7 @@ import Game.Buffs.AdditiveBuff;
 public class ShatteredSunCleric extends Minion {
 
 	public ShatteredSunCleric() {
-		super("Shattered Sun Cleric",-1,3,3,2);
+		super("Shattered Sun Cleric",3,3,2);
 		battlecrys.add(new ChooseTargetBuffBC(new AdditiveBuff(-1,1,1,0)));
 	}
 	

@@ -15,7 +15,7 @@ public class BlessingOfMight extends TargettedSpell {
 
 	@Override
 	public MyTurnState playCard(BoardState oldstate, Character target) {
-		return oldstate.applyBuff(((Minion) target).getId(), new AdditiveBuff(-1,3,0,0));
+		return oldstate.applyBuff(((Minion) target).getId(),((Minion) target).getName(), new AdditiveBuff(-1,3,0,0));
 	}
 
 	@Override

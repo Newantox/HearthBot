@@ -4,17 +4,19 @@ public class StateProbabilityPair {
 
   private final MyTurnState state;
   private final double probability;
+  private final String text;
 
-  public StateProbabilityPair(MyTurnState state, double probability) {
+  public StateProbabilityPair(MyTurnState state, double probability, String text) {
     this.state = state;
     this.probability = probability;
+    this.text = text;
   }
 
-  public MyTurnState getState() { 
-	  return state; 
-  }
+  public MyTurnState getState() { return state; }
   
   public double getProbability() { return probability; }
+  
+  public String getText() { return text; }
 
   @Override
   public boolean equals(Object that) {
@@ -27,6 +29,10 @@ public class StateProbabilityPair {
   @Override
   public int hashCode() { 
 	  return state.hashCode(); 
+  }
+  
+  public void print() {
+	  System.out.println("Resolved: "+text);
   }
 
 }

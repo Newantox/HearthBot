@@ -7,6 +7,7 @@ import Game.CardType;
 import Game.Character;
 import Game.MyTurnState;
 import Game.PlayableCard;
+import Game.TargetsType;
 import Game.Battlecrys.Battlecry;
 import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
@@ -132,10 +133,10 @@ public class Weapon implements PlayableCard {
 		return tempstate;
 	}
 	
-	public MyTurnState deathRattle(MyTurnState oldstate) {
+	public MyTurnState deathRattle(MyTurnState oldstate, TargetsType side) {
 		MyTurnState tempstate = oldstate;
 		for (Deathrattle deathrattle : deathrattles) {
-			tempstate = deathrattle.trigger(this,tempstate);
+			tempstate = deathrattle.trigger(tempstate,this,side);
 		}
 		return tempstate;
 	}
@@ -165,6 +166,10 @@ public class Weapon implements PlayableCard {
 	
 	public void playPrint(Character target) {
 		System.out.println("Play "+getName());
+	}
+	
+	public String playOutput(Character target) {
+		return ("Play "+getName());
 	}
 
 	@Override

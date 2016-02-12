@@ -26,7 +26,7 @@ public class HeroFaceAttack implements Action {
 
 	@Override
 	public MyTurnState result(BoardState oldstate) {
-		return (attacker.getWeapon()).attackWith(oldstate,defender);
+		return oldstate.heroAttack(weapon.getId(),defender);
 	}
 
 	@Override
@@ -37,5 +37,12 @@ public class HeroFaceAttack implements Action {
 		System.out.println(defender.getName());
 		System.out.println();
 	}
+	
+	public String output() {
+		String newline = System.getProperty("line.separator");
+		String s = "Hero "+attacker.getName()+" attacks enemy hero "+defender.getName()+newline;
+		return s;
+	}
+
 
 }

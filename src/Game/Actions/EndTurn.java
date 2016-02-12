@@ -14,9 +14,9 @@ public class EndTurn implements Action {
 	@Override
 	public MyTurnState result(BoardState oldstate) {
 		
-		MyTurnState tempstate = oldstate.doEndTurnEffects(oldstate.getHero());
+		MyTurnState tempstate = oldstate.endTurn(oldstate.getHero());
 		tempstate = tempstate.doStartTurnEffects(oldstate.getEnemy());
-		tempstate.setTurnEnded(true);
+	
 		return tempstate;
 		
 	}
@@ -26,5 +26,12 @@ public class EndTurn implements Action {
 		System.out.println("Turn ended.");
 		
 	}
+	
+	public String output() {
+		String newline = System.getProperty("line.separator");
+		String s = "Turn ended."+newline;
+		return s;
+	}
+
 
 }

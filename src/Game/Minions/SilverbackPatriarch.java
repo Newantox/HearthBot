@@ -3,7 +3,7 @@ package Game.Minions;
 public class SilverbackPatriarch extends Minion {
 
 	public SilverbackPatriarch() {
-		super("Silverback Patriarch",-1,3,1,4);
+		super("Silverback Patriarch",3,1,4);
 		setRace(Race.BEAST);
 		setTaunt(true);
 	}

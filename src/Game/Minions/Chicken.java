@@ -3,7 +3,7 @@ package Game.Minions;
 public class Chicken extends Minion {
 
 	public Chicken() {
-		super("Chicken",-1,0,1,1);
+		super("Chicken",0,1,1);
 		setRace(Race.BEAST);
 	}
 	

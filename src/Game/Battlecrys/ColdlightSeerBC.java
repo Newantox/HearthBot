@@ -20,17 +20,17 @@ public class ColdlightSeerBC extends Battlecry {
 		for(int id : oldstate.getIdsInPlayOrder()) {
 			if (id!=((Minion) minion).getId()) {
 	
-				Minion newMinion = oldstate.findMinion(id);
+				Minion newMinion = oldstate.findMinion(id,"");
 				if ((newMinion.getRace()).equals(Race.MURLOC)) {
 					newMinion = newMinion.applyBuff(new AdditiveBuff(-1,0,2,0));
 				}		
 					
-				if (newMinion.getMyPos()<7) newMySide.set(newMinion.getMyPos(), newMinion);
-				else newOppSide.set(newMinion.getMyPos(), newMinion);
+				if (oldstate.findPosition(newMinion.getId(),newMinion.getName())<7) newMySide.set(oldstate.findPosition(newMinion.getId(),newMinion.getName()), newMinion);
+				else newOppSide.set(oldstate.findPosition(newMinion.getId(),newMinion.getName()), newMinion);
 			}
 		}
 					
-		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
+		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
 	}
 
 }

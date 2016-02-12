@@ -10,21 +10,39 @@ public class BestFirstFrontier implements Frontier  {
 	private NodeFunction nfunction;
 	private int max = 0;
 	private int current = 0;
+	double minionWeight;
+	double hpWeight;
 
-	public BestFirstFrontier(NodeFunction f) {
+	public BestFirstFrontier(NodeFunction f,double minionWeight, double hpWeight) {
 		this.nfunction = f;
 	}
 
 	@Override
 	public void add(Node n) {
-		n.fn = nfunction.getValue(n);
+		n.fn = nfunction.getValue(n,minionWeight,hpWeight);
 		current += 1;
 		if (current>max) max = current;
 		frontier.add(n);
 		State state = n.state;
 		//BoardState board = (BoardState)state;
-		System.out.println(current);
+		//System.out.println(current);
 
+	}
+
+	public double getMinionWeight() {
+		return minionWeight;
+	}
+
+	public void setMinionWeight(double minionWeight) {
+		this.minionWeight = minionWeight;
+	}
+
+	public double getHpWeight() {
+		return hpWeight;
+	}
+
+	public void setHpWeight(double hpWeight) {
+		this.hpWeight = hpWeight;
 	}
 
 	@Override

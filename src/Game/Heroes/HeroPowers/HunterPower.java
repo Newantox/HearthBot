@@ -23,14 +23,20 @@ public class HunterPower extends HeroPower {
 		hero.setPowerUsed(true);
 		hero.setCurrentMana(hero.getCurrentMana()-manacost);
 		
-		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
+		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
 	
 		return (tempstate.getEnemy()).damage(tempstate, damage);
 	}
 
 	@Override
 	public void print() {
-		System.out.print("Rexxar uses hero power");
+		System.out.println("Rexxar uses hero power");
+
+	}
+	
+	@Override
+	public String output() {
+		return ("Rexxar uses hero power");
 
 	}
 

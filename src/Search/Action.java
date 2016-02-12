@@ -7,5 +7,6 @@ public interface Action {
 	abstract double cost();
 	MyTurnState result(BoardState oldstate);
 	abstract void print();
+	abstract String output();
 
 }

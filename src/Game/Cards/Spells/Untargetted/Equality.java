@@ -14,21 +14,22 @@ public class Equality extends UntargettedSpell {
 		super("Equality", 2);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public MyTurnState playCard(BoardState oldstate, Character target) {
-		ArrayList<Minion> newOppSide = new ArrayList<Minion>();
-		ArrayList<Minion> newMySide = new ArrayList<Minion>();
+		ArrayList<Minion> newMySide = (ArrayList<Minion>) oldstate.getMySide().clone();
+		ArrayList<Minion> newOppSide = (ArrayList<Minion>) oldstate.getOppSide().clone();
 		
-		for(int id : oldstate.getIdsInPlayOrder()) {
-			Minion newMinion = oldstate.findMinion(id);
-			
-			newMinion = newMinion.applyBuff(new AdditiveBuff(-1,0,1-newMinion.getMaxHP(),0));
-	
-			if (newMinion.getMyPos()<7) newMySide.add(newMinion.getMyPos(),newMinion);
-			else newOppSide.add(newMinion.getMyPos()-7, newMinion);
+		for (int i = 0; i<newMySide.size(); i++) {
+			newMySide.set(i, newMySide.get(i).applyBuff(new AdditiveBuff(-1,0,1-newMySide.get(i).getMaxHP(),0)));
 		}
 		
-		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
+		for (int i = 0; i<newOppSide.size(); i++) {
+			newOppSide.set(i, newOppSide.get(i).applyBuff(new AdditiveBuff(-1,0,1-newOppSide.get(i).getMaxHP(),0)));
+		}
+	
+		
+		return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
 	}
 	
 }

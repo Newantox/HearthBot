@@ -17,4 +17,8 @@ public abstract class UntargettedSpell extends SpellCard {
 	public void playPrint(Character target) {
 		System.out.println("Cast "+getName());
 	}
+	
+	public String playOutput(Character target) {
+		return "Cast "+getName();
+	}
 }

@@ -9,12 +9,14 @@ public interface State {
 	Set<Action> getApplicableActions();
 	MyTurnState getActionResult(Action action);
 	
-	double getValue(Node n);
-	double getBestValue(Node node);
+	double getValue(Node n, double minionWeight, double hpWeight);
+	double getBestValue(Node node, double minionWeight, double hpWeight);
 	
 	boolean isGameWon();
 	void print();
 	boolean isTurnEnded();
+	
+	String output();
 
 	
 }

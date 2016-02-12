@@ -20,7 +20,7 @@ public class Gorehowl extends Weapon {
 		Hero newHero = oldstate.getHero().fresh();
 		newHero.setReady(false);
 			
-		MyTurnState tempstate = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize());
+		MyTurnState tempstate = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
 		tempstate.damage(newHero,defender.getAtk());
 		tempstate = tempstate.damage(defender,newHero.getWeapon().getAtk());
 			

@@ -1,6 +1,7 @@
 package Game.Auras;
 
 import Game.MyTurnState;
+import Game.TargetsType;
 import Game.Minions.Minion;
 
 public abstract class Aura {
@@ -14,10 +15,13 @@ public abstract class Aura {
 	public abstract MyTurnState apply(MyTurnState oldstate, Minion source, Minion target);
 	
 	public MyTurnState remove(MyTurnState oldstate, Minion source, Minion target) {
-		return oldstate.removeBuff(target.getId(),getId());
+		return oldstate.removeBuff(target.getId(),target.getName(),getId());
 	}
 
 	public int getId() {
 		return id;
 	}
+
+	public abstract TargetsType getEffectRange();
+	
 }

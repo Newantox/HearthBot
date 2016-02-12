@@ -4,7 +4,7 @@ import Game.Deathrattles.LootHoarderDR;
 
 public class LootHoarder extends Minion {
 	public LootHoarder() {
-		super("Loot Hoarder",-1,1,2,1);
+		super("Loot Hoarder",1,2,1);
 		addDeathrattle(new LootHoarderDR());
 	}
 	

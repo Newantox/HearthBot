@@ -16,9 +16,8 @@ public class MinionCompanionBC extends Battlecry {
 	@Override
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
 		if (oldstate.numberOfAlliedMinions() < 7) {
-			Minion newMinion = companion;
-			newMinion.setMyPos(((Minion) minion).getMyPos()+1);
-			return oldstate.placeMinion(newMinion);
+			Minion newMinion = new Minion(companion);
+			return oldstate.placeMinion(newMinion,oldstate.findPosition(((Minion) minion).getId(),((Minion) minion).getName())+1);
 		}
 		else return oldstate;
 	}
