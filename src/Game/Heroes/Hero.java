@@ -143,22 +143,22 @@ public class Hero implements Character {
 		Hero hero = this.fresh();
 		if (hero.getArmour()>=amount) hero.setArmour(hero.getArmour()-2);
 		else {int additional = amount - hero.getArmour(); hero.setArmour(0); hero.setHP(hero.getHP()-additional);}
-		if (side.equals(TargetsType.ALLYCHAR)) return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
-		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		if (side.equals(TargetsType.ALLYCHAR)) return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	}
 	
 	public MyTurnState heal(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setHP(Math.min(hero.getHP()+amount,30));
 		
-		if (side.equals(TargetsType.ALLYCHAR)) return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
-		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		if (side.equals(TargetsType.ALLYCHAR)) return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	}
 	
 	public BoardState useMana(BoardState oldstate, int amount) {
 		Hero hero = this.fresh();
 		hero.setCurrentMana(currentMana-amount);
-		return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		return new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	}
 
 	public boolean canAttack() {
@@ -250,8 +250,8 @@ public class Hero implements Character {
 		Hero hero = this.fresh();
 		hero.setWeapon(weapon);
 		
-		if (side.equals(TargetsType.ALLYCHAR)) return  new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
-		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		if (side.equals(TargetsType.ALLYCHAR)) return  new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	}
 	
 	//NEEDS CHANGED
@@ -268,8 +268,8 @@ public class Hero implements Character {
 		Weapon weapon = hero.getWeapon();
 		hero.setWeapon(null);
 		BoardState tempstate;
-		if (side.equals(TargetsType.ALLYCHAR)) tempstate = new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
-		else tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		if (side.equals(TargetsType.ALLYCHAR)) tempstate = new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
+		else tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		
 		return weapon.deathRattle(tempstate,side);
 		

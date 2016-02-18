@@ -166,7 +166,7 @@ public class PlayGame {
 		
 		int newEnemyHandSize = (config.getHero()).getMyHandSize();
 		
-		BoardState tempstate =  new BoardState(config.getViewType(),newHero,newEnemy,newOppSide,newMySide,config.getIdsInPlayOrder(),newEnemyHandSize,false);
+		BoardState tempstate =  new BoardState(config.getViewType(),newHero,newEnemy,newOppSide,newMySide,config.getIdsInPlayOrder(),newEnemyHandSize,false,config.getIdCounter());
 		tempstate.setTurnEnded(false);
 		
 		if (real) gameplay.addNewTurn(tempstate);
@@ -209,7 +209,7 @@ public class PlayGame {
 	
 	public BoardState setUpGame() {
 		
-		MyTurnState startState = new BoardState(ViewType.UNBIASED, player1.getInitialHero(), player2.getInitialHero(), new ArrayList<Minion>(), new ArrayList<Minion>(), new ArrayList<Integer>(), 0,true);
+		MyTurnState startState = new BoardState(ViewType.UNBIASED, player1.getInitialHero(), player2.getInitialHero(), new ArrayList<Minion>(), new ArrayList<Minion>(), new ArrayList<Integer>(), 0,true,0);
 		startState = swapSides(true,(BoardState) startState);
 		
 		for (int i = 0; i<4; i++) {

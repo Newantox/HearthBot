@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import Game.BoardState;
+import Game.BufferType;
 import Game.ChoiceState;
 import Game.MyTurnState;
 import Game.PlayableCard;
@@ -16,29 +17,32 @@ public class AbusiveSergeantBC extends Battlecry {
 
 	@Override
 	public MyTurnState perform(PlayableCard minion, BoardState oldstate) {
+		System.out.println("triggering");
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id,"");
+			if (id!=((Minion) minion).getId()) {
+				Minion targetMinion = oldstate.findMinion(id);
 			
-			if (targetMinion.isTargettable()) actions.add(new AbusiveSergeantChoice(id,targetMinion.getName()));
+				if (targetMinion.isTargettable()) actions.add(new AbusiveSergeantChoice(id));
+			}
 		}
+		System.out.println(actions.size());
 		if (actions.size()==0) return oldstate;
-		return new ChoiceState(oldstate,actions);
+		System.out.println("ChoiceId"+((Minion) minion).getId());
+		return new ChoiceState(oldstate,actions,BufferType.BATTLECRY,((Minion) minion).getId());
 	}
 	
 	
 	public class AbusiveSergeantChoice extends ChoiceAction {
 		
 		private int id;
-		private String name;
 		
-		public AbusiveSergeantChoice(int id, String name) {
+		public AbusiveSergeantChoice(int id) {
 			this.id = id;
-			this.name = name;
 		}
 
 		public MyTurnState result(BoardState oldstate) {
-			return oldstate.applyTempBuff(id,name,new AdditiveBuff(-1,2,0,0));
+			return oldstate.applyTempBuff(id,new AdditiveBuff(-1,2,0,0));
 		}
 
 		@Override

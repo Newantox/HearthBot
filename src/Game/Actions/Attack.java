@@ -2,17 +2,16 @@ package Game.Actions;
 
 import Game.BoardState;
 import Game.MyTurnState;
-import Game.Minions.Minion;
 import Search.Action;
 
 public class Attack implements Action {
 	
-	Minion attacker;
-	Minion defender;
+	int attackerId;
+	int defenderId;
 	
-	public Attack(Minion attacker , Minion defender) {
-		this.attacker = attacker;
-		this.defender = defender;
+	public Attack(int attackerId , int defenderId) {
+		this.attackerId = attackerId;
+		this.defenderId = defenderId;
 	}
 
 	@Override
@@ -23,21 +22,21 @@ public class Attack implements Action {
 
 	@Override
 	public MyTurnState result(BoardState oldstate) {
-		return attacker.attackWith(oldstate, defender);
+		return (oldstate.findMinion(attackerId)).attackWith(oldstate, oldstate.findMinion(defenderId));
 	
 	}
 	
 	public void print() {
 		System.out.print("Minion ");
-		System.out.print(attacker.getName());
+		//System.out.print(attacker.getName());
 		System.out.print(" attacks enemy minion ");
-		System.out.println(defender.getName());
+		//System.out.println(defender.getName());
 		System.out.println();
 	}
 	
 	public String output() {
 		String newline = System.getProperty("line.separator");
-		String s = "Minion "+attacker.getName()+" attacks enemy minion "+defender.getName()+newline;
+		String s = "Minion "+attackerId+" attacks enemy minion "+defenderId+newline;
 		return s;
 	}
 

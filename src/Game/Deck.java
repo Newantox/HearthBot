@@ -59,8 +59,8 @@ public class Deck {
 				newHero.setMyDeck(newDeck);
 				
 				double probability = ((double) deck.get(card))/getSize();
-				if (newHero.getSide().equals(TargetsType.ALLYCHAR)) list.add(new StateProbabilityPair(new BoardState(state.getViewType(),newHero,state.getEnemy(),state.getOppSide(),state.getMySide(),state.getIdsInPlayOrder(),state.getEnemyHandSize(),state.isTurnEnded()), probability, newHero.getName()+" draws "+card.getName()));
-				else list.add(new StateProbabilityPair(new BoardState(state.getViewType(),state.getHero(),newHero,state.getOppSide(),state.getMySide(),state.getIdsInPlayOrder(),Math.min(10,state.getEnemyHandSize()+1),state.isTurnEnded()), probability, newHero.getName()+" draws "+card.getName()));
+				if (newHero.getSide().equals(TargetsType.ALLYCHAR)) list.add(new StateProbabilityPair(new BoardState(state.getViewType(),newHero,state.getEnemy(),state.getOppSide(),state.getMySide(),state.getIdsInPlayOrder(),state.getEnemyHandSize(),state.isTurnEnded(),state.getIdCounter()), probability, newHero.getName()+" draws "+card.getName()));
+				else list.add(new StateProbabilityPair(new BoardState(state.getViewType(),state.getHero(),newHero,state.getOppSide(),state.getMySide(),state.getIdsInPlayOrder(),Math.min(10,state.getEnemyHandSize()+1),state.isTurnEnded(),state.getIdCounter()), probability, newHero.getName()+" draws "+card.getName()));
 			}
 			return new RandomState(list);
 		}

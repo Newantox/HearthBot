@@ -9,7 +9,7 @@ public class StormwindChampionAura extends Aura {
 	
 	@Override
 	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
-		return oldstate.applyBuff(target.getId(),target.getName(), new AdditiveBuff(getId(),1,1,0));
+		return oldstate.applyBuff(target.getId(), new AdditiveBuff(getId(),1,1,0));
 	}
 
 	@Override

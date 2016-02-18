@@ -16,9 +16,7 @@ public class Hand {
 		if (hand.size() < 10) {
 			ArrayList<PlayableCard> temp = new ArrayList<PlayableCard>();
 			temp.addAll(hand);
-		//	System.out.println("Sizebefore"+temp.size()+card.getName());
 			temp.add(pos,card);
-		//	System.out.println("Sizeafter"+temp.size()+card.getName());
 			return new Hand(temp);
 		}
 		else return this;

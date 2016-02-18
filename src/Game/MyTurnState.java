@@ -2,13 +2,15 @@ package Game;
 
 import java.util.ArrayList;
 
+import Game.Auras.Aura;
 import Game.Battlecrys.Battlecry;
 import Game.Buffs.Buff;
-import Game.Cards.Spells.Untargetted.TheCoin;
+import Game.DeathEffects.DeathEffect;
 import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
 import Game.Inspires.Inspire;
 import Game.Minions.Minion;
+import Game.SummonEffects.SummonEffect;
 import Game.Weapons.Weapon;
 import Search.State;
 
@@ -33,12 +35,16 @@ public interface MyTurnState extends State {
 	MyTurnState giveWeapon(Hero hero, Weapon weapon);
 	MyTurnState equipHeroWeapon(Weapon weapon);
 	MyTurnState equipEnemyWeapon(Weapon weapon);
-	MyTurnState applyAuras(Minion minion);
+	MyTurnState applyAura(Aura aura, int summonedMinionId, int id);
+	MyTurnState applyAuras(int minionId);
+	MyTurnState removeAura(Aura aura, Minion source, int targetId);
 	MyTurnState removeAuras(Minion minion);
-	MyTurnState doSummonEffects(Minion minion);
+	MyTurnState doSummonEffect(SummonEffect summonEffect, int id, int summonedMinionId, TargetsType side);
+	MyTurnState doSummonEffects(int minionId);
+	MyTurnState doDeathEffect(DeathEffect deathEffect, int id, Minion destroyedMinion);
 	MyTurnState doDeathEffects(Minion minion, TargetsType side);
-	MyTurnState applyBuff(int minionID, String name, Buff buff);
-	MyTurnState removeBuff(int minionID, String name, int id);
+	MyTurnState applyBuff(int minionID, Buff buff);
+	MyTurnState removeBuff(int minionID, int id);
 	
 	MyTurnState simultaneousHeal(TargetsType enemyminions, int i, ArrayList<Minion> arrayList);
 	

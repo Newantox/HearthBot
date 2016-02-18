@@ -2,19 +2,18 @@ package Search;
 
 import java.util.PriorityQueue;
 
-import Game.BoardState;
-
 public class BestFirstFrontier implements Frontier  {
 	
-	private PriorityQueue<Node> frontier = new PriorityQueue<Node>(100 , new NodeComparator());
+	private PriorityQueue<Node> frontier;
 	private NodeFunction nfunction;
 	private int max = 0;
 	private int current = 0;
 	double minionWeight;
 	double hpWeight;
 
-	public BestFirstFrontier(NodeFunction f,double minionWeight, double hpWeight) {
-		this.nfunction = f;
+	public BestFirstFrontier(NodeFunction nfunction,double minionWeight, double hpWeight) {
+		frontier = new PriorityQueue<Node>(100 , new NodeComparator(minionWeight,hpWeight));
+		this.nfunction = nfunction;
 	}
 
 	@Override
@@ -23,10 +22,6 @@ public class BestFirstFrontier implements Frontier  {
 		current += 1;
 		if (current>max) max = current;
 		frontier.add(n);
-		State state = n.state;
-		//BoardState board = (BoardState)state;
-		//System.out.println(current);
-
 	}
 
 	public double getMinionWeight() {

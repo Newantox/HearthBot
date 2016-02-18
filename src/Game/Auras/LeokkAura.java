@@ -9,7 +9,7 @@ public class LeokkAura extends Aura {
 
 	@Override
 	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
-		return oldstate.applyBuff(target.getId(),target.getName(),new AdditiveBuff(getId(),1,0,0));
+		return oldstate.applyBuff(target.getId(),new AdditiveBuff(getId(),1,0,0));
 	}
 
 	@Override

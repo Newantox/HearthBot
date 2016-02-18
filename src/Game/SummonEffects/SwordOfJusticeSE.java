@@ -14,7 +14,7 @@ public class SwordOfJusticeSE extends SummonEffect {
 
 	@Override
 	public MyTurnState perform(MyTurnState oldstate, PlayableCard weapon, Minion minion, TargetsType side) {
-		MyTurnState tempstate = oldstate.applyBuff(minion.getId(),minion.getName(),new AdditiveBuff(-1,1,1,0));
+		MyTurnState tempstate = oldstate.applyBuff(minion.getId(),new AdditiveBuff(-1,1,1,0));
 		
 		if (side.equals(TargetsType.ALLYCHAR)) {
 			return tempstate.changeHeroWeaponAtkDurability(((Weapon) weapon).getId(),0,-1);

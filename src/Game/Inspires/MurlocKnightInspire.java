@@ -19,7 +19,7 @@ public class MurlocKnightInspire extends Inspire {
 			MurlocList murlocs = new MurlocList();
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 			for (Minion murloc : murlocs.get()) {
-				list.add(new StateProbabilityPair(oldstate.placeMinion(murloc,oldstate.findPosition(((Minion) minion).getId(),((Minion) minion).getName())+1) , (double)1 / (murlocs.get()).size(), murloc.getName()+" is summoned by Murloc Knight inspire"));
+				list.add(new StateProbabilityPair(oldstate.placeMinion(murloc,oldstate.findPosition(((Minion) minion).getId())+1) , (double)1 / (murlocs.get()).size(), murloc.getName()+" is summoned by Murloc Knight inspire"));
 			}
 			return new RandomState(list);
 		}

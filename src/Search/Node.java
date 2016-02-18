@@ -30,7 +30,7 @@ public class Node {
 	}
 	
 	public double getValue(double minionWeight, double hpWeight) {
-		return state.getValue(this,minionWeight,hpWeight);
+		return state.getValue(this,minionWeight,hpWeight) + action.cost();
 	}
 	
 	public double getBestValue(double minionWeight, double hpWeight) {

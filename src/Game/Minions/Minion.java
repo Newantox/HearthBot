@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import Game.Character;
 import Game.BoardState;
 import Game.CardType;
+import Game.ChoiceState;
 import Game.MyTurnState;
 import Game.TargetsType;
 import Game.Auras.Aura;
@@ -225,7 +226,7 @@ public class Minion implements Character {
 	}
 	
 	public boolean isAttackable(BoardState oldstate) {
-		if (oldstate.findPosition(id,name)<7) return (taunt || !oldstate.isTauntOnSide(oldstate.getMySide()));
+		if (oldstate.findPosition(id)<7) return (taunt || !oldstate.isTauntOnSide(oldstate.getMySide()));
 		else return (taunt || !oldstate.isTauntOnSide(oldstate.getOppSide()));
 	}
 	
@@ -328,7 +329,7 @@ public class Minion implements Character {
 			Minion newMinion = new Minion(this);
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 			
-			newMinion.setId(oldstate.getFreeId());
+			newMinion.setId(oldstate.getNextId());
 			
 			if(newMySide.size()>position) newMySide.add(position,newMinion);
 			else newMySide.add(newMinion);
@@ -336,12 +337,18 @@ public class Minion implements Character {
 			ArrayList<Integer> newIdsInPlayOrder = (ArrayList<Integer>) (oldstate.getIdsInPlayOrder()).clone();
 			newIdsInPlayOrder.add(newMinion.getId());
 			
-			MyTurnState tempstate =  new BoardState(oldstate.getViewType(), oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			MyTurnState tempstate =  new BoardState(oldstate.getViewType(), oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),newMinion.getId());
 			
-			tempstate = battleCry(tempstate);
+			tempstate = newMinion.battleCry(tempstate);
 			
-			tempstate = tempstate.doSummonEffects(newMinion);
-			return tempstate.applyAuras(newMinion);
+			if (tempstate.getClass().equals((new ChoiceState()).getClass())) return tempstate;
+			else {
+				tempstate = tempstate.doSummonEffects(newMinion.getId());
+				if (name.equals("Wolfrider")) { 
+					System.out.print("sffse"+newMinion.getId());
+				}
+				return tempstate.applyAuras(newMinion.getId());
+			}
 		}
 		else return oldstate;
 	}
@@ -350,7 +357,7 @@ public class Minion implements Character {
 	public MyTurnState place(BoardState oldstate, int position) {
 		Minion newMinion = new Minion(this);
 		
-		newMinion.setId(oldstate.getFreeId());
+		newMinion.setId(oldstate.getNextId());
 		
 		if (position<7 && oldstate.getMySide().size()<7) {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
@@ -361,10 +368,10 @@ public class Minion implements Character {
 			ArrayList<Integer> newIdsInPlayOrder = (ArrayList<Integer>) (oldstate.getIdsInPlayOrder()).clone();
 			newIdsInPlayOrder.add(newMinion.getId());
 			
-			MyTurnState tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			MyTurnState tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),newMinion.getId());
 			
-			tempstate = tempstate.doSummonEffects(newMinion);
-			return tempstate.applyAuras(newMinion);
+			tempstate = tempstate.doSummonEffects(newMinion.getId());
+			return tempstate.applyAuras(newMinion.getId());
 		}
 		
 		else if (position>=7 && oldstate.getOppSide().size()<7) { 
@@ -376,10 +383,10 @@ public class Minion implements Character {
 			ArrayList<Integer> newIdsInPlayOrder = (ArrayList<Integer>) (oldstate.getIdsInPlayOrder()).clone();
 			newIdsInPlayOrder.add(newMinion.getId());
 			
-			MyTurnState tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			MyTurnState tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),newMinion.getId());
 			
-			tempstate = tempstate.doSummonEffects(newMinion);
-			return tempstate.applyAuras(newMinion);
+			tempstate = tempstate.doSummonEffects(newMinion.getId());
+			return tempstate.applyAuras(newMinion.getId());
 		}
 		else return oldstate;
 	}
@@ -392,10 +399,10 @@ public class Minion implements Character {
 		Minion newAttacker = new Minion(this);
 		
 		newAttacker.setAttacksTaken(newAttacker.getAttacksTaken()+1);
-		if (oldstate.findPosition(newAttacker.getId(),newAttacker.getName())<7) newMySide.set(oldstate.findPosition(newAttacker.getId(),newAttacker.getName()),newAttacker);
-		else newOppSide.set(oldstate.findPosition(newAttacker.getId(),newAttacker.getName())-7, newAttacker);
+		if (oldstate.findPosition(newAttacker.getId())<7) newMySide.set(oldstate.findPosition(newAttacker.getId()),newAttacker);
+		else newOppSide.set(oldstate.findPosition(newAttacker.getId())-7, newAttacker);
 		
-		BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		
 		ArrayList<Minion> minions = new ArrayList<Minion>();
 		ArrayList<Integer> amounts = new ArrayList<Integer>();
@@ -414,11 +421,12 @@ public class Minion implements Character {
 		ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 		
 		Minion newAttacker = new Minion(this);
-		
+		System.out.print("goingin:"+id+","+name+newAttacker.getId()+target.getName()+oldstate.findPosition(id));
+		oldstate.print();
 		newAttacker.setAttacksTaken(newAttacker.getAttacksTaken()+1);
-		newMySide.set(oldstate.findPosition(newAttacker.getId(),newAttacker.getName()), newAttacker);
+		newMySide.set(oldstate.findPosition(newAttacker.getId()), newAttacker);
 		
-		BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		BoardState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		
 		if (target.getSide().equals(TargetsType.ALLYCHAR)) return (tempstate.getHero()).damage(tempstate,newAttacker.getAtk());
 		else return (tempstate.getEnemy()).damage(tempstate,newAttacker.getAtk());
@@ -428,7 +436,7 @@ public class Minion implements Character {
 	public MyTurnState damage(BoardState oldstate, int amount) {
 		Minion newMinion = new Minion(this);
 		
-		if (oldstate.findPosition(newMinion.getId(),newMinion.getName())<7) {
+		if (oldstate.findPosition(newMinion.getId())<7) {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 			
 			if (divineshield) newMinion.setDivineShield(false);
@@ -436,9 +444,9 @@ public class Minion implements Character {
 			
 			if (newMinion.getDamageTaken() >= newMinion.getMaxHP()) return destroy(oldstate);
 			
-			newMySide.set(oldstate.findPosition(newMinion.getId(),newMinion.getName()), newMinion);
+			newMySide.set(oldstate.findPosition(newMinion.getId()), newMinion);
 			
-			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		}
 		else {
 			ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
@@ -448,9 +456,9 @@ public class Minion implements Character {
 			
 			if (newMinion.getDamageTaken() >= newMinion.getMaxHP()) return destroy(oldstate);
 			
-			newOppSide.set(oldstate.findPosition(newMinion.getId(),newMinion.getName())-7, newMinion);
+			newOppSide.set(oldstate.findPosition(newMinion.getId())-7, newMinion);
 			
-			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		}
 		
 	}
@@ -458,7 +466,7 @@ public class Minion implements Character {
 	@SuppressWarnings("unchecked")
 	public MyTurnState destroy(BoardState oldstate) {
 		TargetsType side;
-		if (oldstate.findPosition(id,name)<7) side = TargetsType.ALLYMINIONS;
+		if (oldstate.findPosition(id)<7) side = TargetsType.ALLYMINIONS;
 		else side = TargetsType.ENEMYMINIONS;
 	
 		ArrayList<Integer> newIdsInPlayOrder = (ArrayList<Integer>) (oldstate.getIdsInPlayOrder()).clone();
@@ -466,12 +474,12 @@ public class Minion implements Character {
 			if (newIdsInPlayOrder.get(i)==id) newIdsInPlayOrder.remove(i);
 		}
 		
-		if (oldstate.findPosition(id,name)<7) {
+		if (oldstate.findPosition(id)<7) {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 			
 			newMySide.remove(this);
 			
-			MyTurnState tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			MyTurnState tempstate =  new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 			
 			tempstate = tempstate.doDeathEffects(this,side);
 			return deathRattle(tempstate,side);
@@ -481,7 +489,7 @@ public class Minion implements Character {
 			
 			newOppSide.remove(this);
 			
-			MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),newIdsInPlayOrder,oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 			
 			tempstate = tempstate.doDeathEffects(this,side);
 			return deathRattle(tempstate,side);
@@ -493,15 +501,15 @@ public class Minion implements Character {
 	public MyTurnState heal(BoardState oldstate, int amount) {
 		Minion newMinion = new Minion(this);
 		
-		if (oldstate.findPosition(id,name)<7) {
+		if (oldstate.findPosition(id)<7) {
 			ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 			
 			if (amount >= damageTaken) newMinion.setDamageTaken(0);
 			else newMinion.setDamageTaken(newMinion.getDamageTaken()-amount);
 			
-			newMySide.set(oldstate.findPosition(id,name), newMinion);
+			newMySide.set(oldstate.findPosition(id), newMinion);
 			
-			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),newMySide,oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		}
 		else {
 			ArrayList<Minion> newOppSide = (ArrayList<Minion>) (oldstate.getOppSide()).clone();
@@ -509,9 +517,9 @@ public class Minion implements Character {
 			if (amount >= damageTaken) newMinion.setDamageTaken(0);
 			else newMinion.setDamageTaken(newMinion.getDamageTaken()-amount);
 			
-			newOppSide.set(oldstate.findPosition(id,name)-7, newMinion);
+			newOppSide.set(oldstate.findPosition(id)-7, newMinion);
 			
-			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+			return new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),newOppSide,oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 		}
 	}
 	
@@ -551,7 +559,7 @@ public class Minion implements Character {
 		
 		ArrayList<Buff> newTempBuffs = (ArrayList<Buff>) (newMinion.getTempBuffs()).clone();
 	    newTempBuffs.add(buff);
-	    newMinion.setBuffs(newTempBuffs);
+	    newMinion.setTempBuffs(newTempBuffs);
 	    
 	    buff.apply(newMinion);
  		
@@ -604,7 +612,7 @@ public class Minion implements Character {
 		Minion newMinion = new Minion(this);
 	
 		ArrayList<Buff> newTempBuffs = (ArrayList<Buff>) (newMinion.getTempBuffs()).clone();
-		
+
 		for (int i = newTempBuffs.size()-1 ; i>=0; i--) {
 			(newTempBuffs.get(i)).remove(newMinion);
 			newTempBuffs.remove(i);
@@ -620,8 +628,8 @@ public class Minion implements Character {
 		ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 	    Minion newMinion = new Minion(this);
 	 		
-	    newMySide.set(oldstate.findPosition(id,name),newMinion);
-	    MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+	    newMySide.set(oldstate.findPosition(id),newMinion);
+	    MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	         
 	    newMinion = newMinion.removeBuffs();
 	    
@@ -645,10 +653,6 @@ public class Minion implements Character {
 		newMinion.setDeathEffects(new ArrayList<DeathEffect>());
 		newMinion.setStartTurnEffects(new ArrayList<StartTurnEffect>());
 		newMinion.setEndTurnEffects(new ArrayList<EndTurnEffect>());
-			
-		//Perform twice to offset removal above
-		tempstate = tempstate.applyAuras(newMinion);
-		tempstate = tempstate.applyAuras(newMinion);
 			
 		return tempstate;
 	}

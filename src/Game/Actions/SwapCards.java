@@ -48,7 +48,7 @@ public class SwapCards implements Action {
 		newHero.setMyDeck(newDeck);
 		newHero.setMyHand(newHand);
 	
-		newState = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		newState = new BoardState(oldstate.getViewType(),newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	
 		for (int position : positions) {
 			newState = newState.drawCard(position);

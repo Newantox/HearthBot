@@ -25,7 +25,7 @@ public class PaladinPower extends HeroPower {
 		hero.setPowerUsed(true);
 		hero.setCurrentMana(hero.getCurrentMana()-manacost);
 		
-		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getIdsInPlayOrder(), oldstate.getEnemyHandSize(),oldstate.isTurnEnded());
+		BoardState tempstate = new BoardState(oldstate.getViewType(), hero, oldstate.getEnemy(),oldstate.getOppSide(), oldstate.getMySide(), oldstate.getIdsInPlayOrder(), oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
 	
 		Minion minion = new SilverHandRecruit();
 		return  tempstate.placeMinion(minion,tempstate.numberOfAlliedMinions());

@@ -28,7 +28,7 @@ public class PlayOut {
 		this.player1 = new Player(search1,null);
 		this.player2 = new Player(search2,null);
 		this.prepState = (BoardState) state.resolveRNG(false);
-		currentState = new BoardState(ViewType.UNBIASED,prepState.getHero(), prepState.getEnemy(), prepState.getOppSide(), prepState.getMySide(), prepState.getIdsInPlayOrder(), prepState.getEnemyHandSize(), prepState.isTurnEnded());
+		currentState = new BoardState(ViewType.UNBIASED,prepState.getHero(), prepState.getEnemy(), prepState.getOppSide(), prepState.getMySide(), prepState.getIdsInPlayOrder(), prepState.getEnemyHandSize(), prepState.isTurnEnded(),prepState.getIdCounter());
 	}
 	
 	//public PlayOut(MulliganState state, Search search1, Search search2) {
@@ -96,7 +96,7 @@ public class PlayOut {
 			
 			int newEnemyHandSize = (config.getHero()).getMyHandSize();
 			
-			BoardState tempstate =  new BoardState(config.getViewType(),newHero,newEnemy,newOppSide,newMySide,config.getIdsInPlayOrder(),newEnemyHandSize,false);
+			BoardState tempstate =  new BoardState(config.getViewType(),newHero,newEnemy,newOppSide,newMySide,config.getIdsInPlayOrder(),newEnemyHandSize,false,config.getIdCounter());
 			tempstate.setTurnEnded(false);
 			
 			return tempstate;

@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import Game.BoardState;
+import Game.BufferType;
 import Game.ChoiceState;
 import Game.MyTurnState;
 import Game.PlayableCard;
@@ -24,28 +25,26 @@ public class ChooseTargetBuffBC extends Battlecry {
 	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id,"");
+			Minion targetMinion = oldstate.findMinion(id);
 			
-			if (targetMinion.isTargettable()) actions.add(new TargetChoice(id,targetMinion.getName()));
+			if (targetMinion.isTargettable()) actions.add(new TargetChoice(id));
 		}
 		if (actions.size()==0) return oldstate;
-		return new ChoiceState(oldstate,actions);
+		return new ChoiceState(oldstate,actions,BufferType.BATTLECRY,((Minion) card).getId());
 	}
 	
 	
 	public class TargetChoice extends ChoiceAction {
 		
 		private int id;
-		private String name;
 		
-		public TargetChoice(int id, String name) {
+		public TargetChoice(int id) {
 			this.id = id;
-			this.name = name;
 		}
 		
 		@Override
 		public MyTurnState result(BoardState oldstate) {
-			return oldstate.applyBuff(id,name,buff);
+			return oldstate.applyBuff(id,buff);
 		}
 
 		@Override

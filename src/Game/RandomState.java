@@ -6,13 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import Game.Auras.Aura;
 import Game.Battlecrys.Battlecry;
 import Game.Buffs.Buff;
 import Game.Character;
+import Game.DeathEffects.DeathEffect;
 import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
 import Game.Inspires.Inspire;
 import Game.Minions.Minion;
+import Game.SummonEffects.SummonEffect;
 import Game.Weapons.Weapon;
 import Search.Action;
 import Search.Node;
@@ -160,28 +163,46 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState applyBuff(int minionID, String name, Buff buff) {
+	public MyTurnState applyBuff(int minionID, Buff buff) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).applyBuff(minionID,name,buff),thing.getProbability() , thing.getText()));
+			list.add(new StateProbabilityPair((thing.getState()).applyBuff(minionID,buff),thing.getProbability() , thing.getText()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState removeBuff(int minionID, String name, int id) {
+	public MyTurnState removeBuff(int minionID, int id) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).removeBuff(minionID,name,id),thing.getProbability() , thing.getText()));
+			list.add(new StateProbabilityPair((thing.getState()).removeBuff(minionID,id),thing.getProbability() , thing.getText()));
 		}
 		return new RandomState(list);
 	}
 	
 	@Override
-	public MyTurnState applyAuras(Minion minion) {
+	public MyTurnState applyAura(Aura aura, int sourceId, int targetId) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).applyAuras(minion),thing.getProbability() , thing.getText()));
+			list.add(new StateProbabilityPair((thing.getState()).applyAura(aura,sourceId,targetId),thing.getProbability() , thing.getText()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState applyAuras(int minionId) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).applyAuras(minionId),thing.getProbability() , thing.getText()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState removeAura(Aura aura, Minion source, int targetId) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).removeAura(aura,source,targetId),thing.getProbability() , thing.getText()));
 		}
 		return new RandomState(list);
 	}
@@ -196,10 +217,28 @@ public class RandomState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState doSummonEffects(Minion minion) {
+	public MyTurnState doSummonEffect(SummonEffect summonEffect, int sourceId, int targetId, TargetsType side) {
 		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair thing : states) {
-			list.add(new StateProbabilityPair((thing.getState()).doSummonEffects(minion),thing.getProbability() , thing.getText()));
+			list.add(new StateProbabilityPair((thing.getState()).doSummonEffect(summonEffect,sourceId,targetId,side),thing.getProbability() , thing.getText()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState doSummonEffects(int minionId) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).doSummonEffects(minionId),thing.getProbability() , thing.getText()));
+		}
+		return new RandomState(list);
+	}
+	
+	@Override
+	public MyTurnState doDeathEffect(DeathEffect deathEffect, int sourceId, Minion destroyedMinion) {
+		List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair thing : states) {
+			list.add(new StateProbabilityPair((thing.getState()).doDeathEffect(deathEffect,sourceId,destroyedMinion),thing.getProbability() , thing.getText()));
 		}
 		return new RandomState(list);
 	}

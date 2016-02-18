@@ -4,6 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import Game.BoardState;
+import Game.BufferType;
 import Game.Character;
 import Game.ChoiceState;
 import Game.MyTurnState;
@@ -24,7 +25,7 @@ public class ChooseTargetHealBC extends Battlecry {
 	public MyTurnState perform(PlayableCard card, BoardState oldstate) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		for (int id : oldstate.getIdsInPlayOrder()) {
-			Minion targetMinion = oldstate.findMinion(id,"");
+			Minion targetMinion = oldstate.findMinion(id);
 			
 			if (targetMinion.isTargettable()) actions.add(new TargetChoice(targetMinion));
 		}
@@ -32,7 +33,7 @@ public class ChooseTargetHealBC extends Battlecry {
 		actions.add(new TargetChoice(oldstate.getEnemy()));
 		
 		if (actions.size()==0) return oldstate;
-		return new ChoiceState(oldstate,actions);
+		return new ChoiceState(oldstate,actions,BufferType.BATTLECRY,((Minion) card).getId());
 	}
 	
 	

@@ -11,14 +11,14 @@ public class OldMurkEyeAura extends Aura {
 	@Override
 	public MyTurnState apply(MyTurnState oldstate, Minion source, Minion target) {
 		if ((target.getRace()).equals(Race.MURLOC)) {
-			return oldstate.applyBuff(source.getId(),source.getName(),new AdditiveBuff(getId(),1,0,0));
+			return oldstate.applyBuff(source.getId(),new AdditiveBuff(getId(),1,0,0));
 		}
 		else return oldstate;
 	}
 	
 	@Override
 	public MyTurnState remove(MyTurnState oldstate, Minion source, Minion target) {
-		return oldstate.removeBuff(source.getId(),source.getName(),getId());
+		return oldstate.removeBuff(source.getId(),getId());
 	}
 
 	@Override

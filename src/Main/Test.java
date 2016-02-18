@@ -29,6 +29,7 @@ import Game.Minions.LootHoarder;
 import Game.Minions.Murloc;
 import Game.Minions.MurlocTidecaller;
 import Game.Minions.MurlocWarleader;
+import Game.Minions.NoviceEngineer;
 import Game.Minions.Ragnaros;
 import Game.Minions.ShieldedMinibot;
 import Game.Minions.SouthseaDeckhand;
@@ -117,7 +118,7 @@ public class Test {
 		myDeck = myDeck.add(new TruesilverChampion(),2);
 		myDeck = myDeck.add(new Consecration(),2);
 		myDeck = myDeck.add(new HammerOfWrath(),2);
-		//myDeck = myDeck.add(new AvengingWrath(),1);
+	//	myDeck = myDeck.add(new AvengingWrath(),1);
 		myDeck = myDeck.add(new AbusiveSergeant(),2);
 		myDeck = myDeck.add(new ArgentSquire(),2);
 		myDeck = myDeck.add(new LeperGnome(),2);
@@ -125,18 +126,19 @@ public class Test {
 		myDeck = myDeck.add(new KnifeJuggler(),2);
 		myDeck = myDeck.add(new LootHoarder(),1);
 		myDeck = myDeck.add(new Wolfrider(), 1);
+		myDeck = myDeck.add(new NoviceEngineer(), 2);
 		
 		Deck enemyDeck = new Deck();
 		enemyDeck = enemyDeck.add(new BlessingOfMight(),2);
 		enemyDeck = enemyDeck.add(new Equality(),2);
 		enemyDeck = enemyDeck.add(new ShieldedMinibot(),2);
 		enemyDeck = enemyDeck.add(new SwordOfJustice(),1);
-//		enemyDeck = enemyDeck.add(new DivineFavour(),2);
+	//	enemyDeck = enemyDeck.add(new DivineFavour(),2);
 		enemyDeck = enemyDeck.add(new MusterForBattle(),2);
 		enemyDeck = enemyDeck.add(new TruesilverChampion(),2);
 		enemyDeck = enemyDeck.add(new Consecration(),2);
 		enemyDeck = enemyDeck.add(new HammerOfWrath(),2);
-		//enemyDeck = enemyDeck.add(new AvengingWrath(),1);
+	//	enemyDeck = enemyDeck.add(new AvengingWrath(),1);
 		enemyDeck = enemyDeck.add(new AbusiveSergeant(),2);
 		enemyDeck = enemyDeck.add(new ArgentSquire(),2);
 		enemyDeck = enemyDeck.add(new LeperGnome(),2);
@@ -144,6 +146,7 @@ public class Test {
 		enemyDeck = enemyDeck.add(new KnifeJuggler(),2);
 		enemyDeck = enemyDeck.add(new LootHoarder(),1);
 		enemyDeck = enemyDeck.add(new Wolfrider(), 1);
+		enemyDeck = enemyDeck.add(new NoviceEngineer(), 2);
 		
 		Hero hero1 = new Uther("Uther",TargetsType.ALLYCHAR,30,30,0,0,0,new Hand(), myDeck, 0, 0, null);
 		Hero hero2 = new Uther("Uther2",TargetsType.ENEMYCHAR,30,30,0,0,0,new Hand(), enemyDeck, 0, 0, null);
@@ -197,14 +200,14 @@ public class Test {
 	//	for (int i = 0; i <= 10; i++) {
 		//	for (int j = 0; j<=10; j++) {
 				
-				double x = (double) 3 / 10;
-				double y = (double) 7 / 10;
+				double x = (double) 0.5;
+				double y = (double) 0.5;
 				
 		
 				Frontier frontier = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),x,1-x);
 				Frontier frontier2 = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),y,1-y);
 		
-				while (gamecount<10) {
+				while (gamecount<1000) {
 			
 					//Player player1 = new Player(new RandomPlayout(), hero1);
 					Player player1 = new Player(new BlindGreedySearch(frontier),hero1);

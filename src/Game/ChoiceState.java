@@ -3,12 +3,15 @@ package Game;
 import java.util.ArrayList;
 import java.util.Set;
 
+import Game.Auras.Aura;
 import Game.Battlecrys.Battlecry;
 import Game.Buffs.Buff;
+import Game.DeathEffects.DeathEffect;
 import Game.Deathrattles.Deathrattle;
 import Game.Heroes.Hero;
 import Game.Inspires.Inspire;
 import Game.Minions.Minion;
+import Game.SummonEffects.SummonEffect;
 import Game.Weapons.Weapon;
 import Search.Action;
 import Search.Node;
@@ -19,6 +22,8 @@ public class ChoiceState implements MyTurnState {
 
 	private BoardState state;
 	private Set<Action> actions;
+	private BufferType bufferType;
+	private int sourceId;
 	
 	public BoardState getState() {
 		return state;
@@ -31,10 +36,16 @@ public class ChoiceState implements MyTurnState {
 	public void setTurnEnded(boolean turnEnded) {
 		this.turnEnded = turnEnded;
 	}
+	
+	public ChoiceState() {
+		
+	}
 
-	public ChoiceState(BoardState state, Set<Action> actions) {
+	public ChoiceState(BoardState state, Set<Action> actions, BufferType bufferType, int sourceId) {
 		this.state = state;
 		this.actions = actions;
+		this.bufferType = bufferType;
+		this.sourceId = sourceId;
 	}
 
 	@Override
@@ -44,7 +55,13 @@ public class ChoiceState implements MyTurnState {
 
 	@Override
 	public MyTurnState getActionResult(Action action) {
-		return action.result(state);
+		System.out.println("Viewing result of choice");
+		MyTurnState tempstate = action.result(state);
+		if (bufferType.equals(BufferType.BATTLECRY)){
+			tempstate = tempstate.applyAuras(sourceId);
+			tempstate = tempstate.doSummonEffects(sourceId);
+		}
+		return tempstate;
 	}
 
 	@Override
@@ -98,8 +115,18 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState applyAuras(Minion minion) {
-		return state.applyAuras(minion);
+	public MyTurnState applyAura(Aura aura, int sourceId, int targetId) {
+		return state.applyAura(aura,sourceId,targetId);
+	}
+	
+	@Override
+	public MyTurnState applyAuras(int minionId) {
+		return state.applyAuras(minionId);
+	}
+	
+	@Override
+	public MyTurnState removeAura(Aura aura, Minion source, int targetId) {
+		return state.removeAura(aura,source,targetId);
 	}
 	
 	@Override
@@ -108,8 +135,18 @@ public class ChoiceState implements MyTurnState {
 	}
 	
 	@Override
-	public MyTurnState doSummonEffects(Minion minion) {
-		return state.doSummonEffects(minion);
+	public MyTurnState doSummonEffect(SummonEffect summonEffect, int sourceId, int targetId, TargetsType side) {
+		return state.doSummonEffect(summonEffect,sourceId,targetId,side);
+	}
+	
+	@Override
+	public MyTurnState doSummonEffects(int minionId) {
+		return state.doSummonEffects(minionId);
+	}
+	
+	@Override
+	public MyTurnState doDeathEffect(DeathEffect deathEffect, int sourceId, Minion destroyedMinion) {
+		return state.doDeathEffect(deathEffect,sourceId,destroyedMinion);
 	}
 	
 	@Override
@@ -198,17 +235,17 @@ public class ChoiceState implements MyTurnState {
 
 	@Override
 	public MyTurnState viewBiased() {
-		return new ChoiceState((BoardState) state.viewBiased(), actions);
+		return new ChoiceState((BoardState) state.viewBiased(), actions,bufferType,sourceId);
 	}
 
 	@Override
-	public MyTurnState applyBuff(int minionID, String name, Buff buff) {
-		return state.applyBuff(minionID,name,buff);
+	public MyTurnState applyBuff(int minionID, Buff buff) {
+		return state.applyBuff(minionID,buff);
 	}
 
 	@Override
-	public MyTurnState removeBuff(int minionID, String name, int id) {
-		return state.removeBuff(minionID,name,id);
+	public MyTurnState removeBuff(int minionID, int id) {
+		return state.removeBuff(minionID,id);
 	}
 
 	@Override

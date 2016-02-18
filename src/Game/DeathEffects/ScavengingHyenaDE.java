@@ -13,7 +13,7 @@ public class ScavengingHyenaDE extends DeathEffect {
 	
 	@Override
 	public MyTurnState perform(MyTurnState oldstate, Minion source, Minion minion) {
-		if (minion.getRace().equals(Race.BEAST)) return oldstate.applyBuff(source.getId(),source.getName(), new AdditiveBuff(-1,2,1,0));
+		if (minion.getRace().equals(Race.BEAST)) return oldstate.applyBuff(source.getId(), new AdditiveBuff(-1,2,1,0));
 		else return oldstate;
 	}
 	

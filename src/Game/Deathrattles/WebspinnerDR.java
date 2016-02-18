@@ -22,8 +22,15 @@ public class WebspinnerDR extends Deathrattle {
 		if (hero.getMyHandSize()<10) {
 			BeastCardList beastCards = new BeastCardList();
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
-			for (PlayableCard card : beastCards.get()) {
-				list.add(new StateProbabilityPair(oldstate.addCardToHand(hero,card) , (double)1 / (beastCards.get()).size(), hero.getName()+" gets "+card.getName()+" from Webspinner DR"));
+			if (side.equals(TargetsType.ALLYCHAR)) {
+				for (PlayableCard card : beastCards.get()) {
+					list.add(new StateProbabilityPair(oldstate.addCardToMyHand(card) , (double)1 / (beastCards.get()).size(), hero.getName()+" gets "+card.getName()+" from Webspinner DR"));
+				}
+			}
+			else {
+				for (PlayableCard card : beastCards.get()) {
+					list.add(new StateProbabilityPair(oldstate.addCardToEnemyHand(card) , (double)1 / (beastCards.get()).size(), hero.getName()+" gets "+card.getName()+" from Webspinner DR"));
+				}
 			}
 			return new RandomState(list);
 		}

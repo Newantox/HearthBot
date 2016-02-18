@@ -30,6 +30,7 @@ public class AdditiveBuff extends Buff {
 	}
 	
 	public void remove(Minion minion) {
+		System.out.println("REMOVING");
 		minion.setAtk(minion.getAtk()-atkChange);
 		
 		minion.setMaxHP(minion.getMaxHP()-hpChange);

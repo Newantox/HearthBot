@@ -19,7 +19,7 @@ public class GlaivezookaBC extends Battlecry {
 		else {
 			List<StateProbabilityPair> list = new LinkedList<StateProbabilityPair>();
 			for (Minion minion : oldstate.getMySide()) {
-				list.add(new StateProbabilityPair(oldstate.applyBuff(minion.getId(),minion.getName(),new AdditiveBuff(-1,1,0,0)), (double)1/oldstate.numberOfAlliedMinions(), minion.getName()+" gets buffed by Glaivezooka"));
+				list.add(new StateProbabilityPair(oldstate.applyBuff(minion.getId(),new AdditiveBuff(-1,1,0,0)), (double)1/oldstate.numberOfAlliedMinions(), minion.getName()+" gets buffed by Glaivezooka"));
 			}
 			return new RandomState(list);
 		}
