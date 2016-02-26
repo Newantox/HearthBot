@@ -36,10 +36,4 @@ public class BlindGreedySearch implements Search {
 
 	}
 
-	@Override
-	public int lastSearch() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

@@ -77,9 +77,4 @@ public class MCTS implements Search {
 		}
 	}
 
-	@Override
-	public int lastSearch() {
-		return -1;
-	}
-
 }

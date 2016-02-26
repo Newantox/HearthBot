@@ -1,10 +1,6 @@
 package Search;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
-
-import Game.GameGoalTest2;
-import Game.StopWatch;
 import Game.Actions.EndTurn;
 
 public class RandomPlayout implements Search {
@@ -35,12 +31,6 @@ public class RandomPlayout implements Search {
 			else return action;
 		}
 		return backup;
-	}
-
-	@Override
-	public int lastSearch() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 }

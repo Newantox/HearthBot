@@ -109,14 +109,15 @@ public class GamePlay {
 		
 		public void addNewStep(State state, Action action) {
 			StateString newStateString;
-			if (action!=null) newStateString = new StateString(state,action.output());
-			else newStateString = new StateString(state,"Start of Turn");
-			if (currentStateString==null) currentStateString = newStateString;
-			ArrayList<StateString> templist = list.get(totalTurns-1);
-			templist.add(newStateString);
-			list.set(totalTurns-1, templist);
-			stepsInTurn.set(totalTurns-1, stepsInTurn.get(totalTurns-1)+1);
-			totalSteps++;
+			if (action!=null) {
+				newStateString = new StateString(state,action.output());
+				if (currentStateString==null) currentStateString = newStateString;
+				ArrayList<StateString> templist = list.get(totalTurns-1);
+				templist.add(newStateString);
+				list.set(totalTurns-1, templist);
+				stepsInTurn.set(totalTurns-1, stepsInTurn.get(totalTurns-1)+1);
+				totalSteps++;
+			}
 		}
 		
 		public void addNewTurn(State state) {

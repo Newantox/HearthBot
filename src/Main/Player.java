@@ -3,13 +3,7 @@ package Main;
 import Game.GameGoalTest;
 import Game.MyTurnState;
 import Game.Heroes.Hero;
-import GameSearch.GameHeuristic;
-import Search.AStarFunction;
-import Search.BestFirstFrontier;
-import Search.Frontier;
-import Search.GraphSearch;
 import Search.Node;
-import Search.RandomPlayout;
 import Search.Search;
 import Search.State;
 

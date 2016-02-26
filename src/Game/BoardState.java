@@ -749,10 +749,11 @@ public class BoardState implements MyTurnState {
 	public MyTurnState heroAttack(int weaponID, Hero defender) {
 		if (hero.getWeapon().getId()==weaponID) {
 			Hero newHero = hero.fresh();
+			int amount = (hero.getWeapon()).getAtk();
 			newHero.setReady(false);
 			
 			MyTurnState tempstate = new BoardState(viewType,newHero,enemy,oppSide,mySide,idsInPlayOrder,enemyHandSize,turnEnded,idCounter);
-			tempstate = tempstate.damage(defender,hero.getWeapon().getAtk());
+			tempstate = tempstate.damage(defender,amount);
 			
 			return tempstate.changeHeroWeaponAtkDurability(weaponID,0,-1);
 		}
@@ -763,11 +764,12 @@ public class BoardState implements MyTurnState {
 		if (hero.getWeapon().getId()==weaponID && !findMinion(defender.getId()).equals(null)) {
 			Minion target = findMinion(defender.getId());
 			Hero newHero = hero.fresh();
+			int amount = (hero.getWeapon()).getAtk();
 			newHero.setReady(false);
 			
 			MyTurnState tempstate = new BoardState(viewType,newHero,enemy,oppSide,mySide,idsInPlayOrder,enemyHandSize,turnEnded,idCounter);
 			tempstate = tempstate.damage(newHero,target.getAtk());
-			tempstate = tempstate.damage(target,hero.getWeapon().getAtk());
+			tempstate = tempstate.damage(target,amount);
 			
 			return tempstate.changeHeroWeaponAtkDurability(weaponID,0,-1);
 		}
@@ -876,34 +878,35 @@ public class BoardState implements MyTurnState {
 		return this;
 	}
 	
-	public double getValue(Node n, double hpWeight, double minionWeight) {
+	public double getValue(Node n, double heroWeight, double minionWeight) {
 		if (enemy.getHP()<=0) return 0;
+		if (hero.getHP()<=0) return 1000;
 		
 		if (turnEnded) {
-			int k = 20;
+			int k = 500;
 			for (Minion minion : oppSide) {
-				if (minion.isDivineShield()) k += 3.2*minionWeight*minion.getCurrentHP();
-				else k += 2*minionWeight*minion.getCurrentHP();
-				k += 1.6*minionWeight*minion.getAtk();
+				if (minion.isDivineShield()) k += 2.1*minionWeight*minion.getCurrentHP();
+				else k += 1.6*minionWeight*minion.getCurrentHP();
+				k += 1.4*minionWeight*minion.getAtk();
 			}
-			k += 0.2*hpWeight*enemy.getHP();
-			if (enemy.getWeapon()!=null) k += 0.8*(enemy.getWeapon()).getAtk()*(enemy.getWeapon()).getDurability();
-			k += 0.5*enemy.getMyHandSize();
+			k += 0.8*heroWeight*enemy.getHP();
+			if (enemy.getWeapon()!=null) k += 0.5*(enemy.getWeapon()).getAtk()*(enemy.getWeapon()).getDurability();
+			//k += 0.05*enemy.getMyHandSize();
 			
 			for (Minion minion : mySide) {
 				if (minion.isDivineShield()) k -= 1.6*minionWeight*minion.getCurrentHP();
-				else k -= minionWeight*minion.getCurrentHP();
+				else k -= 1.2*minionWeight*minion.getCurrentHP();
 				k -= 0.8*minionWeight*minion.getAtk();
 			}
-			k -= 0.05*hpWeight*hero.getHP();
-			if (hero.getWeapon()!=null) 	k -= 0.4*(hero.getWeapon()).getAtk()*(hero.getWeapon()).getDurability();
-			for (PlayableCard card : hero.getMyHand().raw()) {
-				k -= 0.3*card.getCost();
-			}
+			k -= 0.4*heroWeight*hero.getHP();
+			if (hero.getWeapon()!=null) 	k -= 0.5*(hero.getWeapon()).getAtk()*(hero.getWeapon()).getDurability();
+			//for (PlayableCard card : hero.getMyHand().raw()) {
+			//	k -= 0.01*card.getCost();
+			//}
 			
 			return k;
 		}
-		else return (this.getActionResult(new EndTurn())).getValue(n,minionWeight,hpWeight);
+		else return (this.getActionResult(new EndTurn())).getValue(n,minionWeight,heroWeight);
 	}
 	
 	public double getBestValue(Node n,double minionWeight, double hpWeight) {

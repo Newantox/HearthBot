@@ -22,10 +22,12 @@ import Game.ViewType;
 import Game.Minions.AbusiveSergeant;
 import Game.Minions.AcidicSwampOoze;
 import Game.Minions.ArgentSquire;
+import Game.Minions.DragonlingMechanic;
 import Game.Minions.GrimscaleOracle;
 import Game.Minions.KnifeJuggler;
 import Game.Minions.LeperGnome;
 import Game.Minions.LootHoarder;
+import Game.Minions.MechanicalDragonling;
 import Game.Minions.Murloc;
 import Game.Minions.MurlocTidecaller;
 import Game.Minions.MurlocWarleader;
@@ -56,10 +58,8 @@ import Game.SummonEffects.SwordOfJusticeSE;
 import Game.Weapons.FieryWarAxe;
 import Game.Weapons.SwordOfJustice;
 import Game.Weapons.TruesilverChampion;
-import GameSearch.GameHeuristic;
 import MCTS.MCTS;
 import MCTS.MCTSNode;
-import Search.AStarFunction;
 import Search.Action;
 import Search.BestFirstFrontier;
 import Search.BlindGreedySearch;
@@ -107,18 +107,15 @@ public class Test {
 	//	myHand.add(new Murloc());
 	//	myHand.add(new GrimscaleOracle());
 		
-		//int startmana = 10;
 		Deck myDeck = new Deck();
 		myDeck = myDeck.add(new BlessingOfMight(),2);
 		myDeck = myDeck.add(new Equality(),2);
 		myDeck = myDeck.add(new ShieldedMinibot(),2);
 		myDeck = myDeck.add(new SwordOfJustice(),1);
-	//	myDeck = myDeck.add(new DivineFavour(),2);
 		myDeck = myDeck.add(new MusterForBattle(),2);
 		myDeck = myDeck.add(new TruesilverChampion(),2);
 		myDeck = myDeck.add(new Consecration(),2);
 		myDeck = myDeck.add(new HammerOfWrath(),2);
-	//	myDeck = myDeck.add(new AvengingWrath(),1);
 		myDeck = myDeck.add(new AbusiveSergeant(),2);
 		myDeck = myDeck.add(new ArgentSquire(),2);
 		myDeck = myDeck.add(new LeperGnome(),2);
@@ -127,18 +124,17 @@ public class Test {
 		myDeck = myDeck.add(new LootHoarder(),1);
 		myDeck = myDeck.add(new Wolfrider(), 1);
 		myDeck = myDeck.add(new NoviceEngineer(), 2);
+		myDeck = myDeck.add(new DragonlingMechanic(), 1);
 		
 		Deck enemyDeck = new Deck();
 		enemyDeck = enemyDeck.add(new BlessingOfMight(),2);
 		enemyDeck = enemyDeck.add(new Equality(),2);
 		enemyDeck = enemyDeck.add(new ShieldedMinibot(),2);
 		enemyDeck = enemyDeck.add(new SwordOfJustice(),1);
-	//	enemyDeck = enemyDeck.add(new DivineFavour(),2);
 		enemyDeck = enemyDeck.add(new MusterForBattle(),2);
 		enemyDeck = enemyDeck.add(new TruesilverChampion(),2);
 		enemyDeck = enemyDeck.add(new Consecration(),2);
 		enemyDeck = enemyDeck.add(new HammerOfWrath(),2);
-	//	enemyDeck = enemyDeck.add(new AvengingWrath(),1);
 		enemyDeck = enemyDeck.add(new AbusiveSergeant(),2);
 		enemyDeck = enemyDeck.add(new ArgentSquire(),2);
 		enemyDeck = enemyDeck.add(new LeperGnome(),2);
@@ -147,6 +143,7 @@ public class Test {
 		enemyDeck = enemyDeck.add(new LootHoarder(),1);
 		enemyDeck = enemyDeck.add(new Wolfrider(), 1);
 		enemyDeck = enemyDeck.add(new NoviceEngineer(), 2);
+		enemyDeck = enemyDeck.add(new DragonlingMechanic(), 1);
 		
 		Hero hero1 = new Uther("Uther",TargetsType.ALLYCHAR,30,30,0,0,0,new Hand(), myDeck, 0, 0, null);
 		Hero hero2 = new Uther("Uther2",TargetsType.ENEMYCHAR,30,30,0,0,0,new Hand(), enemyDeck, 0, 0, null);
@@ -200,14 +197,14 @@ public class Test {
 	//	for (int i = 0; i <= 10; i++) {
 		//	for (int j = 0; j<=10; j++) {
 				
-				double x = (double) 0.5;
+				double x = (double) 1.1;
 				double y = (double) 0.5;
 				
 		
-				Frontier frontier = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),x,1-x);
-				Frontier frontier2 = new BestFirstFrontier(new AStarFunction(new GameHeuristic()),y,1-y);
+				Frontier frontier = new BestFirstFrontier(x,1-x);
+				Frontier frontier2 = new BestFirstFrontier(y,1-y);
 		
-				while (gamecount<1000) {
+				while (gamecount<100) {
 			
 					//Player player1 = new Player(new RandomPlayout(), hero1);
 					Player player1 = new Player(new BlindGreedySearch(frontier),hero1);

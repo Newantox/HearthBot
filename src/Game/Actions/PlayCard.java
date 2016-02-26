@@ -22,7 +22,7 @@ public class PlayCard implements Action {
 
 	@Override
 	public double cost() {
-		return card.getCost()*0.4;
+		return 0;
 	}
 
 	@Override
@@ -34,7 +34,9 @@ public class PlayCard implements Action {
 		newMyHand = newMyHand.remove(pos);
 		newHero.setMyHand(newMyHand);
 		
-		BoardState tempstate = newHero.useMana(oldstate,card.getCost());
+		BoardState tempstate = new BoardState(oldstate.getViewType(), newHero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
+		
+		tempstate = newHero.useMana(tempstate,card.getCost());
 		
 		return card.playCard(tempstate,target);
 	}

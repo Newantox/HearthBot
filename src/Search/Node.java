@@ -5,7 +5,6 @@ public class Node {
 	public final Action action;
 	public final State state;
 	public int depth;
-	public double fn;
 	public double gn;
 	public double best;
 	public Node bestNode;

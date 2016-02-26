@@ -344,9 +344,6 @@ public class Minion implements Character {
 			if (tempstate.getClass().equals((new ChoiceState()).getClass())) return tempstate;
 			else {
 				tempstate = tempstate.doSummonEffects(newMinion.getId());
-				if (name.equals("Wolfrider")) { 
-					System.out.print("sffse"+newMinion.getId());
-				}
 				return tempstate.applyAuras(newMinion.getId());
 			}
 		}
@@ -421,8 +418,7 @@ public class Minion implements Character {
 		ArrayList<Minion> newMySide = (ArrayList<Minion>) (oldstate.getMySide()).clone();
 		
 		Minion newAttacker = new Minion(this);
-		System.out.print("goingin:"+id+","+name+newAttacker.getId()+target.getName()+oldstate.findPosition(id));
-		oldstate.print();
+		
 		newAttacker.setAttacksTaken(newAttacker.getAttacksTaken()+1);
 		newMySide.set(oldstate.findPosition(newAttacker.getId()), newAttacker);
 		

@@ -248,16 +248,23 @@ public class Hero implements Character {
 	
 	public MyTurnState giveWeapon(BoardState oldstate, Weapon weapon) {
 		Hero hero = this.fresh();
+		Weapon newWeapon = new Weapon(weapon);
+		newWeapon.setId(oldstate.getNextId());
 		hero.setWeapon(weapon);
 		
-		if (side.equals(TargetsType.ALLYCHAR)) return  new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
-		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter());
+		if (side.equals(TargetsType.ALLYCHAR)) return  new BoardState(oldstate.getViewType(),hero,oldstate.getEnemy(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter()+1);
+		else return new BoardState(oldstate.getViewType(),oldstate.getHero(),hero,oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter()+1);
 	}
 	
 	//NEEDS CHANGED
 	public MyTurnState equipWeapon(BoardState oldstate, Weapon weapon) {
-		MyTurnState tempstate = destroyWeapon(oldstate);
-		tempstate = tempstate.giveWeapon(this,weapon);
+		MyTurnState tempstate = new BoardState(oldstate.getViewType(),oldstate.getHero(),oldstate.getHero(),oldstate.getOppSide(),oldstate.getMySide(),oldstate.getIdsInPlayOrder(),oldstate.getEnemyHandSize(),oldstate.isTurnEnded(),oldstate.getIdCounter()+1);
+		tempstate = destroyWeapon(oldstate);
+		
+		Weapon newWeapon = new Weapon(weapon);
+		newWeapon.setId(oldstate.getNextId());
+		
+		tempstate = tempstate.giveWeapon(this,newWeapon);
 		
 		return weapon.battleCry(tempstate);
 	}
@@ -276,6 +283,7 @@ public class Hero implements Character {
 	}
 	
 	public MyTurnState fatigue(BoardState oldstate) {
+		//if (name!="") throw new Error("fat");
 		System.out.println("Take fatigue damage: "+(fatigue+1));
 		Hero newHero = this.fresh();
 		newHero.setFatigue(fatigue+1);

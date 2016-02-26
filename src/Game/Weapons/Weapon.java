@@ -26,7 +26,6 @@ public class Weapon implements PlayableCard {
 	protected ArrayList<Inspire> inspires;
 	
 	public Weapon(String name, int cost, int atk, int durability) {
-		this.id = (int) Math.ceil(Math.random()*10000);
 		this.name = name;
 		this.cost = cost;
 		this.atk = atk;

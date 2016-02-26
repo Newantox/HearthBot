@@ -72,9 +72,4 @@ public class GraphSearch implements Search {
 		return best; 
 	}
 
-	@Override
-	public int lastSearch() {
-		return lastSearch;
-	}
-
 }
