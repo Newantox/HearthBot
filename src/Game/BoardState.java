@@ -64,7 +64,7 @@ public class BoardState implements MyTurnState {
 	}
 
 	@Override
-	public Set<Action> getApplicableActions() {
+	public Set<Action> getApplicableActions(boolean end) {
 	
 		if (turnEnded) return new LinkedHashSet<Action>();
 		
@@ -74,10 +74,10 @@ public class BoardState implements MyTurnState {
 			//Add possible attacks by minions to the set of actions.
 			for (Minion myMinion : mySide) {
 				if (myMinion.canAttack()) {
-					if (enemy.isAttackable()) actions.add(new FaceAttack(myMinion.getId(),enemy,findPosition(myMinion.getId())));
 					for (Minion oppMinion : oppSide) {
 						if (oppMinion.isAttackable(this) && oppMinion.isTargettable()) actions.add(new Attack(myMinion.getId(),oppMinion.getId()));
 					}
+					if (enemy.isAttackable()) actions.add(new FaceAttack(myMinion.getId(),enemy,findPosition(myMinion.getId())));
 				}
 			}
 			
@@ -119,7 +119,6 @@ public class BoardState implements MyTurnState {
 							else if (tcard.getTargets().equals(TargetsType.ALLMINIONS)) {
 								for (int id : idsInPlayOrder) {
 									if (findMinion(id)==null) System.out.println("Couldn't find "+id);
-									System.out.println("");
 									if (findMinion(id).isTargettable()) actions.add(new PlayCard(card,findMinion(id),i));
 								}
 							}
@@ -131,8 +130,8 @@ public class BoardState implements MyTurnState {
 				}
 				
 			}
-			//Add ability to end turn:
-			actions.add(new EndTurn());
+			//Add ability to end turn, if desired:
+			if (end) actions.add(new EndTurn());
 			return actions;
 		}
 	}
@@ -878,7 +877,7 @@ public class BoardState implements MyTurnState {
 		return this;
 	}
 	
-	public double getValue(Node n, double heroWeight, double minionWeight) {
+	public double getValue(Node n, double minionWeight, double heroWeight) {
 		if (enemy.getHP()<=0) return 0;
 		if (hero.getHP()<=0) return 1000;
 		
@@ -921,7 +920,7 @@ public class BoardState implements MyTurnState {
 			n.bestNode = newNode;
 			n.best = newNode.getBestValue(minionWeight,hpWeight);
 			
-			for (Action action : getApplicableActions()) {
+			for (Action action : getApplicableActions(true)) {
 				Node newnode = new Node(n, action, getActionResult(action));
 				double nodebest = newnode.getBestValue(minionWeight,hpWeight);
 				if (nodebest < best) {
@@ -1023,6 +1022,11 @@ public class BoardState implements MyTurnState {
 	@Override
 	public MyTurnState viewBiased() {
 		return new BoardState(ViewType.BIASED, hero, enemy, oppSide, mySide, idsInPlayOrder, enemyHandSize,turnEnded,idCounter);
+	}
+	
+	@Override
+	public MyTurnState predictUnbiased() {
+		return new BoardState(ViewType.UNBIASED, hero, enemy, oppSide, mySide, idsInPlayOrder, enemyHandSize,turnEnded,idCounter);
 	}
 	
 	public int getNextId() {

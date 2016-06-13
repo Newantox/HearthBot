@@ -52,6 +52,7 @@ public interface MyTurnState extends State {
 	MyTurnState doEndTurnEffects(Hero hero);
 
 	MyTurnState viewBiased();
+	MyTurnState predictUnbiased();
 
 	MyTurnState drawCard(int pos);
 

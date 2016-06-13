@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import Game.BoardState;
+import Game.ChoiceState;
 import Game.GamePlay;
 import Game.MulliganState;
 import Game.MyTurnState;
@@ -21,6 +22,7 @@ public class PlayGame {
 	private Player player1;
 	private Player player2;
 	int timer = 0;
+	ChoiceState temp = new ChoiceState();
 	
 	GamePlay gameplay = new GamePlay();
 	
@@ -90,14 +92,16 @@ public class PlayGame {
 				solution = player1.getSolution(currentState.viewBiased());
 				currentState = perform(currentState,solution);
 
-				if (((BoardState) currentState)==null) throw new Error("Null from perform");
-				if (((BoardState) currentState).getEnemy().getHP()<=0) {
-					if (real) gameplay.setWinner(1);
-					return 1;
-				}
-				if (((BoardState) currentState).getHero().getHP()<=0) {
-					if (real) gameplay.setWinner(2); 
-					return 2;
+				if (!currentState.getClass().equals(temp.getClass())) {
+					if (((BoardState) currentState).getEnemy().getHP()<=0) {
+						if (real) gameplay.setWinner(1);
+						return 1;
+					}
+					
+					if (((BoardState) currentState).getHero().getHP()<=0) {
+						if (real) gameplay.setWinner(2); 
+						return 2;
+					}
 				}
 				if (timer>100) {currentState = currentState.getActionResult(new EndTurn()); currentState = currentState.resolveRNG(true); break;}
 			} 
@@ -121,13 +125,16 @@ public class PlayGame {
 				timer++;
 				solution = player2.getSolution(currentState.viewBiased());
 				currentState = perform(currentState,solution);
-				if (((BoardState) currentState).getEnemy().getHP()<=0) {
-					if (real) gameplay.setWinner(2);
-					return 2;
-				}
-				if (((BoardState) currentState).getHero().getHP()<=0) {
-					if (real) gameplay.setWinner(1); 
-					return 1;
+				
+				if (!currentState.getClass().equals(temp.getClass())) {
+					if (((BoardState) currentState).getEnemy().getHP()<=0) {
+						if (real) gameplay.setWinner(2);
+						return 2;
+					}
+					if (((BoardState) currentState).getHero().getHP()<=0) {
+						if (real) gameplay.setWinner(1); 
+						return 1;
+					}
 				}
 				if (timer>100) {currentState = currentState.getActionResult(new EndTurn()); currentState = currentState.resolveRNG(true); break;}
 			}
@@ -189,6 +196,7 @@ public class PlayGame {
 			if(stack.isEmpty()) return (MyTurnState) startState;
 			else {
 				node = stack.pop();
+				if (node.parent==null) node = stack.pop();
 				currentState = startState.getActionResult(node.action);
 				currentState = currentState.resolveRNG(true);
 				gameplay.addNewStep(currentState,node.action);

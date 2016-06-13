@@ -49,13 +49,12 @@ public class ChoiceState implements MyTurnState {
 	}
 
 	@Override
-	public Set<Action> getApplicableActions() {
+	public Set<Action> getApplicableActions(boolean end) {
 		return actions;
 	}
 
 	@Override
 	public MyTurnState getActionResult(Action action) {
-		System.out.println("Viewing result of choice");
 		MyTurnState tempstate = action.result(state);
 		if (bufferType.equals(BufferType.BATTLECRY)){
 			tempstate = tempstate.applyAuras(sourceId);
@@ -180,7 +179,7 @@ public class ChoiceState implements MyTurnState {
 	public double getBestValue(Node n, double minionWeight, double hpWeight) {
 		System.out.println("Choice");
 		double best = 1000;
-		 for (Action action : getApplicableActions()) {
+		 for (Action action : getApplicableActions(true)) {
 			 Node newnode = new Node(n,action,getActionResult(action));
 			 if (newnode.getBestValue(minionWeight,hpWeight) < best) {
 				 best = newnode.getBestValue(minionWeight,hpWeight);
@@ -236,6 +235,11 @@ public class ChoiceState implements MyTurnState {
 	@Override
 	public MyTurnState viewBiased() {
 		return new ChoiceState((BoardState) state.viewBiased(), actions,bufferType,sourceId);
+	}
+	
+	@Override
+	public MyTurnState predictUnbiased() {
+		return new ChoiceState((BoardState) state.predictUnbiased(), actions,bufferType,sourceId);
 	}
 
 	@Override

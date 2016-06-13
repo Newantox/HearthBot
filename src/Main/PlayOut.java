@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import Game.BoardState;
+import Game.ChoiceState;
 import Game.MyTurnState;
 import Game.TargetsType;
-import Game.ViewType;
 import Game.Actions.EndTurn;
 import Game.Heroes.Hero;
 import Game.Minions.Minion;
@@ -19,16 +19,16 @@ public class PlayOut {
 	private Player player1;
 	private Player player2;
 	Node solution;
-	private BoardState prepState;
 	private MyTurnState currentState;
 	int timer = 0;
 	int count = 0;
 	
+	ChoiceState temp = new ChoiceState();
+	
 	public PlayOut(MyTurnState state, Search search1, Search search2) {
 		this.player1 = new Player(search1,null);
 		this.player2 = new Player(search2,null);
-		this.prepState = (BoardState) state.resolveRNG(false);
-		currentState = new BoardState(ViewType.UNBIASED,prepState.getHero(), prepState.getEnemy(), prepState.getOppSide(), prepState.getMySide(), prepState.getIdsInPlayOrder(), prepState.getEnemyHandSize(), prepState.isTurnEnded(),prepState.getIdCounter());
+		this.currentState = (state.resolveRNG(false)).predictUnbiased();
 	}
 	
 	//public PlayOut(MulliganState state, Search search1, Search search2) {
@@ -50,8 +50,10 @@ public class PlayOut {
 				solution = player1.getSolution(currentState.viewBiased());
 				currentState = perform(currentState,solution);
 				
-				if (((BoardState) currentState).getEnemy().getHP()<=0) {return 1;}
-				if (((BoardState) currentState).getHero().getHP()<=0) {return 0;}
+				if (!currentState.getClass().equals(temp.getClass())) {
+					if (((BoardState) currentState).getEnemy().getHP()<=0) {return 1;}
+					if (((BoardState) currentState).getHero().getHP()<=0) {return 0;}
+				}
 				if (timer>100) {currentState = currentState.getActionResult(new EndTurn()); currentState = currentState.resolveRNG(false); break;}
 			} 
 			timer = 0;
@@ -63,8 +65,11 @@ public class PlayOut {
 				timer++;
 				solution = player2.getSolution(currentState.viewBiased());
 				currentState = perform(currentState,solution);
-				if (((BoardState) currentState).getEnemy().getHP()<=0) {return 0;}
-				if (((BoardState) currentState).getHero().getHP()<=0) {return 1;}
+				
+				if (!currentState.getClass().equals(temp.getClass())) {
+					if (((BoardState) currentState).getEnemy().getHP()<=0) {return 0;}
+					if (((BoardState) currentState).getHero().getHP()<=0) {return 1;}
+				}
 				if (timer>100) {currentState = currentState.getActionResult(new EndTurn()); currentState = currentState.resolveRNG(true); break;}
 			}
 			
@@ -108,7 +113,7 @@ public class PlayOut {
 			else {
 				Stack<Node> stack = new Stack<Node>();
 				Node node = solution;
-				while (node != null) {
+				while (node.action != null) {
 					stack.push(node);
 					node = node.parent;
 				}

@@ -8,14 +8,20 @@ public class AdditiveBuff extends Buff {
 	private int atkChange;
 	private int hpChange;
 	private int costChange;
+	private int filterValue;
 	
 	public AdditiveBuff(double id, int atkChange,int hpChange,int costChange) {
 		this.id = id;
 		this.atkChange = atkChange;
 		this.hpChange = hpChange;
 		this.costChange = costChange;
+		this.filterValue = (int) Math.signum(atkChange+hpChange-costChange);
 	}
 	
+	public int getFilterValue() {
+		return filterValue;
+	}
+
 	public double getID() {
 		return id;
 	}

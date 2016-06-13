@@ -14,6 +14,7 @@ public class AttributeBuff extends Buff {
 	private int spelldamageChange;
 	private int frozenChange;
 	private int immuneChange;
+	private int filterValue;
 	
 	// 1 represents giving the minion the attribute, -1 taking it away, and 0 no change.
 	public AttributeBuff(double id, int chargeChange , int divineshieldChange, int tauntChange, int stealthChange, int windfuryChange, int spelldamageChange, int frozenChange, int immuneChange) {
@@ -25,8 +26,13 @@ public class AttributeBuff extends Buff {
 		this.spelldamageChange = spelldamageChange;
 		this.frozenChange = frozenChange;
 		this.immuneChange = immuneChange;
+		this.filterValue = (int) Math.signum(chargeChange+divineshieldChange+tauntChange+stealthChange+windfuryChange+spelldamageChange-frozenChange+immuneChange);
 	}
 	
+	public int getFilterValue() {
+		return filterValue;
+	}
+
 	public double getID() {
 		return id;
 	}

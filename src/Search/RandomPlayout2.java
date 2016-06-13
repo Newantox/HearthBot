@@ -1,10 +1,11 @@
 package Search;
 
 import java.util.Set;
+
 import Game.Actions.EndTurn;
 
-public class RandomPlayout implements Search {
-
+public class RandomPlayout2 implements Search {
+	
 	@Override
 	public Node solution(State initialConfig, GoalTest goalTest,int step) {
 		State currentState = initialConfig;
@@ -12,7 +13,10 @@ public class RandomPlayout implements Search {
 		
 		if (currentState.getApplicableActions(true).isEmpty()) throw new Error("empty");
 		while (!currentState.getApplicableActions(true).isEmpty()) {
-			Action action = takeRandom(currentState.getApplicableActions(true));
+			Action action;
+			if (currentState.getApplicableActions(true).size()==1) action = takeRandom(currentState.getApplicableActions(false));
+			else action = takeRandom(currentState.getApplicableActions(false));
+			
 			if (action==null) throw new Error("no");
 			
 			currentState = currentState.getActionResult(action);

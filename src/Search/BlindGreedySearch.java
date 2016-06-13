@@ -21,12 +21,13 @@ public class BlindGreedySearch implements Search {
 			if ((n.state).isGameWon()) {frontier.clear(); return n;}
 			frontier.clear();
 			
-			if (n.state.getApplicableActions().isEmpty()) return n;
+			if (n.state.getApplicableActions(true).isEmpty()) return n;
 			
-			for (Action action : n.state.getApplicableActions()) {
-				//if (action==null) {frontier.clear(); return current;}
-				State newState = n.state.getActionResult(action);
-				frontier.add(new Node(n, action, newState));
+			for (Action action : n.state.getApplicableActions(true)) {
+				if (action!=null) {
+					State newState = n.state.getActionResult(action);
+					frontier.add(new Node(n, action, newState));
+				}
 			}
 			current = n;
 			if (current.state.isTurnEnded()) return current;

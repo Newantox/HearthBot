@@ -6,7 +6,7 @@ import Game.MyTurnState;
 
 public interface State {
 	
-	Set<Action> getApplicableActions();
+	Set<Action> getApplicableActions(boolean end);
 	MyTurnState getActionResult(Action action);
 	
 	double getValue(Node n, double minionWeight, double hpWeight);

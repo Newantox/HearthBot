@@ -67,6 +67,7 @@ import Search.Frontier;
 import Search.GraphSearch;
 import Search.Node;
 import Search.RandomPlayout;
+import Search.RandomPlayout2;
 import Search.Search;
 import Search.State;
 
@@ -148,69 +149,29 @@ public class Test {
 		Hero hero1 = new Uther("Uther",TargetsType.ALLYCHAR,30,30,0,0,0,new Hand(), myDeck, 0, 0, null);
 		Hero hero2 = new Uther("Uther2",TargetsType.ENEMYCHAR,30,30,0,0,0,new Hand(), enemyDeck, 0, 0, null);
 		
-	//	MyTurnState config = new BoardState(ViewType.UNBIASED,hero1,hero2,new ArrayList<Minion>(),new ArrayList<Minion>(),new ArrayList<Integer>(),0,false);
-		
-	/*	config = config.drawCard();
-		config = config.drawCard();
-		config = config.drawCard();
-		config = config.drawCard();
-		config = config.resolveRNG(true);
-		config = config.enemyDrawCard();
-		config = config.enemyDrawCard();
-		config = config.enemyDrawCard();
-		config = config.enemyDrawCard();
-		config = config.resolveRNG(true);
-		config = config.resolveRNG(true);
-		MCTSNode ndai = new MCTS(new RandomPlayout(),new RandomPlayout()).solution(config, goalTest, 0);
-		System.out.println("dsifnvisnfinfisenfisenfisn");
-		MCTSNode temp = ndai;
-		Stack<Action> stack = new Stack<Action>();
-		while (temp!=null) {
-			stack.push(temp.getAction());
-			temp = temp.getParent();
-		}
-		System.out.println(stack.size());
-		while (!stack.isEmpty()) {
-			Action printe = stack.pop();
-			if (printe!=null) printe.print();
-		}
-		System.out.println("dsifnvisnfinfisenfisenfisn");
-		config = (MyTurnState) ndai.getState();
-		//config = config.getActionResult(new PlayCard(new KnifeJuggler(),hero1,0));
-		//config = config.resolveRNG(true);
-		//config = config.getActionResult(new PlayCard(new ShieldedMinibot(),hero1,0));
-		//config = config.resolveRNG(true);
-		
-		//config = config.getActionResult(new PlayCard(new Ragnaros(),hero1,0));
-		//config = ((MyTurnState) config).resolveRNG(true);
-		//config = config.getActionResult(new EndTurn());
-		//config = ((MyTurnState) config).resolveRNG(true);
-		config = config.resolveRNG(true);
-		config.print();*/
-		
 		int gamecount = 0;
 		int onescore = 0;
 		int twoscore = 0;
 		
 		ArrayList<GamePlay> games = new ArrayList<GamePlay>();
 		
-	//	for (int i = 0; i <= 10; i++) {
-		//	for (int j = 0; j<=10; j++) {
+		String output = "";
+			//for (int j = 0; j<9; j++) {
 				
-				double x = (double) 1.1;
-				double y = (double) 0.5;
+				double x = (double) 0.75;
 				
 		
 				Frontier frontier = new BestFirstFrontier(x,1-x);
-				Frontier frontier2 = new BestFirstFrontier(y,1-y);
+				Frontier frontier2 = new BestFirstFrontier(x,1-x);
+				Frontier frontier3 = new BestFirstFrontier(x,1-x);
 		
-				while (gamecount<100) {
+				while (gamecount<50) {
 			
 					//Player player1 = new Player(new RandomPlayout(), hero1);
-					Player player1 = new Player(new BlindGreedySearch(frontier),hero1);
-					//Player player1 = new Player(new MCTS(new BlindGreedySearch(frontier),new BlindGreedySearch(frontier2)),hero1);
-					Player player2 = new Player(new BlindGreedySearch(frontier2),hero2);
-					//Player player2 = new Player(new RandomPlayout(), hero2);
+					//Player player1 = new Player(new BlindGreedySearch(frontier),hero1);
+					Player player2 = new Player(new MCTS(new RandomPlayout2(),new RandomPlayout2(),true),hero1);
+					//Player player2 = new Player(new BlindGreedySearch(frontier3),hero2);
+					Player player1 = new Player(new MCTS(new RandomPlayout2(),new RandomPlayout2(),false),hero2);
 			
 					PlayGame simulation = new PlayGame(player1,player2);
 					//PlayOut simulation = new PlayOut(config,new MCTS(new RandomPlayout(),new RandomPlayout()), new BlindGreedySearch(frontier2));
@@ -222,13 +183,14 @@ public class Test {
 					gamecount++;
 					System.out.println("Games:"+gamecount);
 				}
+				output = output+" , "+": "+onescore;
 				
 				System.out.println("Player 1: "+onescore+" , Player 2 :"+twoscore);
 				gamecount = 0;
 				onescore = 0;
 				twoscore = 0;
 			
-		
+		System.out.println(output);
 		UI ui = new UI();
 		ui.setGames(games);
 		ui.buildScreen();
@@ -243,8 +205,7 @@ public class Test {
 		Printer.printSolution(solution1);
 		System.out.println("Total Nodes: "+(search.lastSearch()));
 		System.out.println("Max Nodes: "+(frontier).maxNodes());*/
-		
+	}	
 		
 	
-	}
 }

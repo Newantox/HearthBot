@@ -19,10 +19,9 @@ public class MulliganState implements State {
 	}
 
 	@Override
-	public Set<Action> getApplicableActions() {
+	public Set<Action> getApplicableActions(boolean end) {
 		Set<Action> actions = new LinkedHashSet<Action>();
 		Hand hand = (state.getHero()).getMyHand();
-		System.out.println(hand.getSize());
 		for (Set<Integer> positions : powerSetOfPositions(hand)) {
 			int improvement = 0;
 			for (int position : positions) if (!goodStart((hand.raw()).get(position))) improvement += -1;
@@ -49,7 +48,7 @@ public class MulliganState implements State {
 	public double getBestValue(Node node, double minionWeight, double hpWeight) {
 		System.out.println("Mulligan");
 		double best = 1000;
-		 for (Action action : getApplicableActions()) {
+		 for (Action action : getApplicableActions(true)) {
 			 Node newnode = new Node(node,action,getActionResult(action));
 			 if (newnode.getBestValue(minionWeight,hpWeight) < best) {
 				 best = newnode.getBestValue(minionWeight,hpWeight);

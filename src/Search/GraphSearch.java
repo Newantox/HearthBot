@@ -43,7 +43,7 @@ public class GraphSearch implements Search {
 			//switch (n.state.getStatetype()) {
 			//	case BOARD:
 				//	BoardState boardstate = (BoardState)n.state;
-					for (Action action : n.state.getApplicableActions()) {
+					for (Action action : n.state.getApplicableActions(true)) {
 						State newState = n.state.getActionResult(action);
 						if (!exploredSet.contains(newState)) {k+=1; frontier.add(new Node(n, action, newState)); exploredSet.add(newState);}
 					}

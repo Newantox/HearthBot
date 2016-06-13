@@ -10,10 +10,12 @@ public class MCTS implements Search {
 
 	private Search search;
 	private Search enemysearch;
+	private boolean bias;
 
-	public MCTS(Search search, Search enemysearch) {
+	public MCTS(Search search, Search enemysearch, boolean bias) {
 		this.search = search;
 		this.enemysearch = enemysearch;
+		this.bias = bias;
 	}
 	
 	// Ideas: Make play game version that is enterable from anywhere. Make process loop until we hit "Leaf" to get full move segment
@@ -23,31 +25,37 @@ public class MCTS implements Search {
 		//StopWatch timer = new StopWatch();
 		//MCTSNode best = new Node(null,null,null);
 		//double bestscore = 1000;
-		MCTSNode startNode = new MCTSNode(null,null,initialConfig);
+		MCTSNode startNode = new MCTSNode(null,null,initialConfig,bias);
 		if (startNode.isLeaf()) {
 			((Game.BoardState) initialConfig).print();
 			System.out.println(initialConfig.isTurnEnded());
-			System.out.println(initialConfig.getApplicableActions().size());
+			System.out.println(initialConfig.getApplicableActions(true).size());
 			throw new Error("looking for solution for leaf");
 		}
 		MCTSNode currentNode = startNode;
+		
 		int i=0;
-		while (i<1000) {
-		//	System.out.println(i);
-			currentNode = TreePolicy(currentNode);
+		while (i<20000) {
+			currentNode = TreePolicy(startNode);
 			int delta = DefaultPolicy((MyTurnState) currentNode.getState());
 			Backup(currentNode,delta);
 			i++;
 		}
 		i=0;
-		MCTSNode returnedNode = startNode.selectBestChild();
-		if (returnedNode==null) throw new Error("best child is null");
-		return returnedNode;
-	/*	if (returnedNode.isLeaf()) return returnedNode;
-		else {
-			MCTSNode temp = solution(returnedNode.getState(),goalTest,step+1);
-			return new MCTSNode(returnedNode,temp.getAction(),temp.getState());
+		
+		/*if (matchingBestVisited) {
+			while (!startNode.selectBestChild().equals(startNode.mostVisitedChild())) {
+				currentNode = TreePolicy(currentNode);
+				int delta = DefaultPolicy((MyTurnState) currentNode.getState());
+				Backup(currentNode,delta);
+				i++;
+			}
 		}*/
+		
+		currentNode = startNode.selectBestChild();
+		if (currentNode==null) throw new Error("best child is null");
+		if (currentNode.getAction()==null) throw new Error("best action is null");
+		return currentNode;
 		
 	}
 	

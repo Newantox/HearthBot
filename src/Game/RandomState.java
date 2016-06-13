@@ -29,7 +29,7 @@ public class RandomState implements MyTurnState {
 	}
 
 	@Override
-	public Set<Action> getApplicableActions() {
+	public Set<Action> getApplicableActions(boolean end) {
 		Set<Action> actions = new LinkedHashSet<Action>();		
 		//for (int i = 0; i < states.size(); i++) {
 		//	actions.add(new IndexAction(i));
@@ -442,6 +442,15 @@ public class RandomState implements MyTurnState {
 		List<StateProbabilityPair> newStates = new LinkedList<StateProbabilityPair>();
 		for (StateProbabilityPair pair : states) {
 			newStates.add(new StateProbabilityPair((pair.getState()).viewBiased(), pair.getProbability() , pair.getText()));
+		}
+		return new RandomState(newStates);
+	}
+	
+	@Override
+	public MyTurnState predictUnbiased() {
+		List<StateProbabilityPair> newStates = new LinkedList<StateProbabilityPair>();
+		for (StateProbabilityPair pair : states) {
+			newStates.add(new StateProbabilityPair((pair.getState()).predictUnbiased(), pair.getProbability() , pair.getText()));
 		}
 		return new RandomState(newStates);
 	}
